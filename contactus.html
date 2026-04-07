@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Contact Us - Tailoring Services</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+:root {
+  --primary-bg: #212529;
+  --accent-color: #1B2A4A;
+  --copyright-bg: #575a5b;
+  --text-white: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+} 
+
+body {
+  /* background: linear-gradient(135deg, var(--primary-bg) 0%, var(--accent-color) 100%); */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  color: var(--primary-bg);
+}
+
+.header {
+  background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
+  padding: 20px 0;
+  border-bottom: 3px solid var(--copyright-bg);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logo-img {
+  width: 80px;
+  height: 55px;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.site-title {
+  color: var(--text-white);
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.nav-menu {
+  display: flex;
+  gap: 25px;
+  list-style: none;
+  margin: 0;
+}
+
+.nav-menu a {
+  color: var(--text-white);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  font-size: 16px;
+}
+
+.nav-menu a:hover,
+.nav-menu a.active {
+  color: #a8d5ff;
+}
+
+.main-content {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.content-card {
+  background-color: var(--text-white);
+  border-radius: 20px;
+  padding: 50px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.page-title {
+  color: var(--accent-color);
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.page-subtitle {
+  color: var(--copyright-bg);
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  margin-bottom: 40px;
+}
+
+.contact-box {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.contact-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(14, 24, 48, 0.2);
+  border-color: var(--accent-color);
+}
+
+.contact-icon {
+  font-size: 48px;
+  color: var(--accent-color);
+  margin-bottom: 15px;
+}
+
+.contact-title {
+  color: var(--accent-color);
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.contact-info {
+  color: var(--copyright-bg);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.contact-info a {
+  color: var(--accent-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.contact-info a:hover {
+  text-decoration: underline;
+}
+
+.form-section {
+  margin-top: 40px;
+  padding-top: 40px;
+  border-top: 2px solid #e0e0e0;
+}
+
+.section-title {
+  color: var(--accent-color);
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.form-label {
+  color: var(--primary-bg);
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.form-control, .form-select {
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 12px 15px;
+  color: var(--primary-bg);
+  background-color: #f8f9fa;
+  transition: all 0.3s ease;
+  font-size: 15px;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 0.25rem rgba(14, 24, 48, 0.15);
+  background-color: var(--text-white);
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
+  color: var(--text-white);
+  border: none;
+  border-radius: 10px;
+  padding: 14px 40px;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: 100%;
+}
+
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(14, 24, 48, 0.4);
+}
+
+.footer {
+  background-color: var(--copyright-bg);
+  color: var(--text-white);
+  text-align: center;
+  padding: 20px;
+  margin-top: 50px;
+}
+
+.footer p {
+  margin: 0;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .header .container {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .nav-menu {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  .content-card {
+    padding: 30px 20px;
+  }
+
+  .page-title {
+    font-size: 32px;
+  }
+}
+</style>
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="logo-section">
+        <img src="logo.png" alt="Logo" class="logo-img">
+        <h1 class="site-title">Stitchify</h1>
+      </div>
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html" class="active">Contact</a></li>
+          <li><a href="login.html">Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="content-card">
+      <h1 class="page-title">Contact Us</h1>
+      <p class="page-subtitle">We'd love to hear from you</p>
+
+      <div class="contact-grid">
+        <div class="contact-box">
+          <div class="contact-icon">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+          <h3 class="contact-title">Visit Us</h3>
+          <p class="contact-info">
+            123 Fashion Street<br>
+            Gujranwala, Punjab<br>
+            Pakistan
+          </p>
+        </div>
+
+        <div class="contact-box">
+          <div class="contact-icon">
+            <i class="fas fa-phone"></i>
+          </div>
+          <h3 class="contact-title">Call Us</h3>
+          <p class="contact-info">
+            <a href="tel:+923001234567">+92 300 1234567</a><br>
+            <a href="tel:+923001234568">+92 300 1234568</a><br>
+            Mon - Sat: 9 AM - 8 PM
+          </p>
+        </div>
+
+        <div class="contact-box">
+          <div class="contact-icon">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <h3 class="contact-title">Email Us</h3>
+          <p class="contact-info">
+            <a href="mailto:info@tailoring.com">info@tailoring.com</a><br>
+            <a href="mailto:support@tailoring.com">support@tailoring.com</a><br>
+            24/7 Support Available
+          </p>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2 class="section-title">Send Us a Message</h2>
+        
+        <form id="contactForm" novalidate>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="fullName" class="form-label">Full Name *</label>
+              <input type="text" class="form-control" id="fullName" placeholder="Enter your name" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="email" class="form-label">Email Address *</label>
+              <input type="email" class="form-control" id="email" placeholder="your@email.com" required>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="phone" class="form-label">Phone Number *</label>
+              <input type="tel" class="form-control" id="phone" placeholder="+92 300 1234567" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="subject" class="form-label">Subject *</label>
+              <select class="form-select" id="subject" required>
+                <option value="">Select a subject</option>
+                <option value="general">General Inquiry</option>
+                <option value="tailor">Tailor Registration</option>
+                <option value="order">Order Related</option>
+                <option value="technical">Technical Support</option>
+                <option value="feedback">Feedback</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="message" class="form-label">Message *</label>
+            <textarea class="form-control" id="message" placeholder="Write your message here..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn-submit">
+            <i class="fas fa-paper-plane"></i> Send Message
+          </button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Tailoring Services. All rights reserved.</p>
+    <p style="margin-top: 10px;">
+      <a href="privacy.html" style="color: var(--text-white); margin: 0 10px;">Privacy Policy</a> | 
+      <a href="terms.html" style="color: var(--text-white); margin: 0 10px;">Terms & Conditions</a>
+    </p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const contactForm = document.getElementById('contactForm');
+
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      if (!contactForm.checkValidity()) {
+        contactForm.classList.add('was-validated');
+        return;
+      }
+
+      const formData = {
+        name: document.getElementById('fullName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        subject: document.getElementById('subject').value,
+        message: document.getElementById('message').value.trim()
+      };
+
+      console.log('Contact Form Data:', formData);
+      alert('Thank you for contacting us! We will get back to you soon.\n\nYour message has been sent successfully.');
+      
+      contactForm.reset();
+      contactForm.classList.remove('was-validated');
+    });
+  </script>
+</body>
+</html>

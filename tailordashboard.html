@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Tailor Dashboard - Tailoring Services</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+:root {
+  --primary-bg: #212529;
+  --accent-color: #1b2a4a;
+  --copyright-bg: #575a5b;
+  --text-white: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #f5f6fa;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 260px;
+  background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
+  padding: 20px 0;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.sidebar-logo {
+  text-align: center;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 20px;
+}
+
+.sidebar-logo img {
+  width: 80px;
+  height: 50px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.sidebar-logo h3 {
+  color: var(--text-white);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.user-info {
+  padding: 15px 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  margin: 0 15px 20px;
+  border-radius: 10px;
+}
+
+.user-info h4 {
+  color: var(--text-white);
+  font-size: 16px;
+  margin: 0 0 5px 0;
+}
+
+.user-info p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  margin: 0;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0 15px;
+}
+
+.sidebar-menu li {
+  margin-bottom: 5px;
+}
+
+.sidebar-menu a {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-size: 15px;
+  cursor: pointer;
+  position: relative;
+}
+
+.sidebar-menu a::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 70%;
+  background-color: var(--text-white);
+  border-radius: 0 4px 4px 0;
+  transition: width 0.3s ease;
+}
+
+.sidebar-menu a.active::before {
+  width: 4px;
+}
+
+.sidebar-menu a:hover,
+.sidebar-menu a.active {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: var(--text-white);
+  padding-left: 20px;
+}
+
+.sidebar-menu a i {
+  margin-right: 12px;
+  width: 20px;
+  text-align: center;
+}
+
+.logout-btn {
+  margin-top: 20px;
+  padding: 0 15px;
+}
+
+.logout-btn a {
+  background-color: rgba(220, 53, 69, 0.2);
+  color: #ff6b6b;
+}
+
+.logout-btn a:hover {
+  background-color: rgba(220, 53, 69, 0.3);
+}
+
+.main-content {
+  margin-left: 260px;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+.top-bar {
+  background-color: var(--text-white);
+  padding: 20px 30px;
+  border-radius: 15px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.top-bar h2 {
+  color: var(--accent-color);
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, var(--text-white) 0%, #f8f9fa 100%);
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-left: 4px solid var(--accent-color);
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.stat-icon.blue { background-color: #e3f2fd; color: #1976d2; }
+.stat-icon.green { background-color: #e8f5e9; color: #388e3c; }
+.stat-icon.orange { background-color: #fff3e0; color: #f57c00; }
+.stat-icon.purple { background-color: #f3e5f5; color: #7b1fa2; }
+
+.stat-number {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--accent-color);
+  margin: 0;
+}
+
+.stat-label {
+  color: var(--copyright-bg);
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.content-section {
+  background-color: var(--text-white);
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  margin-bottom: 25px;
+  scroll-margin-top: 20px;
+}
+
+.section-title {
+  color: var(--accent-color);
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.order-card {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  border-left: 4px solid var(--accent-color);
+  transition: all 0.3s ease;
+}
+
+.order-card:hover {
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 10px;
+}
+
+.order-id {
+  font-weight: 600;
+  color: var(--accent-color);
+  font-size: 16px;
+}
+
+.order-status {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-pending { background-color: #fff3e0; color: #f57c00; }
+.status-progress { background-color: #e3f2fd; color: #1976d2; }
+.status-completed { background-color: #e8f5e9; color: #388e3c; }
+
+.order-details {
+  color: var(--copyright-bg);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.order-details strong {
+  color: var(--primary-bg);
+}
+
+.order-actions {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+.btn-sm-custom {
+  padding: 6px 15px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-accept {
+  background-color: #388e3c;
+  color: var(--text-white);
+}
+
+.btn-accept:hover {
+  background-color: #2e7d32;
+}
+
+.btn-view {
+  background-color: var(--accent-color);
+  color: var(--text-white);
+}
+
+.btn-view:hover {
+  background-color: var(--primary-bg);
+}
+
+.btn-complete {
+  background-color: #1976d2;
+  color: var(--text-white);
+}
+
+.btn-complete:hover {
+  background-color: #1565c0;
+}
+
+.review-card {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.customer-name {
+  font-weight: 600;
+  color: var(--accent-color);
+  font-size: 16px;
+}
+
+.review-rating {
+  color: #f57c00;
+  font-size: 14px;
+}
+
+.review-text {
+  color: var(--copyright-bg);
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.review-date {
+  color: var(--copyright-bg);
+  font-size: 12px;
+  font-style: italic;
+}
+
+.performance-stat {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.performance-stat:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.performance-label {
+  color: var(--copyright-bg);
+  font-size: 14px;
+}
+
+.performance-value {
+  color: var(--accent-color);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .main-content {
+    margin-left: 0;
+  }
+}
+</style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <img src="logo.png" alt="Logo">
+      <h3>Stitchify</h3>
+    </div>
+
+    <div class="user-info">
+      <h4>Ahmed Tailors</h4>
+      <p>Professional Tailor</p>
+    </div>
+
+    <ul class="sidebar-menu">
+      <li><a href="#overview" data-section="overview"><i class="fas fa-th-large"></i> Dashboard</a></li>
+      <li><a href="#pending-orders" data-section="pending-orders"><i class="fas fa-hourglass-half"></i> Pending Orders</a></li>
+      <li><a href="#active-orders" data-section="active-orders"><i class="fas fa-tasks"></i> Active Orders</a></li>
+      <li><a href="#performance" data-section="performance"><i class="fas fa-chart-line"></i> Performance</a></li>
+      <li><a href="#reviews" data-section="reviews"><i class="fas fa-star"></i> Reviews</a></li>
+      <li><a href="profile.html"><i class="fas fa-user"></i> My Profile</a></li>
+      <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+    </ul>
+
+    <div class="logout-btn">
+      <a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="top-bar" id="overview">
+      <h2>Welcome Back, Ahmed!</h2>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon orange">
+          <i class="fas fa-hourglass-half"></i>
+        </div>
+        <h3 class="stat-number">8</h3>
+        <p class="stat-label">Pending Orders</p>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon blue">
+          <i class="fas fa-tasks"></i>
+        </div>
+        <h3 class="stat-number">12</h3>
+        <p class="stat-label">In Progress</p>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon green">
+          <i class="fas fa-check-double"></i>
+        </div>
+        <h3 class="stat-number">156</h3>
+        <p class="stat-label">Completed Orders</p>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon purple">
+          <i class="fas fa-wallet"></i>
+        </div>
+        <h3 class="stat-number">PKR 45K</h3>
+        <p class="stat-label">This Month Earnings</p>
+      </div>
+    </div>
+
+    <div class="content-section" id="pending-orders">
+      <h3 class="section-title">Pending Orders</h3>
+
+      <div class="order-card">
+        <div class="order-header">
+          <div class="order-id">#ORD-2024-045</div>
+          <span class="order-status status-pending">New Order</span>
+        </div>
+        <div class="order-details">
+          <p><strong>Customer:</strong> Ali Hassan</p>
+          <p><strong>Item:</strong> 3-Piece Wedding Suit</p>
+          <p><strong>Order Date:</strong> Jan 18, 2026</p>
+          <p><strong>Requested Delivery:</strong> Jan 28, 2026</p>
+          <p><strong>Price:</strong> PKR 15,000</p>
+        </div>
+        <div class="order-actions">
+          <button class="btn-sm-custom btn-accept" onclick="alert('Order accepted!')">Accept Order</button>
+          <button class="btn-sm-custom btn-view" onclick="alert('Order details coming soon!')">View Details</button>
+        </div>
+      </div>
+
+      <div class="order-card">
+        <div class="order-header">
+          <div class="order-id">#ORD-2024-046</div>
+          <span class="order-status status-pending">New Order</span>
+        </div>
+        <div class="order-details">
+          <p><strong>Customer:</strong> Sara Ahmed</p>
+          <p><strong>Item:</strong> Bridal Dress Alteration</p>
+          <p><strong>Order Date:</strong> Jan 18, 2026</p>
+          <p><strong>Requested Delivery:</strong> Jan 22, 2026</p>
+          <p><strong>Price:</strong> PKR 8,000</p>
+        </div>
+        <div class="order-actions">
+          <button class="btn-sm-custom btn-accept" onclick="alert('Order accepted!')">Accept Order</button>
+          <button class="btn-sm-custom btn-view" onclick="alert('Order details coming soon!')">View Details</button>
+        </div>
+      </div>
+
+      <div class="order-card">
+        <div class="order-header">
+          <div class="order-id">#ORD-2024-047</div>
+          <span class="order-status status-pending">New Order</span>
+        </div>
+        <div class="order-details">
+          <p><strong>Customer:</strong> Fahad Khan</p>
+          <p><strong>Item:</strong> Kurta Pajama</p>
+          <p><strong>Order Date:</strong> Jan 19, 2026</p>
+          <p><strong>Requested Delivery:</strong> Jan 25, 2026</p>
+          <p><strong>Price:</strong> PKR 5,500</p>
+        </div>
+        <div class="order-actions">
+          <button class="btn-sm-custom btn-accept" onclick="alert('Order accepted!')">Accept Order</button>
+          <button class="btn-sm-custom btn-view" onclick="alert('Order details coming soon!')">View Details</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-section" id="active-orders">
+      <h3 class="section-title">Active Orders</h3>
+
+      <div class="order-card">
+        <div class="order-header">
+          <div class="order-id">#ORD-2024-042</div>
+          <span class="order-status status-progress">In Progress</span>
+        </div>
+        <div class="order-details">
+          <p><strong>Customer:</strong> Usman Khan</p>
+          <p><strong>Item:</strong> Shalwar Kameez</p>
+          <p><strong>Order Date:</strong> Jan 15, 2026</p>
+          <p><strong>Deadline:</strong> Jan 20, 2026</p>
+          <p><strong>Progress:</strong> 60%</p>
+        </div>
+        <div class="order-actions">
+          <button class="btn-sm-custom btn-complete" onclick="alert('Mark as completed!')">Mark Complete</button>
+          <button class="btn-sm-custom btn-view" onclick="alert('Order details coming soon!')">View Details</button>
+        </div>
+      </div>
+
+      <div class="order-card">
+        <div class="order-header">
+          <div class="order-id">#ORD-2024-043</div>
+          <span class="order-status status-progress">In Progress</span>
+        </div>
+        <div class="order-details">
+          <p><strong>Customer:</strong> Fatima Ali</p>
+          <p><strong>Item:</strong> Kurta Pajama</p>
+          <p><strong>Order Date:</strong> Jan 16, 2026</p>
+          <p><strong>Deadline:</strong> Jan 23, 2026</p>
+          <p><strong>Progress:</strong> 40%</p>
+        </div>
+        <div class="order-actions">
+          <button class="btn-sm-custom btn-complete" onclick="alert('Mark as completed!')">Mark Complete</button>
+          <button class="btn-sm-custom btn-view" onclick="alert('Order details coming soon!')">View Details</button>
+        </div>
+      </div>
+
+      <div class="order-card">
+        <div class="order-header">
+          <div class="order-id">#ORD-2024-044</div>
+          <span class="order-status status-progress">In Progress</span>
+        </div>
+        <div class="order-details">
+          <p><strong>Customer:</strong> Ayesha Mahmood</p>
+          <p><strong>Item:</strong> Wedding Lehenga</p>
+          <p><strong>Order Date:</strong> Jan 12, 2026</p>
+          <p><strong>Deadline:</strong> Jan 30, 2026</p>
+          <p><strong>Progress:</strong> 25%</p>
+        </div>
+        <div class="order-actions">
+          <button class="btn-sm-custom btn-complete" onclick="alert('Mark as completed!')">Mark Complete</button>
+          <button class="btn-sm-custom btn-view" onclick="alert('Order details coming soon!')">View Details</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-section" id="performance">
+      <h3 class="section-title">Performance Metrics</h3>
+      
+      <div class="performance-stat">
+        <span class="performance-label">Overall Rating</span>
+        <span class="performance-value">⭐ 4.5/5.0</span>
+      </div>
+
+      <div class="performance-stat">
+        <span class="performance-label">Total Orders Completed</span>
+        <span class="performance-value">156 orders</span>
+      </div>
+
+      <div class="performance-stat">
+        <span class="performance-label">Completion Rate</span>
+        <span class="performance-value">98%</span>
+      </div>
+
+      <div class="performance-stat">
+        <span class="performance-label">On-Time Delivery</span>
+        <span class="performance-value">95%</span>
+      </div>
+
+      <div class="performance-stat">
+        <span class="performance-label">Average Response Time</span>
+        <span class="performance-value">2 hours</span>
+      </div>
+
+      <div class="performance-stat">
+        <span class="performance-label">This Month Earnings</span>
+        <span class="performance-value">PKR 45,000</span>
+      </div>
+
+      <div class="performance-stat">
+        <span class="performance-label">Total Earnings (All Time)</span>
+        <span class="performance-value">PKR 825,000</span>
+      </div>
+    </div>
+
+    <div class="content-section" id="reviews">
+      <h3 class="section-title">Recent Reviews</h3>
+
+      <div class="review-card">
+        <div class="review-header">
+          <span class="customer-name">Ali Hassan</span>
+          <div class="review-rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+        </div>
+        <p class="review-text">"Excellent work! The suit fit perfectly and was delivered on time. Highly recommended!"</p>
+        <p class="review-date">2 days ago</p>
+      </div>
+
+      <div class="review-card">
+        <div class="review-header">
+          <span class="customer-name">Sara Ahmed</span>
+          <div class="review-rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="far fa-star"></i>
+          </div>
+        </div>
+        <p class="review-text">"Great quality and attention to detail. Very professional service."</p>
+        <p class="review-date">5 days ago</p>
+      </div>
+
+      <div class="review-card">
+        <div class="review-header">
+          <span class="customer-name">Usman Khan</span>
+          <div class="review-rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+          </div>
+        </div>
+        <p class="review-text">"Very satisfied with the workmanship. Will order again!"</p>
+        <p class="review-date">1 week ago</p>
+      </div>
+
+      <div class="review-card">
+        <div class="review-header">
+          <span class="customer-name">Fatima Ali</span>
+          <div class="review-rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+        </div>
+        <p class="review-text">"Perfect fit and beautiful stitching. Ahmed is a master tailor!"</p>
+        <p class="review-date">1 week ago</p>
+      </div>
+
+      <div class="review-card">
+        <div class="review-header">
+          <span class="customer-name">Fahad Khan</span>
+          <div class="review-rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="far fa-star"></i>
+          </div>
+        </div>
+        <p class="review-text">"Good work overall. Minor delay but quality was worth the wait."</p>
+        <p class="review-date">2 weeks ago</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Smooth scroll for sidebar links
+    document.querySelectorAll('.sidebar-menu a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Spy scroll - auto highlight active section
+    const sections = document.querySelectorAll('.content-section, .top-bar');
+    const navLinks = document.querySelectorAll('.sidebar-menu a[data-section]');
+
+    function updateActiveLink() {
+      let current = '';
+      
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (window.scrollY >= (sectionTop - 100)) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('data-section') === current) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveLink);
+    updateActiveLink(); // Run on page load
+  </script>
+</body>
+</html>

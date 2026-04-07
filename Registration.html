@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Registration - Tailoring Services</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+:root {
+  --primary-bg: #212529;
+  --accent-color: #1B2A4A;
+  --copyright-bg: #575a5b;
+  --text-white: #ffffff;
+}
+
+body {
+  /* background: linear-gradient(135deg, var(--primary-bg) 0%, var(--accent-color) 100%); */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.registration-wrapper {
+  width: 500px;
+  max-width: 95%;
+  background-color: var(--text-white);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.logo-container {
+  background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
+  padding: 30px;
+  text-align: center;
+  border-bottom: 3px solid var(--copyright-bg);
+}
+
+.logo-image {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto;
+  display: block;
+  object-fit: contain;
+  border-radius: 50%;
+  padding: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.form-container {
+  background-color: var(--text-white);
+  display: flex;
+  width: 200%;
+  transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.form-container.active {
+  transform: translateX(-50%);
+}
+
+.form-step {
+  width: 50%;
+  padding: 40px;
+  box-sizing: border-box;
+}
+
+.registration-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.registration-header h2 {
+  color: var(--accent-color);
+  font-weight: 700;
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.registration-header p {
+  color: var(--copyright-bg);
+  font-size: 14px;
+}
+
+.form-label {
+  color: var(--primary-bg);
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.form-control, .form-select {
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 12px 15px;
+  color: var(--primary-bg);
+  background-color: #f8f9fa;
+  transition: all 0.3s ease;
+  font-size: 15px;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 0.25rem rgba(14, 24, 48, 0.15);
+  background-color: var(--text-white);
+}
+
+.form-control.is-invalid, .form-select.is-invalid {
+  border-color: #dc3545;
+}
+
+.btn-custom {
+  background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
+  color: var(--text-white);
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-weight: 600;
+  font-size: 16px;
+  width: 100%;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-custom:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(14, 24, 48, 0.4);
+}
+
+.btn-nav {
+  background-color: transparent;
+  border: none;
+  color: var(--copyright-bg);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 10px 0;
+  transition: color 0.3s ease;
+}
+
+.btn-nav:hover {
+  color: var(--accent-color);
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 20px;
+  color: var(--copyright-bg);
+  font-size: 14px;
+}
+
+.login-link a {
+  color: var(--accent-color);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
+
+.error-text {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 5px;
+  display: block;
+}
+
+.success-text {
+  color: #28a745;
+  font-size: 0.875rem;
+  margin-top: 5px;
+  display: block;
+}
+
+.password-toggle {
+  position: relative;
+}
+
+.password-toggle .toggle-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: var(--copyright-bg);
+  opacity: 0.6;
+  display: none;
+  font-size: 1.1rem;
+  transition: opacity 0.3s ease;
+}
+
+.password-toggle .toggle-icon:hover {
+  opacity: 1;
+}
+
+.password-toggle .toggle-icon.show {
+  display: block;
+}
+
+.requirement-text {
+  font-size: 0.8rem;
+  color: var(--copyright-bg);
+  margin-top: 5px;
+  line-height: 1.4;
+}
+
+.step-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.step-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+.step-dot.active {
+  background-color: var(--accent-color);
+  width: 30px;
+  border-radius: 6px;
+}
+
+#backBtn {
+  display: inline-block;
+  width: auto;
+  margin-bottom: 10px;
+}
+</style>
+</head>
+<body>
+<div class="registration-wrapper">
+  <div class="logo-container">
+    <img src="logo.png" alt="Tailoring Services Logo" class="logo-image">
+  </div>
+
+  <div class="form-container" id="formWrapper">
+    <!-- STEP 1 -->
+    <div class="form-step" id="step1">
+      <div class="step-indicator">
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+      </div>
+      
+      <div class="registration-header">
+        <h2>Create Account</h2>
+        <p>Join our tailoring community</p>
+      </div>
+
+      <form method="POST" action="/register" id="step1Form" novalidate>
+        @csrf
+        <div class="mb-3">
+          <label for="name" class="form-label">Full Name *</label>
+          <input id="name" name="name" class="form-control" placeholder="Enter your full name" type="text" value="{{ old('name') }}" required>
+          <!-- <input id="name" class="form-control" placeholder="Enter your full name" type="text" required> -->
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label">Email Address *</label>
+          <input id="email" name="email" class="form-control" placeholder="example@gmail.com" type="email" required>
+          <!-- <input id="email" class="form-control" placeholder="example@gmail.com" type="email" required> -->
+          <span id="emailError" class="error-text"></span>
+        </div>
+
+        <div class="mb-3">
+          <label for="phone" class="form-label">Phone Number *</label>
+          <input id="phone" name="phone" class="form-control" placeholder="+92 300 1234567" type="tel" required>
+          <!-- <input id="phone" class="form-control" placeholder="+92 300 1234567" type="tel" required> -->
+        </div>
+
+        <div class="mb-3 password-toggle">
+          <label for="password" class="form-label">Password *</label>
+          <input id="password" name="password" class="form-control" placeholder="Create a strong password" type="password" required>
+          <!-- <input id="password" class="form-control" placeholder="Create a strong password" type="password" required> -->
+          <i id="togglePassword" class="fas fa-eye toggle-icon" title="Show/hide password" role="button" aria-label="Toggle password visibility"></i>
+          <span class="requirement-text">Must be at least 8 characters with letters, numbers, and special characters (!@#$%^&*)</span>
+          <span id="passwordError" class="error-text"></span>
+        </div>
+
+        <button id="nextBtn" class="btn-custom" type="button">
+          <i class="fas fa-arrow-right"></i> Continue
+        </button>
+        
+        <div class="login-link">
+          Already have an account? <a href="login.html">Log In</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="form-step" id="step2">
+      <div class="step-indicator">
+        <div class="step-dot"></div>
+        <div class="step-dot active"></div>
+      </div>
+      
+      <div class="registration-header">
+        <h2>Complete Profile</h2>
+        <p>Tell us more about yourself</p>
+      </div>
+
+      <form id="step2Form" novalidate>
+        <div class="mb-3">
+          <label for="role" class="form-label">I am a *</label>
+          <select id="role" name="role" class="form-select" required>
+          <!-- <select id="role" class="form-select" required> -->
+            <option value="">Select your role</option>
+            <option value="customer">Customer</option>
+            <option value="tailor">Tailor</option>
+            <option value="delivery_staff">Delivery Staff</option>
+          </select>
+        </div>
+
+        <div id="tailorFields" class="mb-3" style="display:none;">
+          <label for="address" class="form-label">Shop Address *</label>
+          <textarea id="address" name="address" class="form-control" rows="2" placeholder="Enter your shop address"></textarea>
+          <!-- <textarea id="address" class="form-control" rows="2" placeholder="Enter your shop address"></textarea> -->
+          
+          <div class="mt-3">
+            <label for="category" class="form-label">Specialization *</label>
+            <select id="category" name="category" class="form-select"></select>
+            <!-- <select id="category" class="form-select"> -->
+              <option value="">Select specialization</option>
+              <option value="men">Men's Clothing</option>
+              <option value="women">Women's Clothing</option>
+              <option value="child">Children's Clothing</option>
+              <option value="all">All Categories</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="button" class="btn-nav" id="backBtn">
+          <i class="fas fa-arrow-left"></i> Back
+        </button>
+        <button type="submit" class="btn-custom">
+          <i class="fas fa-user-check"></i> Register
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script>
+const wrapper = document.getElementById('formWrapper');
+const nextBtn = document.getElementById('nextBtn');
+const backBtn = document.getElementById('backBtn');
+const step1Form = document.getElementById('step1Form');
+const step2Form = document.getElementById('step2Form');
+
+const nameInput = document.getElementById('name');
+const emailInput = document.getElementById('email');
+const phoneInput = document.getElementById('phone');
+const passwordInput = document.getElementById('password');
+const togglePassword = document.getElementById('togglePassword');
+const emailError = document.getElementById('emailError');
+const passwordError = document.getElementById('passwordError');
+
+const roleSelect = document.getElementById('role');
+const tailorFields = document.getElementById('tailorFields');
+const addressInput = document.getElementById('address');
+const categorySelect = document.getElementById('category');
+
+const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}:"<>?~]).{8,}$/;
+
+// Email validation with detailed feedback
+function validateEmail(email) {
+  emailError.textContent = '';
+  
+  if (!email) return false;
+  
+  if (!email.includes('@')) {
+    emailError.textContent = 'Email must contain @ symbol';
+    return false;
+  }
+  
+  const parts = email.split('@');
+  if (parts.length !== 2 || !parts[0] || !parts[1]) {
+    emailError.textContent = 'Invalid email format. Use: example@domain.com';
+    return false;
+  }
+  
+  if (!parts[1].includes('.')) {
+    emailError.textContent = 'Email must contain a domain (e.g., gmail.com)';
+    return false;
+  }
+  
+  const domainParts = parts[1].split('.');
+  if (domainParts.some(part => !part)) {
+    emailError.textContent = 'Invalid domain format';
+    return false;
+  }
+  
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    emailError.textContent = 'Please enter a valid email address';
+    return false;
+  }
+  
+  return true;
+}
+
+emailInput.addEventListener('blur', () => {
+  if (emailInput.value.trim()) {
+    validateEmail(emailInput.value.trim());
+  }
+});
+
+emailInput.addEventListener('input', () => {
+  if (emailError.textContent) {
+    validateEmail(emailInput.value.trim());
+  }
+});
+
+// Password toggle functionality
+passwordInput.addEventListener('input', () => {
+  const value = passwordInput.value;
+  
+  if (value.length > 0) {
+    togglePassword.classList.add('show');
+  } else {
+    togglePassword.classList.remove('show');
+    passwordInput.setAttribute('type', 'password');
+    togglePassword.classList.remove('fa-eye-slash');
+    togglePassword.classList.add('fa-eye');
+  }
+  
+  passwordError.textContent = '';
+});
+
+togglePassword.addEventListener('click', () => {
+  const currentType = passwordInput.getAttribute('type');
+  if (currentType === 'password') {
+    passwordInput.setAttribute('type', 'text');
+    togglePassword.classList.remove('fa-eye');
+    togglePassword.classList.add('fa-eye-slash');
+  } else {
+    passwordInput.setAttribute('type', 'password');
+    togglePassword.classList.remove('fa-eye-slash');
+    togglePassword.classList.add('fa-eye');
+  }
+});
+
+// Role selection handling
+roleSelect.addEventListener('change', () => {
+  if (roleSelect.value === 'tailor') {
+    tailorFields.style.display = 'block';
+    addressInput.setAttribute('required', '');
+    categorySelect.setAttribute('required', '');
+  } else {
+    tailorFields.style.display = 'none';
+    addressInput.removeAttribute('required');
+    categorySelect.removeAttribute('required');
+  }
+});
+
+// Next button - Step 1 validation
+nextBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  emailError.textContent = '';
+  passwordError.textContent = '';
+  
+  // Validate all fields
+  let isValid = true;
+  
+  if (!nameInput.value.trim()) {
+    nameInput.classList.add('is-invalid');
+    isValid = false;
+  } else {
+    nameInput.classList.remove('is-invalid');
+  }
+  
+  if (!validateEmail(emailInput.value.trim())) {
+    emailInput.classList.add('is-invalid');
+    isValid = false;
+  } else {
+    emailInput.classList.remove('is-invalid');
+  }
+  
+  if (!phoneInput.value.trim()) {
+    phoneInput.classList.add('is-invalid');
+    isValid = false;
+  } else {
+    phoneInput.classList.remove('is-invalid');
+  }
+  
+  const pw = passwordInput.value.trim();
+  if (!passwordRegex.test(pw)) {
+    passwordError.textContent = 'Password must be at least 8 characters with letters, numbers, and special characters';
+    passwordInput.classList.add('is-invalid');
+    passwordInput.focus();
+    isValid = false;
+  } else {
+    passwordInput.classList.remove('is-invalid');
+  }
+  
+  if (isValid) {
+    wrapper.classList.add('active');
+  }
+});
+
+// Back button
+backBtn.addEventListener('click', () => {
+  wrapper.classList.remove('active');
+});
+
+// Step 2 form submission
+step2Form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  
+  if (!step2Form.checkValidity()) {
+    step2Form.classList.add('was-validated');
+    return;
+  }
+  
+  const data = {
+    name: nameInput.value.trim(),
+    email: emailInput.value.trim(),
+    phone: phoneInput.value.trim(),
+    password: passwordInput.value,
+    role: roleSelect.value
+  };
+  
+  if (data.role === 'tailor') {
+    data.address = addressInput.value.trim();
+    data.category = categorySelect.value;
+  }
+  
+  console.log('Registration Data:', data);
+  alert('Registration successful!\n\nEmail: ' + data.email + '\nRole: ' + data.role.replace('_', ' ').toUpperCase());
+  
+  setTimeout(() => location.reload(), 1500);
+});
+</script>
+</body>
+</html>
