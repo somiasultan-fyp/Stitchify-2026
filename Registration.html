@@ -257,10 +257,9 @@ body {
       </div>
 
       <form method="POST" action="/register" id="step1Form" novalidate>
-        @csrf
         <div class="mb-3">
           <label for="name" class="form-label">Full Name *</label>
-          <input id="name" name="name" class="form-control" placeholder="Enter your full name" type="text" value="{{ old('name') }}" required>
+          <input id="name" name="name" class="form-control" placeholder="Enter your full name" type="text" >
           <!-- <input id="name" class="form-control" placeholder="Enter your full name" type="text" required> -->
         </div>
 
