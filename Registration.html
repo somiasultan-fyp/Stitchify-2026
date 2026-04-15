@@ -15,7 +15,6 @@
 }
 
 body {
-  /* background: linear-gradient(135deg, var(--primary-bg) 0%, var(--accent-color) 100%); */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   min-height: 100vh;
   display: flex;
@@ -265,20 +264,17 @@ body {
         <div class="mb-3">
           <label for="email" class="form-label">Email Address *</label>
           <input id="email" name="email" class="form-control" placeholder="example@gmail.com" type="email" required>
-          <!-- <input id="email" class="form-control" placeholder="example@gmail.com" type="email" required> -->
           <span id="emailError" class="error-text"></span>
         </div>
 
         <div class="mb-3">
           <label for="phone" class="form-label">Phone Number *</label>
           <input id="phone" name="phone" class="form-control" placeholder="+92 300 1234567" type="tel" required>
-          <!-- <input id="phone" class="form-control" placeholder="+92 300 1234567" type="tel" required> -->
         </div>
 
         <div class="mb-3 password-toggle">
           <label for="password" class="form-label">Password *</label>
           <input id="password" name="password" class="form-control" placeholder="Create a strong password" type="password" required>
-          <!-- <input id="password" class="form-control" placeholder="Create a strong password" type="password" required> -->
           <i id="togglePassword" class="fas fa-eye toggle-icon" title="Show/hide password" role="button" aria-label="Toggle password visibility"></i>
           <span class="requirement-text">Must be at least 8 characters with letters, numbers, and special characters (!@#$%^&*)</span>
           <span id="passwordError" class="error-text"></span>
@@ -310,7 +306,6 @@ body {
         <div class="mb-3">
           <label for="role" class="form-label">I am a *</label>
           <select id="role" name="role" class="form-select" required>
-          <!-- <select id="role" class="form-select" required> -->
             <option value="">Select your role</option>
             <option value="customer">Customer</option>
             <option value="tailor">Tailor</option>
@@ -320,12 +315,10 @@ body {
         <div id="tailorFields" class="mb-3" style="display:none;">
           <label for="address" class="form-label">Shop Address *</label>
           <textarea id="address" name="address" class="form-control" rows="2" placeholder="Enter your shop address"></textarea>
-          <!-- <textarea id="address" class="form-control" rows="2" placeholder="Enter your shop address"></textarea> -->
           
           <div class="mt-3">
             <label for="category" class="form-label">Specialization *</label>
             <select id="category" name="category" class="form-select">
-            <!-- <select id="category" class="form-select"> -->
               <option value="">Select specialization</option>
               <option value="men">Men's Clothing</option>
               <option value="women">Women's Clothing</option>
@@ -333,6 +326,14 @@ body {
               <option value="all">All Categories</option>
             </select>
           </div>
+
+          <!-- SLOT CAPACITY FIELD -->
+          <div class="mt-3">
+            <label for="slotCapacity" class="form-label">Slot Capacity *</label>
+            <input id="slotCapacity" name="slotCapacity" class="form-control" type="number" min="1" max="100" placeholder="e.g. 10 (how many orders you can handle at once)">
+            <span id="slotError" class="error-text"></span>
+          </div>
+
         </div>
 
         <button type="button" class="btn-nav" id="backBtn">
@@ -366,62 +367,32 @@ const roleSelect = document.getElementById('role');
 const tailorFields = document.getElementById('tailorFields');
 const addressInput = document.getElementById('address');
 const categorySelect = document.getElementById('category');
+const slotCapacityInput = document.getElementById('slotCapacity');
+const slotError = document.getElementById('slotError');
 
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}:"<>?~]).{8,}$/;
 
-// Email validation with detailed feedback
+// Email validation
 function validateEmail(email) {
   emailError.textContent = '';
-  
   if (!email) return false;
-  
-  if (!email.includes('@')) {
-    emailError.textContent = 'Email must contain @ symbol';
-    return false;
-  }
-  
+  if (!email.includes('@')) { emailError.textContent = 'Email must contain @ symbol'; return false; }
   const parts = email.split('@');
-  if (parts.length !== 2 || !parts[0] || !parts[1]) {
-    emailError.textContent = 'Invalid email format. Use: example@domain.com';
-    return false;
-  }
-  
-  if (!parts[1].includes('.')) {
-    emailError.textContent = 'Email must contain a domain (e.g., gmail.com)';
-    return false;
-  }
-  
+  if (parts.length !== 2 || !parts[0] || !parts[1]) { emailError.textContent = 'Invalid email format. Use: example@domain.com'; return false; }
+  if (!parts[1].includes('.')) { emailError.textContent = 'Email must contain a domain (e.g., gmail.com)'; return false; }
   const domainParts = parts[1].split('.');
-  if (domainParts.some(part => !part)) {
-    emailError.textContent = 'Invalid domain format';
-    return false;
-  }
-  
+  if (domainParts.some(part => !part)) { emailError.textContent = 'Invalid domain format'; return false; }
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    emailError.textContent = 'Please enter a valid email address';
-    return false;
-  }
-  
+  if (!emailRegex.test(email)) { emailError.textContent = 'Please enter a valid email address'; return false; }
   return true;
 }
 
-emailInput.addEventListener('blur', () => {
-  if (emailInput.value.trim()) {
-    validateEmail(emailInput.value.trim());
-  }
-});
+emailInput.addEventListener('blur', () => { if (emailInput.value.trim()) validateEmail(emailInput.value.trim()); });
+emailInput.addEventListener('input', () => { if (emailError.textContent) validateEmail(emailInput.value.trim()); });
 
-emailInput.addEventListener('input', () => {
-  if (emailError.textContent) {
-    validateEmail(emailInput.value.trim());
-  }
-});
-
-// Password toggle functionality
+// Password toggle
 passwordInput.addEventListener('input', () => {
   const value = passwordInput.value;
-  
   if (value.length > 0) {
     togglePassword.classList.add('show');
   } else {
@@ -430,7 +401,6 @@ passwordInput.addEventListener('input', () => {
     togglePassword.classList.remove('fa-eye-slash');
     togglePassword.classList.add('fa-eye');
   }
-  
   passwordError.textContent = '';
 });
 
@@ -447,49 +417,37 @@ togglePassword.addEventListener('click', () => {
   }
 });
 
-// Role selection handling
+// Role selection
 roleSelect.addEventListener('change', () => {
   if (roleSelect.value === 'tailor') {
     tailorFields.style.display = 'block';
     addressInput.setAttribute('required', '');
     categorySelect.setAttribute('required', '');
+    slotCapacityInput.setAttribute('required', '');
   } else {
     tailorFields.style.display = 'none';
     addressInput.removeAttribute('required');
     categorySelect.removeAttribute('required');
+    slotCapacityInput.removeAttribute('required');
   }
 });
 
-// Next button - Step 1 validation
+// Next button
 nextBtn.addEventListener('click', (e) => {
   e.preventDefault();
   emailError.textContent = '';
   passwordError.textContent = '';
-  
-  // Validate all fields
   let isValid = true;
-  
-  if (!nameInput.value.trim()) {
-    nameInput.classList.add('is-invalid');
-    isValid = false;
-  } else {
-    nameInput.classList.remove('is-invalid');
-  }
-  
-  if (!validateEmail(emailInput.value.trim())) {
-    emailInput.classList.add('is-invalid');
-    isValid = false;
-  } else {
-    emailInput.classList.remove('is-invalid');
-  }
-  
-  if (!phoneInput.value.trim()) {
-    phoneInput.classList.add('is-invalid');
-    isValid = false;
-  } else {
-    phoneInput.classList.remove('is-invalid');
-  }
-  
+
+  if (!nameInput.value.trim()) { nameInput.classList.add('is-invalid'); isValid = false; }
+  else nameInput.classList.remove('is-invalid');
+
+  if (!validateEmail(emailInput.value.trim())) { emailInput.classList.add('is-invalid'); isValid = false; }
+  else emailInput.classList.remove('is-invalid');
+
+  if (!phoneInput.value.trim()) { phoneInput.classList.add('is-invalid'); isValid = false; }
+  else phoneInput.classList.remove('is-invalid');
+
   const pw = passwordInput.value.trim();
   if (!passwordRegex.test(pw)) {
     passwordError.textContent = 'Password must be at least 8 characters with letters, numbers, and special characters';
@@ -499,26 +457,46 @@ nextBtn.addEventListener('click', (e) => {
   } else {
     passwordInput.classList.remove('is-invalid');
   }
-  
-  if (isValid) {
-    wrapper.classList.add('active');
-  }
+
+  if (isValid) wrapper.classList.add('active');
 });
 
 // Back button
-backBtn.addEventListener('click', () => {
-  wrapper.classList.remove('active');
-});
+backBtn.addEventListener('click', () => wrapper.classList.remove('active'));
 
-// Step 2 form submission
+// Step 2 submit
 step2Form.addEventListener('submit', (e) => {
   e.preventDefault();
-  
-  if (!step2Form.checkValidity()) {
-    step2Form.classList.add('was-validated');
-    return;
+
+  let isValid = true;
+
+  if (!roleSelect.value) {
+    roleSelect.classList.add('is-invalid');
+    isValid = false;
+  } else {
+    roleSelect.classList.remove('is-invalid');
   }
-  
+
+  if (roleSelect.value === 'tailor') {
+    if (!addressInput.value.trim()) { addressInput.classList.add('is-invalid'); isValid = false; }
+    else addressInput.classList.remove('is-invalid');
+
+    if (!categorySelect.value) { categorySelect.classList.add('is-invalid'); isValid = false; }
+    else categorySelect.classList.remove('is-invalid');
+
+    const slot = slotCapacityInput.value.trim();
+    if (!slot || slot < 1) {
+      slotCapacityInput.classList.add('is-invalid');
+      slotError.textContent = 'Please enter a valid slot capacity (minimum 1)';
+      isValid = false;
+    } else {
+      slotCapacityInput.classList.remove('is-invalid');
+      slotError.textContent = '';
+    }
+  }
+
+  if (!isValid) return;
+
   const data = {
     name: nameInput.value.trim(),
     email: emailInput.value.trim(),
@@ -526,15 +504,15 @@ step2Form.addEventListener('submit', (e) => {
     password: passwordInput.value,
     role: roleSelect.value
   };
-  
+
   if (data.role === 'tailor') {
     data.address = addressInput.value.trim();
     data.category = categorySelect.value;
+    data.slotCapacity = slotCapacityInput.value.trim();
   }
-  
+
   console.log('Registration Data:', data);
-  alert('Registration successful!\n\nEmail: ' + data.email + '\nRole: ' + data.role.replace('_', ' ').toUpperCase());
-  
+  alert('Registration successful!\n\nEmail: ' + data.email + '\nRole: ' + data.role.toUpperCase());
   setTimeout(() => location.reload(), 1500);
 });
 </script>

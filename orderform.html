@@ -308,7 +308,13 @@ body {
 
     <div class="mb-3">
       <label class="form-label">Special Instructions</label>
-      <textarea id="notes" class="form-control" rows="2" placeholder="Collar style, pocket type, embroidery detail, etc."></textarea>
+      <textarea id="notes" class="form-control" rows="2" placeholder="collar style, pocket type, embroidery detail, etc."></textarea>
+      <div id="imagePreviewBox" style="display:none; margin-top:10px; display:flex; flex-wrap:wrap; gap:8px;"></div>
+      <label for="designImages" style="display:flex; align-items:center; gap:8px; margin-top:10px; padding:11px 15px; border:2px dashed #e0e0e0; border-radius:10px; background:#f8f9fa; cursor:pointer; transition:border-color 0.3s;">
+        <i class="fas fa-image" style="color:#1B2A4A; font-size:18px;"></i>
+        <span style="font-size:14px; color:#575a5b;" id="imageLabel">Upload design</span>
+      </label>
+      <input type="file" id="designImages" accept="image/*" multiple style="display:none;">
     </div>
 
     <!-- MEASUREMENTS -->
@@ -354,7 +360,6 @@ body {
       <label class="form-label">Fabric Color *</label>
       <input id="fabricColorText" class="form-control" placeholder="e.g. Navy Blue, Off White, Dark Red" type="text">
       <span class="error-text" id="fabricColorErr"></span>
-      <span class="requirement-text">Type the name of Color</span>
     </div>
 
     <!-- PAYMENT -->
@@ -377,6 +382,33 @@ body {
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 <script>
+
+  // Image upload preview
+  document.getElementById('designImages').addEventListener('change', function () {
+    const previewBox = document.getElementById('imagePreviewBox');
+    const label = document.getElementById('imageLabel');
+    const files = Array.from(this.files);
+    previewBox.innerHTML = '';
+    previewBox.style.display = files.length ? 'flex' : 'none';
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'width:72px; height:72px;';
+        wrap.innerHTML = `<img src="${e.target.result}" style="width:72px;height:72px;object-fit:cover;border-radius:8px;border:2px solid #e0e0e0;">`;
+        previewBox.appendChild(wrap);
+      };
+      reader.readAsDataURL(file);
+    });
+    label.textContent = files.length > 0 ? files.length + ' picture(s) selected' : 'Upload design pictures (optional)';
+  });
+
+  document.querySelector('label[for="designImages"]').addEventListener('mouseover', function() {
+    this.style.borderColor = '#1B2A4A';
+  });
+  document.querySelector('label[for="designImages"]').addEventListener('mouseout', function() {
+    this.style.borderColor = '#e0e0e0';
+  });
 
   // Validation
   function validate() {
