@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Login - Tailoring Services</title>
@@ -374,44 +375,45 @@ forgotPasswordLink.addEventListener('click', (e) => {
 });
 
 // Form submission
-loginForm.addEventListener('submit', (e) => {
+// Login form submit — apne login.html ke submit listener ko replace karo
+
+loginForm.addEventListener('submit', async (e) => {
   e.preventDefault();
-  emailError.textContent = '';
-  passwordError.textContent = '';
-  
-  let isValid = true;
-  
-  // Validate email
-  if (!validateEmail(emailInput.value.trim())) {
-    emailInput.classList.add('is-invalid');
-    isValid = false;
-  } else {
-    emailInput.classList.remove('is-invalid');
+
+  const email    = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const errorDiv = document.getElementById('loginError'); // login.html mein yeh span/div hona chahiye
+
+  if (!email || !password) {
+    errorDiv.textContent = 'Please enter email and password.';
+    return;
   }
-  
-  // Validate password
-  if (!passwordInput.value.trim()) {
-    passwordError.textContent = 'Password is required';
-    passwordInput.classList.add('is-invalid');
-    isValid = false;
-  } else {
-    passwordInput.classList.remove('is-invalid');
-  }
-  
-  if (isValid) {
-    const loginData = {
-      email: emailInput.value.trim(),
-      password: passwordInput.value,
-      rememberMe: document.getElementById('rememberMe').checked
-    };
-    
-    console.log('Login Data:', loginData);
-    alert('Login successful!\n\nEmail: ' + loginData.email + '\nRemember me: ' + (loginData.rememberMe ? 'Yes' : 'No'));
-    
-    // Redirect or process login here
-    // window.location.href = 'dashboard.html';
+
+  try {
+    const response = await fetch('/login', {
+      method:  'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept':       'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      window.location.href = result.redirect;
+    } else {
+      errorDiv.textContent = result.message || 'Invalid credentials.';
+      errorDiv.style.display = 'block';
+    }
+  } catch (err) {
+    console.error('Error:', err);
+    errorDiv.textContent = 'Something went wrong. Please try again.';
   }
 });
+    
 </script>
 </body>
 </html>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Registration - Tailoring Services</title>
@@ -464,8 +465,10 @@ nextBtn.addEventListener('click', (e) => {
 // Back button
 backBtn.addEventListener('click', () => wrapper.classList.remove('active'));
 
-// Step 2 submit
-step2Form.addEventListener('submit', (e) => {
+// Step 2 form submission — Laravel se connect karo
+// Yeh apne registration.html ke step2Form submit listener ko replace karo
+
+step2Form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   let isValid = true;
@@ -497,23 +500,55 @@ step2Form.addEventListener('submit', (e) => {
 
   if (!isValid) return;
 
-  const data = {
-    name: nameInput.value.trim(),
-    email: emailInput.value.trim(),
-    phone: phoneInput.value.trim(),
+  // Data taiyar karo
+  const formData = {
+    name:     nameInput.value.trim(),
+    email:    emailInput.value.trim(),
+    phone:    phoneInput.value.trim(),
     password: passwordInput.value,
-    role: roleSelect.value
+    role:     roleSelect.value,
+    _token:   document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
   };
 
-  if (data.role === 'tailor') {
-    data.address = addressInput.value.trim();
-    data.category = categorySelect.value;
-    data.slotCapacity = slotCapacityInput.value.trim();
+  if (formData.role === 'tailor') {
+    formData.address       = addressInput.value.trim();
+    formData.category      = categorySelect.value;
+    formData.slot_capacity = slotCapacityInput.value.trim();
   }
 
-  console.log('Registration Data:', data);
-  alert('Registration successful!\n\nEmail: ' + data.email + '\nRole: ' + data.role.toUpperCase());
-  setTimeout(() => location.reload(), 1500);
+  try {
+    const response = await fetch('/register', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body:    JSON.stringify(formData),
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      // Laravel ne redirect URL diya — us par jao
+      window.location.href = result.redirect;
+    } else {
+      // Errors dikhao
+      if (result.errors) {
+        if (result.errors.email) {
+          emailError.textContent = result.errors.email[0];
+          emailInput.classList.add('is-invalid');
+          wrapper.classList.remove('active'); // step 1 par wapis jao
+        }
+        if (result.errors.password) {
+          passwordError.textContent = result.errors.password[0];
+          passwordInput.classList.add('is-invalid');
+          wrapper.classList.remove('active');
+        }
+      } else {
+        alert(result.message || 'Registration failed. Please try again.');
+      }
+    }
+  } catch (err) {
+    console.error('Error:', err);
+    alert('Something went wrong. Please try again.');
+  }
 });
 </script>
 </body>
