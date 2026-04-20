@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Registration - Tailoring Services</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <style>
-/* --- your existing CSS unchanged --- */
 :root {
   --primary-bg: #212529;
   --accent-color: #1B2A4A;
@@ -52,6 +52,7 @@ body {
 }
 
 .form-container {
+  background-color: var(--text-white);
   display: flex;
   width: 200%;
   transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -242,42 +243,39 @@ body {
     <img src="logo.png" alt="Tailoring Services Logo" class="logo-image">
   </div>
 
-  <!-- SINGLE FORM FOR BOTH STEPS -->
-  <form method="POST" action="/register" id="registrationForm" novalidate>
-      <input type="hidden" name="_token" value="{{ csrf_token() }}">
-    <div class="form-container" id="formWrapper">
+  <div class="form-container" id="formWrapper">
+    <!-- STEP 1 -->
+    <div class="form-step" id="step1">
+      <div class="step-indicator">
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+      </div>
+      
+      <div class="registration-header">
+        <h2>Create Account</h2>
+        <p>Join our tailoring community</p>
+      </div>
 
-      <!-- STEP 1 -->
-      <div class="form-step" id="step1">
-        <div class="step-indicator">
-          <div class="step-dot active"></div>
-          <div class="step-dot"></div>
-        </div>
-        
-        <div class="registration-header">
-          <h2>Create Account</h2>
-          <p>Join our tailoring community</p>
-        </div>
-
+      <form method="POST" action="{{ route('register') }}"> id="step1Form" novalidate>
         <div class="mb-3">
           <label for="name" class="form-label">Full Name *</label>
-          <input name="name" id="name" class="form-control" placeholder="Enter your full name" type="text" required>
+          <input id="name" class="form-control" placeholder="Enter your full name" type="text" required>
         </div>
 
         <div class="mb-3">
           <label for="email" class="form-label">Email Address *</label>
-          <input name="email" id="email" class="form-control" placeholder="example@gmail.com" type="email" required>
+          <input id="email" name="email" class="form-control" placeholder="example@gmail.com" type="email" required>
           <span id="emailError" class="error-text"></span>
         </div>
 
         <div class="mb-3">
           <label for="phone" class="form-label">Phone Number *</label>
-          <input name="phone" id="phone" class="form-control" placeholder="+92 300 1234567" type="tel" required>
+          <input id="phone" name="phone" class="form-control" placeholder="+92 300 1234567" type="tel" required>
         </div>
 
         <div class="mb-3 password-toggle">
           <label for="password" class="form-label">Password *</label>
-          <input name="password" id="password" class="form-control" placeholder="Create a strong password" type="password" required>
+          <input id="password" name="password" class="form-control" placeholder="Create a strong password" type="password" required>
           <i id="togglePassword" class="fas fa-eye toggle-icon" title="Show/hide password" role="button" aria-label="Toggle password visibility"></i>
           <span class="requirement-text">Must be at least 8 characters with letters, numbers, and special characters (!@#$%^&*)</span>
           <span id="passwordError" class="error-text"></span>
@@ -290,37 +288,38 @@ body {
         <div class="login-link">
           Already have an account? <a href="login.html">Log In</a>
         </div>
-      </div> 
+      </form>
+    </div>
 
-      <!-- STEP 2 -->
-      <div class="form-step" id="step2">
-        <div class="step-indicator">
-          <div class="step-dot"></div>
-          <div class="step-dot active"></div>
-        </div>
-        
-        <div class="registration-header">
-          <h2>Complete Profile</h2>
-          <p>Tell us more about yourself</p>
-        </div>
+    <!-- STEP 2 -->
+    <div class="form-step" id="step2">
+      <div class="step-indicator">
+        <div class="step-dot"></div>
+        <div class="step-dot active"></div>
+      </div>
+      
+      <div class="registration-header">
+        <h2>Complete Profile</h2>
+        <p>Tell us more about yourself</p>
+      </div>
 
+      <form id="step2Form" novalidate>
         <div class="mb-3">
           <label for="role" class="form-label">I am a *</label>
-          <select name="role" id="role" class="form-select" required>
+          <select id="role" name="role" class="form-select" required>
             <option value="">Select your role</option>
             <option value="customer">Customer</option>
             <option value="tailor">Tailor</option>
-            <option value="delivery_staff">Delivery Staff</option>
           </select>
         </div>
 
         <div id="tailorFields" class="mb-3" style="display:none;">
           <label for="address" class="form-label">Shop Address *</label>
-          <textarea name="address" id="address" class="form-control" rows="2" placeholder="Enter your shop address"></textarea>
+          <textarea id="address" name="address" class="form-control" rows="2" placeholder="Enter your shop address"></textarea>
           
           <div class="mt-3">
             <label for="category" class="form-label">Specialization *</label>
-            <select name="category" id="category" class="form-select">
+            <select id="category" name="category" class="form-select">
               <option value="">Select specialization</option>
               <option value="men">Men's Clothing</option>
               <option value="women">Women's Clothing</option>
@@ -328,6 +327,14 @@ body {
               <option value="all">All Categories</option>
             </select>
           </div>
+
+          <!-- SLOT CAPACITY FIELD -->
+          <div class="mt-3">
+            <label for="slotCapacity" class="form-label">Slot Capacity *</label>
+            <input id="slotCapacity" name="slotCapacity" class="form-control" type="number" min="1" max="100" placeholder="e.g. 10 (how many orders you can handle at once)">
+            <span id="slotError" class="error-text"></span>
+          </div>
+
         </div>
 
         <button type="button" class="btn-nav" id="backBtn">
@@ -336,9 +343,9 @@ body {
         <button type="submit" class="btn-custom">
           <i class="fas fa-user-check"></i> Register
         </button>
-      </div>
+      </form>
     </div>
-  </form>
+  </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
@@ -346,8 +353,8 @@ body {
 const wrapper = document.getElementById('formWrapper');
 const nextBtn = document.getElementById('nextBtn');
 const backBtn = document.getElementById('backBtn');
-
-const registrationForm = document.getElementById('registrationForm');
+const step1Form = document.getElementById('step1Form');
+const step2Form = document.getElementById('step2Form');
 
 const nameInput = document.getElementById('name');
 const emailInput = document.getElementById('email');
@@ -361,57 +368,187 @@ const roleSelect = document.getElementById('role');
 const tailorFields = document.getElementById('tailorFields');
 const addressInput = document.getElementById('address');
 const categorySelect = document.getElementById('category');
+const slotCapacityInput = document.getElementById('slotCapacity');
+const slotError = document.getElementById('slotError');
 
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}:"<>?~]).{8,}$/;
 
+// Email validation
 function validateEmail(email) {
   emailError.textContent = '';
   if (!email) return false;
-  if (!email.includes('@')) { emailError.textContent = 'Email must contain @'; return false; }
+  if (!email.includes('@')) { emailError.textContent = 'Email must contain @ symbol'; return false; }
   const parts = email.split('@');
-  if (parts.length !== 2 || !parts[0] || !parts[1]) { emailError.textContent='Invalid email format'; return false; }
-  if (!parts[1].includes('.')) { emailError.textContent='Email must contain domain'; return false; }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { emailError.textContent='Invalid email'; return false; }
+  if (parts.length !== 2 || !parts[0] || !parts[1]) { emailError.textContent = 'Invalid email format. Use: example@domain.com'; return false; }
+  if (!parts[1].includes('.')) { emailError.textContent = 'Email must contain a domain (e.g., gmail.com)'; return false; }
+  const domainParts = parts[1].split('.');
+  if (domainParts.some(part => !part)) { emailError.textContent = 'Invalid domain format'; return false; }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) { emailError.textContent = 'Please enter a valid email address'; return false; }
   return true;
 }
 
-emailInput.addEventListener('blur', () => { if(emailInput.value.trim()) validateEmail(emailInput.value.trim()); });
-emailInput.addEventListener('input', () => { if(emailError.textContent) validateEmail(emailInput.value.trim()); });
+emailInput.addEventListener('blur', () => { if (emailInput.value.trim()) validateEmail(emailInput.value.trim()); });
+emailInput.addEventListener('input', () => { if (emailError.textContent) validateEmail(emailInput.value.trim()); });
 
+// Password toggle
 passwordInput.addEventListener('input', () => {
   const value = passwordInput.value;
-  if(value.length>0) togglePassword.classList.add('show'); else togglePassword.classList.remove('show');
-  passwordError.textContent='';
+  if (value.length > 0) {
+    togglePassword.classList.add('show');
+  } else {
+    togglePassword.classList.remove('show');
+    passwordInput.setAttribute('type', 'password');
+    togglePassword.classList.remove('fa-eye-slash');
+    togglePassword.classList.add('fa-eye');
+  }
+  passwordError.textContent = '';
 });
 
 togglePassword.addEventListener('click', () => {
-  if(passwordInput.type==='password'){ passwordInput.type='text'; togglePassword.classList.replace('fa-eye','fa-eye-slash'); }
-  else{ passwordInput.type='password'; togglePassword.classList.replace('fa-eye-slash','fa-eye'); }
+  const currentType = passwordInput.getAttribute('type');
+  if (currentType === 'password') {
+    passwordInput.setAttribute('type', 'text');
+    togglePassword.classList.remove('fa-eye');
+    togglePassword.classList.add('fa-eye-slash');
+  } else {
+    passwordInput.setAttribute('type', 'password');
+    togglePassword.classList.remove('fa-eye-slash');
+    togglePassword.classList.add('fa-eye');
+  }
 });
 
+// Role selection
 roleSelect.addEventListener('change', () => {
-  if(roleSelect.value==='tailor'){ tailorFields.style.display='block'; addressInput.required=true; categorySelect.required=true; }
-  else{ tailorFields.style.display='none'; addressInput.required=false; categorySelect.required=false; }
+  if (roleSelect.value === 'tailor') {
+    tailorFields.style.display = 'block';
+    addressInput.setAttribute('required', '');
+    categorySelect.setAttribute('required', '');
+    slotCapacityInput.setAttribute('required', '');
+  } else {
+    tailorFields.style.display = 'none';
+    addressInput.removeAttribute('required');
+    categorySelect.removeAttribute('required');
+    slotCapacityInput.removeAttribute('required');
+  }
 });
 
-// Step 1 validation before moving to step 2
-nextBtn.addEventListener('click', (e)=>{
+// Next button
+nextBtn.addEventListener('click', (e) => {
   e.preventDefault();
-  emailError.textContent=''; passwordError.textContent='';
-  let isValid=true;
-  if(!nameInput.value.trim()){ nameInput.classList.add('is-invalid'); isValid=false; } else{ nameInput.classList.remove('is-invalid'); }
-  if(!validateEmail(emailInput.value.trim())){ emailInput.classList.add('is-invalid'); isValid=false; } else{ emailInput.classList.remove('is-invalid'); }
-  if(!phoneInput.value.trim()){ phoneInput.classList.add('is-invalid'); isValid=false; } else{ phoneInput.classList.remove('is-invalid'); }
-  if(!passwordRegex.test(passwordInput.value.trim())){ passwordError.textContent='Password must be at least 8 characters with letters, numbers, special characters'; passwordInput.classList.add('is-invalid'); passwordInput.focus(); isValid=false; } else{ passwordInput.classList.remove('is-invalid'); }
-  if(isValid) wrapper.classList.add('active');
+  emailError.textContent = '';
+  passwordError.textContent = '';
+  let isValid = true;
+
+  if (!nameInput.value.trim()) { nameInput.classList.add('is-invalid'); isValid = false; }
+  else nameInput.classList.remove('is-invalid');
+
+  if (!validateEmail(emailInput.value.trim())) { emailInput.classList.add('is-invalid'); isValid = false; }
+  else emailInput.classList.remove('is-invalid');
+
+  if (!phoneInput.value.trim()) { phoneInput.classList.add('is-invalid'); isValid = false; }
+  else phoneInput.classList.remove('is-invalid');
+
+  const pw = passwordInput.value.trim();
+  if (!passwordRegex.test(pw)) {
+    passwordError.textContent = 'Password must be at least 8 characters with letters, numbers, and special characters';
+    passwordInput.classList.add('is-invalid');
+    passwordInput.focus();
+    isValid = false;
+  } else {
+    passwordInput.classList.remove('is-invalid');
+  }
+
+  if (isValid) wrapper.classList.add('active');
 });
 
 // Back button
-backBtn.addEventListener('click', ()=>{ wrapper.classList.remove('active'); });
+backBtn.addEventListener('click', () => wrapper.classList.remove('active'));
 
-// Submit form
-registrationForm.addEventListener('submit',(e)=>{
-  if(!registrationForm.checkValidity()){ registrationForm.classList.add('was-validated'); e.preventDefault(); return; }
+// Step 2 form submission — Laravel se connect karo
+// Yeh apne registration.html ke step2Form submit listener ko replace karo
+
+step2Form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  let isValid = true;
+
+  if (!roleSelect.value) {
+    roleSelect.classList.add('is-invalid');
+    isValid = false;
+  } else {
+    roleSelect.classList.remove('is-invalid');
+  }
+
+  if (roleSelect.value === 'tailor') {
+    if (!addressInput.value.trim()) { addressInput.classList.add('is-invalid'); isValid = false; }
+    else addressInput.classList.remove('is-invalid');
+
+    if (!categorySelect.value) { categorySelect.classList.add('is-invalid'); isValid = false; }
+    else categorySelect.classList.remove('is-invalid');
+
+    const slot = slotCapacityInput.value.trim();
+    if (!slot || slot < 1) {
+      slotCapacityInput.classList.add('is-invalid');
+      slotError.textContent = 'Please enter a valid slot capacity (minimum 1)';
+      isValid = false;
+    } else {
+      slotCapacityInput.classList.remove('is-invalid');
+      slotError.textContent = '';
+    }
+  }
+
+  if (!isValid) return;
+
+  // Data taiyar karo
+  const formData = {
+    name:     nameInput.value.trim(),
+    email:    emailInput.value.trim(),
+    phone:    phoneInput.value.trim(),
+    password: passwordInput.value,
+    role:     roleSelect.value,
+    _token:   document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+  };
+
+  if (formData.role === 'tailor') {
+    formData.address       = addressInput.value.trim();
+    formData.category      = categorySelect.value;
+    formData.slot_capacity = slotCapacityInput.value.trim();
+  }
+
+  try {
+    const response = await fetch('/register', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body:    JSON.stringify(formData),
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      // Laravel ne redirect URL diya — us par jao
+      window.location.href = result.redirect;
+    } else {
+      // Errors dikhao
+      if (result.errors) {
+        if (result.errors.email) {
+          emailError.textContent = result.errors.email[0];
+          emailInput.classList.add('is-invalid');
+          wrapper.classList.remove('active'); // step 1 par wapis jao
+        }
+        if (result.errors.password) {
+          passwordError.textContent = result.errors.password[0];
+          passwordInput.classList.add('is-invalid');
+          wrapper.classList.remove('active');
+        }
+      } else {
+        alert(result.message || 'Registration failed. Please try again.');
+      }
+    }
+  } catch (err) {
+    console.error('Error:', err);
+    alert('Something went wrong. Please try again.');
+  }
 });
 </script>
 </body>
