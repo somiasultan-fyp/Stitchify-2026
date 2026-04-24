@@ -259,6 +259,7 @@ body {
         <i id="togglePassword" class="fas fa-eye toggle-icon" title="Show/hide password" role="button" aria-label="Toggle password visibility"></i>
         <span id="passwordError" class="error-text"></span>
       </div>
+      <div id="loginError" style="display:none; color:red; margin-bottom:10px;"></div>
 
       <div class="d-flex justify-content-between align-items-center">
         <div class="remember-me">
