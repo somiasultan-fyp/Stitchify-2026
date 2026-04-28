@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Order Form Stitchify</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+:root {
+  --primary-bg: #212529;
+  --accent-color: #1B2A4A;
+  --copyright-bg: #575a5b;
+  --text-white: #ffffff;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: #f0f2f5;
+}
+
+.registration-wrapper {
+  width: 500px;
+  max-width: 95%;
+  background-color: var(--text-white);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.logo-container {
+  background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
+  padding: 30px;
+  text-align: center;
+  border-bottom: 3px solid var(--copyright-bg);
+}
+
+.logo-container h2 {
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.logo-container p {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 13px;
+}
+
+.logo-image {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto;
+  display: block;
+  object-fit: contain;
+  border-radius: 50%;
+  padding: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.form-body {
+  padding: 36px 40px 30px;
+}
+
+.registration-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.registration-header h2 {
+  color: var(--accent-color);
+  font-weight: 700;
+  font-size: 26px;
+  margin-bottom: 6px;
+}
+
+.registration-header p {
+  color: var(--copyright-bg);
+  font-size: 14px;
+}
+
+.form-label {
+  color: var(--primary-bg);
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.form-control,
+.form-select {
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 12px 15px;
+  color: var(--primary-bg);
+  background-color: #f8f9fa;
+  transition: all 0.3s ease;
+  font-size: 15px;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 0.25rem rgba(14, 24, 48, 0.15);
+  background-color: var(--text-white);
+}
+
+.form-control.is-invalid,
+.form-select.is-invalid {
+  border-color: #dc3545;
+}
+
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0 16px;
+}
+
+.section-divider span {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-color);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.section-divider::before,
+.section-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e0e0e0;
+}
+
+.meas-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.meas-item label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary-bg);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.meas-item input {
+  font-size: 14px;
+}
+
+.pay-locked-block {
+  border: 2px dashed #e0e0e0;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  background: #f8f9fa;
+  margin-top: 6px;
+}
+
+.pay-locked-block .lock-icon {
+  font-size: 28px;
+  color: var(--copyright-bg);
+}
+
+.pay-locked-block p {
+  color: var(--copyright-bg);
+  font-size: 13px;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+.info-block {
+  border-radius: 10px;
+  padding: 14px 16px;
+  background: #E6F1FB;
+  border: 1.5px solid #B5D4F4;
+  margin-top: 6px;
+}
+
+.info-block p {
+  font-size: 13px;
+  color: #0C447C;
+  line-height: 1.6;
+}
+
+.info-block strong {
+  color: #042C53;
+}
+
+.btn-custom {
+  background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
+  color: var(--text-white);
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-weight: 600;
+  font-size: 16px;
+  width: 100%;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+}
+
+.btn-custom:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(14, 24, 48, 0.4);
+}
+
+.error-text {
+  color: #dc3545;
+  font-size: 0.82rem;
+  margin-top: 5px;
+  display: block;
+  min-height: 16px;
+}
+
+.requirement-text {
+  font-size: 0.8rem;
+  color: var(--copyright-bg);
+  margin-top: 5px;
+  line-height: 1.4;
+}
+
+.row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+</style>
+</head>
+<body>
+
+<div class="registration-wrapper">
+  <div class="logo-container">
+    <img src="logo.png" alt="Stitchify" class="logo-image">
+    <h2>Stitchify</h2>
+    <p>Place your order below</p>
+  </div>
+
+  <div class="form-body">
+    <div class="registration-header">
+      <h2>New Order</h2>
+      <p>Fill in all details to place your order</p>
+    </div>
+
+    <!-- CONTACT & DELIVERY -->
+    <div class="section-divider"><span>Contact & Delivery</span></div>
+
+    <div class="mb-3">
+      <label class="form-label">Full Name *</label>
+      <input id="cname" class="form-control" placeholder="Enter your full name" type="text">
+      <span class="error-text" id="cnameErr"></span>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Phone Number *</label>
+      <input id="cphone" class="form-control" placeholder="+92 300 1234567" type="tel">
+      <span class="error-text" id="cphoneErr"></span>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Delivery Address *</label>
+      <textarea id="caddr" class="form-control" rows="2" placeholder="House no, street, area, city"></textarea>
+      <span class="error-text" id="caddrErr"></span>
+    </div>
+
+    <div class="row2 mb-3">
+      <div>
+        <label class="form-label">City *</label>
+        <input id="ccity" class="form-control" placeholder="Lahore" type="text">
+        <span class="error-text" id="ccityErr"></span>
+      </div>
+      <div>
+        <label class="form-label">Delivery Date *</label>
+        <input id="cdate" class="form-control" type="date">
+        <span class="error-text" id="cdateErr"></span>
+      </div>
+    </div>
+
+    <!-- GARMENT & ORDER -->
+    <div class="section-divider"><span>Garment & Order</span></div>
+
+    <div class="mb-3">
+      <label class="form-label">Garment Type *</label>
+      <select id="garment" class="form-select">
+        <option value="">Select garment type</option>
+        <option>Shalwar Kameez (Men)</option>
+        <option>Shalwar Kameez (Women)</option>
+        <option>Kurta</option>
+        <option>Suit / Pant Coat</option>
+        <option>Abaya</option>
+        <option>Children's Dress</option>
+        <option>Other</option>
+      </select>
+      <span class="error-text" id="garmentErr"></span>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Special Instructions</label>
+      <textarea id="notes" class="form-control" rows="2" placeholder="Collar style, pocket type, embroidery detail, etc."></textarea>
+    </div>
+
+    <!-- MEASUREMENTS -->
+    <div class="section-divider"><span>Measurements (inches)</span></div>
+
+    <div class="meas-grid mb-3">
+      <div class="meas-item">
+        <label>Chest / Seena</label>
+        <input id="mChest" class="form-control" type="number" placeholder="e.g. 40">
+      </div>
+      <div class="meas-item">
+        <label>Waist / Kamar</label>
+        <input id="mWaist" class="form-control" type="number" placeholder="e.g. 36">
+      </div>
+      <div class="meas-item">
+        <label>Length / Lambai</label>
+        <input id="mLength" class="form-control" type="number" placeholder="e.g. 46">
+      </div>
+      <div class="meas-item">
+        <label>Shoulder / Kandha</label>
+        <input id="mShoulder" class="form-control" type="number" placeholder="e.g. 18">
+      </div>
+      <div class="meas-item">
+        <label>Sleeve / Baazu</label>
+        <input id="mSleeve" class="form-control" type="number" placeholder="e.g. 25">
+      </div>
+      <div class="meas-item">
+        <label>Neck / Gala</label>
+        <input id="mNeck" class="form-control" type="number" placeholder="e.g. 15">
+      </div>
+    </div>
+
+    <!-- FABRIC DETAILS -->
+    <div class="section-divider"><span>Fabric Details</span></div>
+
+    <div class="mb-3">
+      <label class="form-label">Fabric Name *</label>
+      <input id="fabricName" class="form-control" placeholder="e.g. Lawn, Khaddar, Silk, Linen, Cotton" type="text">
+      <span class="error-text" id="fabricNameErr"></span>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Fabric Color *</label>
+      <input id="fabricColorText" class="form-control" placeholder="e.g. Navy Blue, Off White, Dark Red" type="text">
+      <span class="error-text" id="fabricColorErr"></span>
+      <span class="requirement-text">Type the name of Color</span>
+    </div>
+
+    <!-- PAYMENT -->
+    <div class="section-divider"><span>Payment</span></div>
+
+    <div class="info-block mb-3">
+      <p><strong>Payment details</strong> will be available after order accepted. <strong>JazzCash / Easypaisa</strong> options are available for this.</p>
+    </div>
+
+    <div class="pay-locked-block">
+      <div class="lock-icon"><i class="fas fa-lock"></i></div>
+      <p><strong>Payment Locked</strong><br>This section will be unlocked after tailor accepts the order.</p>
+    </div>
+
+    <button class="btn-custom" id="submitBtn" type="button">
+      <i class="fas fa-check"></i> &nbsp;Submit Order
+    </button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script>
+
+  // Validation
+  function validate() {
+    let ok = true;
+    const required = [
+      ['cname',           'cnameErr',       'Full name is required'],
+      ['cphone',          'cphoneErr',      'Phone number is required'],
+      ['caddr',           'caddrErr',       'Delivery address is required'],
+      ['ccity',           'ccityErr',       'City is required'],
+      ['cdate',           'cdateErr',       'Delivery date is required'],
+      ['garment',         'garmentErr',     'Please select a garment type'],
+      ['fabricName',      'fabricNameErr',  'Fabric name is required'],
+      ['fabricColorText', 'fabricColorErr', 'Fabric color is required'],
+    ];
+    required.forEach(([id, errId, msg]) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const err = document.getElementById(errId);
+      if (!el.value.trim()) {
+        el.classList.add('is-invalid');
+        err.textContent = msg;
+        ok = false;
+      } else {
+        el.classList.remove('is-invalid');
+        err.textContent = '';
+      }
+    });
+    return ok;
+  }
+
+  // Submit
+  document.getElementById('submitBtn').addEventListener('click', () => {
+    if (!validate()) {
+      const firstError = document.querySelector('.is-invalid');
+      if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    const data = {
+      name:         document.getElementById('cname').value.trim(),
+      phone:        document.getElementById('cphone').value.trim(),
+      address:      document.getElementById('caddr').value.trim(),
+      city:         document.getElementById('ccity').value.trim(),
+      deliveryDate: document.getElementById('cdate').value,
+      garment:      document.getElementById('garment').value,
+      notes:        document.getElementById('notes').value.trim(),
+      measurements: {
+        chest:    document.getElementById('mChest').value,
+        waist:    document.getElementById('mWaist').value,
+        length:   document.getElementById('mLength').value,
+        shoulder: document.getElementById('mShoulder').value,
+        sleeve:   document.getElementById('mSleeve').value,
+        neck:     document.getElementById('mNeck').value,
+      },
+      fabric: {
+        name:      document.getElementById('fabricName').value.trim(),
+        colorName: document.getElementById('fabricColorText').value.trim(),
+      }
+    };
+
+    console.log('Order Data:', data);
+
+    // Hide form content safely
+    const formBody = document.querySelector('.form-body');
+    formBody.innerHTML = '';
+
+    // Show success screen
+    const success = document.createElement('div');
+    success.style.cssText = 'text-align:center; padding: 30px 10px;';
+    success.innerHTML = `
+      <div style="width:70px;height:70px;background:linear-gradient(135deg,#1B2A4A,#212529);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+        <i class="fas fa-check" style="color:#fff;font-size:28px;"></i>
+      </div>
+      <h3 style="color:#1B2A4A;font-weight:700;font-size:22px;margin-bottom:8px;">Order Submitted!</h3>
+      <p style="color:#575a5b;font-size:14px;margin-bottom:20px;">Your order has been sent to the tailor. Payment will be unlocked after acceptance.</p>
+      <div style="background:#f8f9fa;border-radius:12px;padding:16px;text-align:left;border:2px solid #e0e0e0;margin-bottom:14px;">
+        <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Name:</strong> ${data.name}</p>
+        <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Phone:</strong> ${data.phone}</p>
+        <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Garment:</strong> ${data.garment}</p>
+        <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Fabric:</strong> ${data.fabric.name} — ${data.fabric.colorName}</p>
+        <p style="font-size:13px;color:#212529;margin-bottom:0;"><strong>Delivery Date:</strong> ${data.deliveryDate}</p>
+      </div>
+      <div style="background:#E6F1FB;border-radius:10px;padding:12px;border:1.5px solid #B5D4F4;margin-bottom:20px;">
+        <p style="font-size:13px;color:#0C447C;margin:0;"><i class="fas fa-lock"></i> <strong>Payment Pending</strong> — Waiting for tailor to accept your order.</p>
+      </div>
+      <button onclick="location.reload()" style="background:linear-gradient(135deg,#1B2A4A,#212529);color:#fff;border:none;border-radius:10px;padding:12px 30px;font-size:15px;font-weight:600;cursor:pointer;letter-spacing:0.5px;">
+        <i class="fas fa-plus"></i> &nbsp;New Order
+      </button>
+    `;
+    formBody.appendChild(success);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+</body>
+</html>
