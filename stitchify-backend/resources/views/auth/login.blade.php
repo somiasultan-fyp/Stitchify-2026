@@ -236,7 +236,7 @@ body {
 <body>
 <div class="login-wrapper">
   <div class="logo-container">
-    <img src="logo.png" alt="Tailoring Services Logo" class="logo-image">
+    <img src= "{{ asset('images/logo.png') }}" alt="Stitchify" class="logo-image">
   </div>
 
   <div class="form-container">
@@ -245,7 +245,8 @@ body {
       <p>Login to your account</p>
     </div>
 
-    <form id="loginForm" novalidate>
+    <form method="POST" action="{{ route('login') }}" id="loginForm" novalidate>
+        @csrf
       <div class="mb-3">
         <label for="email" class="form-label">Email Address</label>
         <input id="email" class="form-control" placeholder="example@gmail.com" type="email" required>
@@ -258,6 +259,7 @@ body {
         <i id="togglePassword" class="fas fa-eye toggle-icon" title="Show/hide password" role="button" aria-label="Toggle password visibility"></i>
         <span id="passwordError" class="error-text"></span>
       </div>
+      <div id="loginError" style="display:none; color:red; margin-bottom:10px;"></div>
 
       <div class="d-flex justify-content-between align-items-center">
         <div class="remember-me">

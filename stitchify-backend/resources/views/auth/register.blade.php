@@ -240,7 +240,7 @@ body {
 <body>
 <div class="registration-wrapper">
   <div class="logo-container">
-    <img src="logo.png" alt="Tailoring Services Logo" class="logo-image">
+    <img src="{{ asset('images\logo.png') }}" class="logo-image">
   </div>
 
   <div class="form-container" id="formWrapper">
@@ -256,7 +256,8 @@ body {
         <p>Join our tailoring community</p>
       </div>
 
-      <form method="POST" action="/" id="step1Form" novalidate>
+      <form method="POST" action="{{ route('register') }}" id="step1Form" novalidate>
+      @csrf
         <div class="mb-3">
           <label for="name" class="form-label">Full Name *</label>
           <input id="name" class="form-control" placeholder="Enter your full name" type="text" required>
@@ -519,8 +520,12 @@ step2Form.addEventListener('submit', async (e) => {
   try {
     const response = await fetch('/register', {
       method:  'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body:    JSON.stringify(formData),
+      headers: { 
+          'Content-Type': 'application/json', 
+          'Accept': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+      },
+      body: JSON.stringify(formData),
     });
 
     const result = await response.json();
