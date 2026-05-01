@@ -283,68 +283,52 @@ body {
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+
 <script>
-const loginForm = document.getElementById('loginForm');
-const emailInput = document.getElementById('email');
-const passwordInput = document.getElementById('password');
+const loginForm      = document.getElementById('loginForm');
+const emailInput     = document.getElementById('email');
+const passwordInput  = document.getElementById('password');
 const togglePassword = document.getElementById('togglePassword');
-const emailError = document.getElementById('emailError');
-const passwordError = document.getElementById('passwordError');
+const emailError     = document.getElementById('emailError');
+const passwordError  = document.getElementById('passwordError');
 const forgotPasswordLink = document.getElementById('forgotPasswordLink');
 
-// Email validation with detailed feedback
+// Email validation
 function validateEmail(email) {
   emailError.textContent = '';
-  
   if (!email) return false;
-  
   if (!email.includes('@')) {
     emailError.textContent = 'Email must contain @ symbol';
     return false;
   }
-  
   const parts = email.split('@');
   if (parts.length !== 2 || !parts[0] || !parts[1]) {
     emailError.textContent = 'Invalid email format. Use: example@domain.com';
     return false;
   }
-  
   if (!parts[1].includes('.')) {
     emailError.textContent = 'Email must contain a domain (e.g., gmail.com)';
     return false;
   }
-  
-  const domainParts = parts[1].split('.');
-  if (domainParts.some(part => !part)) {
-    emailError.textContent = 'Invalid domain format';
-    return false;
-  }
-  
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     emailError.textContent = 'Please enter a valid email address';
     return false;
   }
-  
   return true;
 }
 
+// Email listeners
 emailInput.addEventListener('blur', () => {
-  if (emailInput.value.trim()) {
-    validateEmail(emailInput.value.trim());
-  }
+  if (emailInput.value.trim()) validateEmail(emailInput.value.trim());
 });
-
 emailInput.addEventListener('input', () => {
-  if (emailError.textContent) {
-    validateEmail(emailInput.value.trim());
-  }
+  if (emailError.textContent) validateEmail(emailInput.value.trim());
 });
 
-// Password toggle functionality
+// Password toggle
 passwordInput.addEventListener('input', () => {
   const value = passwordInput.value;
-  
   if (value.length > 0) {
     togglePassword.classList.add('show');
   } else {
@@ -353,7 +337,6 @@ passwordInput.addEventListener('input', () => {
     togglePassword.classList.remove('fa-eye-slash');
     togglePassword.classList.add('fa-eye');
   }
-  
   passwordError.textContent = '';
 });
 
@@ -370,26 +353,36 @@ togglePassword.addEventListener('click', () => {
   }
 });
 
-// Forgot password link
+// Forgot password
 forgotPasswordLink.addEventListener('click', (e) => {
   e.preventDefault();
   alert('Password reset functionality coming soon!\n\nPlease contact support for assistance.');
 });
 
-// Form submission
-// Login form submit — apne login.html ke submit listener ko replace karo
-
+// ✅ NAYA Login Submit
 loginForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const email    = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value;
-  const errorDiv = document.getElementById('loginError'); // login.html mein yeh span/div hona chahiye
+  const email     = document.getElementById('email').value.trim();
+  const password  = document.getElementById('password').value;
+  const errorDiv  = document.getElementById('loginError');
+  const submitBtn = loginForm.querySelector('button[type="submit"]');
 
-  if (!email || !password) {
-    errorDiv.textContent = 'Please enter email and password.';
+  errorDiv.textContent = '';
+  errorDiv.style.display = 'none';
+
+  if (!validateEmail(email)) return;
+
+  if (!password) {
+    passwordError.textContent = 'Password is required.';
     return;
   }
+
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = `
+    <span class="spinner-border spinner-border-sm me-2"></span>
+    Logging in...
+  `;
 
   try {
     const response = await fetch('/login', {
@@ -397,7 +390,8 @@ loginForm.addEventListener('submit', async (e) => {
       headers: {
         'Content-Type': 'application/json',
         'Accept':       'application/json',
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .getAttribute('content'),
       },
       body: JSON.stringify({ email, password }),
     });
@@ -405,17 +399,26 @@ loginForm.addEventListener('submit', async (e) => {
     const result = await response.json();
 
     if (result.success) {
+      submitBtn.innerHTML = `
+        <span class="spinner-border spinner-border-sm me-2"></span>
+        Redirecting...
+      `;
       window.location.href = result.redirect;
     } else {
-      errorDiv.textContent = result.message || 'Invalid credentials.';
+      errorDiv.textContent   = result.message || 'Invalid credentials.';
       errorDiv.style.display = 'block';
+      submitBtn.disabled     = false;
+      submitBtn.innerHTML    = 'Login';
     }
+
   } catch (err) {
     console.error('Error:', err);
-    errorDiv.textContent = 'Something went wrong. Please try again.';
+    errorDiv.textContent   = 'Something went wrong. Please try again.';
+    errorDiv.style.display = 'block';
+    submitBtn.disabled     = false;
+    submitBtn.innerHTML    = 'Login';
   }
-});
-    
+});    
 </script>
 </body>
 </html>

@@ -67,6 +67,14 @@ public function login(Request $request)
         'email'    => 'required|email',
         'password' => 'required',
     ]);
+    $user = User::where('email', $request->email)->first();
+
+    if (!$user) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Email or password is incorrect.',
+        ], 401);
+    }
 
     if (Auth::attempt([
         'email'    => $request->email,
