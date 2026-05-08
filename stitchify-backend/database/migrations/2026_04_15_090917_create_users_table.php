@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('email')->unique();   // duplicate email allow nahi hogi
             $table->string('phone');
             $table->string('password');          // hashed password store hoga
-            $table->enum('role', ['customer', 'tailor']);
+            $table->enum('role', ['customer', 'tailor', 'admin']); // admin add karo
             // tailor ke liye extra fields (nullable kyunki customer ke liye zaroorat nahi)
             $table->text('address')->nullable();
             $table->string('category')->nullable();
