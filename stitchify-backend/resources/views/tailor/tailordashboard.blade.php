@@ -317,7 +317,7 @@ body {
 
   <div class="main-content">
     <div class="top-bar" id="overview">
-      <h2>Welcome Back, {{ auth()->user()->name }}!</h2>
+      <h2>Welcome, {{ auth()->user()->name }}!</h2>
     </div>
 
     <!-- SLOT CAPACITY BLOCK -->

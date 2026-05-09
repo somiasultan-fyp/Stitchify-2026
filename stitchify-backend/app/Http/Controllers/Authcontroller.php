@@ -28,7 +28,7 @@ class AuthController extends Controller
             'category'      => 'required_if:role,tailor|nullable|string',
             'slot_capacity' => 'required_if:role,tailor|nullable|integer|min:1',
         ], [
-            'email.unique'              => 'email is already registered.',
+            'email.unique'              => 'Email is already registered.',
             'address.required_if'       => 'Address is compulsory.',
             'category.required_if'      => 'Specialization is compulsory.',
             'slot_capacity.required_if' => 'Slot is compulsory',
@@ -47,11 +47,14 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        // Role ke hisaab se redirect
-        if ($user->role === 'tailor') {
-            return redirect('/tailor/dashboard');
-        }
-        return redirect('/customer/dashboard');
+        $redirect = $user->role === 'tailor'
+            ? '/tailor/dashboard'
+            : '/customer/dashboard';
+
+        return response()->json([
+            'success'  => true,
+            'redirect' => $redirect,
+        ]);
     }
 
     // Show login form
@@ -61,44 +64,52 @@ class AuthController extends Controller
     }
 
     // Login process
-public function login(Request $request)
-{
-    $request->validate([
-        'email'    => 'required|email',
-        'password' => 'required',
-    ]);
-    $user = User::where('email', $request->email)->first();
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email'    => 'required|email',
+            'password' => 'required',
+        ]);
 
-    if (!$user) {
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Email or password is incorrect.',
+            ], 401);
+        }
+
+        if (!$user->is_active) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Your account has been blocked. Contact support.',
+            ], 403);
+        }
+
+        if (Auth::attempt([
+            'email'    => $request->email,
+            'password' => $request->password
+        ])) {
+            $request->session()->regenerate();
+
+            $redirect = match(Auth::user()->role) {
+                'admin'  => '/admin/dashboard',
+                'tailor' => '/tailor/dashboard',
+                default  => '/customer/dashboard',
+            };
+
+            return response()->json([
+                'success'  => true,
+                'redirect' => $redirect,
+            ]);
+        }
+
         return response()->json([
             'success' => false,
             'message' => 'Email or password is incorrect.',
         ], 401);
     }
-
-    if (Auth::attempt([
-        'email'    => $request->email,
-        'password' => $request->password
-    ])) {
-        $request->session()->regenerate();
-
-        $role = Auth::user()->role;
-
-        $redirect = $role === 'tailor' 
-            ? '/tailor/dashboard' 
-            : '/customer/dashboard';
-
-        return response()->json([
-            'success'  => true,
-            'redirect' => $redirect,
-        ]);
-    }
-
-    return response()->json([
-        'success' => false,
-        'message' => 'Email or password is incorrect.',
-    ], 401);
-}
 
     // Logout
     public function logout(Request $request)
