@@ -58,10 +58,11 @@
         }
 
         /* --- Hero Section --- */
-        .hero-section {
+        .hero-section 
+        {
             background-color: var(--primary-bg);
             /* Overlay color + Background Image */
-            background: linear-gradient(rgba(33, 37, 41, 0.4), rgba(33, 37, 41, 0.4)), url(background.png);
+            background: linear-gradient(rgba(33, 37, 41, 0.4), rgba(33, 37, 41, 0.4)), url({{ asset('images/background.png') }});
             background-size: cover;
             background-position: center;
             color: var(--text-white);
