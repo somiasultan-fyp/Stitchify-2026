@@ -5,7 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TailorController;
 
-Route::get('/', fn() => view('/home'));
+Route::get('/', fn() => view('home'));
 
 // Auth Routes
 Route::get('/register',  [AuthController::class, 'showRegister'])->name('register.form');
