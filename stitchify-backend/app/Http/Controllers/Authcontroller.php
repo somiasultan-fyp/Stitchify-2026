@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Customer;
+use App\Models\Tailor;
 
 class AuthController extends Controller
 {
@@ -34,6 +36,7 @@ class AuthController extends Controller
             'slot_capacity.required_if' => 'Slot is compulsory',
         ]);
 
+        // User banao
         $user = User::create([
             'name'          => $request->name,
             'email'         => $request->email,
@@ -43,7 +46,27 @@ class AuthController extends Controller
             'address'       => $request->role === 'tailor' ? $request->address : null,
             'category'      => $request->role === 'tailor' ? $request->category : null,
             'slot_capacity' => $request->role === 'tailor' ? $request->slot_capacity : null,
+            'is_active'     => true,
         ]);
+
+        // Customer profile banao
+        if ($user->role === 'customer') {
+            Customer::create([
+                'user_id' => $user->id,
+            ]);
+        }
+
+        // Tailor profile banao
+        if ($user->role === 'tailor') {
+            Tailor::create([
+                'user_id'         => $user->id,
+                'address'         => $request->address,
+                'specialization'  => $request->category,
+                'max_slots'       => $request->slot_capacity ?? 5,
+                'available_slots' => $request->slot_capacity ?? 5,
+                'status'          => 'pending',
+            ]);
+        }
 
         Auth::login($user);
 
@@ -89,7 +112,7 @@ class AuthController extends Controller
 
         if (Auth::attempt([
             'email'    => $request->email,
-            'password' => $request->password
+            'password' => $request->password,
         ])) {
             $request->session()->regenerate();
 
