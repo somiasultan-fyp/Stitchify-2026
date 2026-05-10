@@ -238,7 +238,7 @@
                     <li class="nav-item"><a class="nav-link" href="aboutus.html">About Us</a></li>
                     <li class="nav-item"><a class="nav-link" href="contactus.html">Contact Us</a></li>
                     <li class="nav-item ms-lg-3">
-                        <a href="login.html" class="btn btn-stitchify">logout</a>
+                       <a href="{{ route('login.form') }}" class="btn btn-stitchify">Login</a>
                     </li>
                 </ul>
             </div>
