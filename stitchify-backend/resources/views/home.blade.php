@@ -228,7 +228,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
             <a class="navbar-brand" href="#">
-        <img src="{{ asset('logo.png') }}" alt="Stitchify Logo" height="55">
+        <img src="{{ images/asset('logo.png') }}" alt="Stitchify Logo" height="55">
              </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -409,7 +409,7 @@
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="shadow rounded overflow-hidden">
-                        <img src="{{ asset('stitching.jpeg') }}" alt="Stitching" class="service-img">
+                        <img src="{{ asset('images/stitching.jpeg') }}" alt="Stitching" class="service-img">
                         <div class="p-3 bg-stitchify-dark">
                             <h5 class="mb-0">Stitching</h5>
                         </div>
@@ -417,7 +417,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="shadow rounded overflow-hidden">
-                        <img src="{{ asset('design2.jpeg') }}" alt="Designing" class="service-img">
+                        <img src="{{ asset('images/design2.jpeg') }}" alt="Designing" class="service-img">
                         <div class="p-3 bg-stitchify-dark">
                             <h5 class="mb-0">Designing</h5>
                         </div>
@@ -425,7 +425,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="shadow rounded overflow-hidden">
-                        <img src="{{ asset('alteration.jpeg') }}" alt="Alteration" class="service-img">
+                        <img src="{{ asset('images/alteration.jpeg') }}" alt="Alteration" class="service-img">
                         <div class="p-3 bg-stitchify-dark">
                             <h5 class="mb-0">Alteration</h5>
                         </div>
