@@ -11,12 +11,22 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-        'order_number', 'customer_id', 'tailor_id', 'dress_type',
-        'special_instructions', 'fabric_provided_by', 'fabric_details',
-        'price', 'advance_paid', 'expected_delivery_date',
-        'actual_delivery_date', 'status', 'payment_status',
-        'delivery_type', 'tracking_id'
-    ];
+    'order_number',
+    'customer_id',
+    'tailor_id',
+    'dress_type',
+    'special_instructions',
+    'fabric_provided_by',
+    'fabric_details',
+    'delivery_type',
+    'status',
+    'payment_status',
+    'price',
+    'advance_paid',
+    'expected_delivery_date',
+    'actual_delivery_date',
+    'tracking_id',
+];
 
     // ===== RELATIONSHIPS =====
 
