@@ -1,6 +1,5 @@
 <?php
 // app/Models/Order.php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,7 +14,8 @@ class Order extends Model
         'special_instructions', 'fabric_provided_by', 'fabric_details',
         'price', 'advance_paid', 'expected_delivery_date',
         'actual_delivery_date', 'status', 'payment_status',
-        'delivery_type', 'tracking_id'
+        'delivery_type', 'tracking_id', 'delivery_days', 'rejection_reason', 
+        'accepted_at', 'rejected_at',
     ];
 
     // ===== RELATIONSHIPS =====

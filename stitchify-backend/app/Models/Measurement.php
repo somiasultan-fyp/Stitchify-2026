@@ -1,6 +1,7 @@
 <?php
-// app/Models/Measurement.php
+
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Model;
 
 class Measurement extends Model
@@ -11,7 +12,8 @@ class Measurement extends Model
         'trouser_waist', 'neck', 'additional_notes'
     ];
 
-    public function order() {
+    public function order()
+    {
         return $this->belongsTo(Order::class);
     }
 }

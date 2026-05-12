@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Tailor;  //  YEH ADD KARO
+use App\Models\Customer; //  YEH ADD KARO (customer ke liye)
 
 class AuthController extends Controller
 {
@@ -45,6 +47,30 @@ class AuthController extends Controller
             'slot_capacity' => $request->role === 'tailor' ? $request->slot_capacity : null,
         ]);
 
+        //  YEH PART ADD KARO - TAILOR/CUSTOMER RECORD CREATE KARO 
+        if ($request->role === 'tailor') {
+            Tailor::create([
+                'user_id' => $user->id,
+                'shop_name' => $request->name . "'s Shop",
+                'city' => 'Lahore', // Ya request se lo
+                'address' => $request->address,
+                'specialization' => $request->category,
+                'experience_years' => $request->experience_years ?? 0,
+                'max_slots' => $request->slot_capacity,
+                'available_slots' => $request->slot_capacity,
+                'status' => 'approved',
+            ]);
+        }
+
+        if ($request->role === 'customer') {
+            Customer::create([
+                'user_id' => $user->id,
+                'phone' => $request->phone,
+                'city' => 'Lahore',
+                'address' => $request->address ?? '',
+            ]);
+        }
+
         Auth::login($user);
 
         // Role ke hisaab se redirect
@@ -61,44 +87,45 @@ class AuthController extends Controller
     }
 
     // Login process
-public function login(Request $request)
-{
-    $request->validate([
-        'email'    => 'required|email',
-        'password' => 'required',
-    ]);
-    $user = User::where('email', $request->email)->first();
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email'    => 'required|email',
+            'password' => 'required',
+        ]);
+        
+        $user = User::where('email', $request->email)->first();
 
-    if (!$user) {
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Email or password is incorrect.',
+            ], 401);
+        }
+
+        if (Auth::attempt([
+            'email'    => $request->email,
+            'password' => $request->password
+        ])) {
+            $request->session()->regenerate();
+
+            $role = Auth::user()->role;
+
+            $redirect = $role === 'tailor' 
+                ? '/tailor/dashboard' 
+                : '/customer/dashboard';
+
+            return response()->json([
+                'success'  => true,
+                'redirect' => $redirect,
+            ]);
+        }
+
         return response()->json([
             'success' => false,
             'message' => 'Email or password is incorrect.',
         ], 401);
     }
-
-    if (Auth::attempt([
-        'email'    => $request->email,
-        'password' => $request->password
-    ])) {
-        $request->session()->regenerate();
-
-        $role = Auth::user()->role;
-
-        $redirect = $role === 'tailor' 
-            ? '/tailor/dashboard' 
-            : '/customer/dashboard';
-
-        return response()->json([
-            'success'  => true,
-            'redirect' => $redirect,
-        ]);
-    }
-
-    return response()->json([
-        'success' => false,
-        'message' => 'Email or password is incorrect.',
-    ], 401);
-}
 
     // Logout
     public function logout(Request $request)
