@@ -15,12 +15,12 @@ class AdminSeeder extends Seeder
         User::create([
             'name'     => 'Super Admin',
             'email'    => 'admin@stitchify.com',
-            'password' => Hash::make('admin123'),  // password: admin123
+            'password' => Hash::make('admin@123'),  // password: admin@123
             'role'     => 'admin',
             'phone'    => '03000000000' ,
             'is_active'=> true,
         ]);
 
-        echo "✅ Admin created: admin@stitchify.com / admin123\n";
+        echo "✅ Admin created: admin@stitchify.com / admin@123\n";
     }
 }

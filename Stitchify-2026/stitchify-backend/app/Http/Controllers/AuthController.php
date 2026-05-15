@@ -81,17 +81,35 @@ class AuthController extends Controller
             ]);
         }
 
-        Auth::login($user);
+        // Register method ke end mein yeh code use karein:
 
-        // Verification email bhejo
-        $user->sendEmailVerificationNotification();
+     Auth::login($user);
 
-        // Email verify page par bhejo — dashboard nahi
-        // (dashboard tab milega jab email verify ho jaaye)
-        return response()->json([
-            'success'  => true,
-            'redirect' => '/email/verify',
-        ]);
+    // ✅ Sirf customer aur tailor ke liye email verification
+     if (in_array($user->role, ['customer', 'tailor'])) {
+    
+    // Verification email bhejo
+     $user->sendEmailVerificationNotification();
+    
+    // Email verify page par redirect karo
+     return response()->json([
+        'success'  => true,
+        'redirect' => '/email/verify',
+        'message'  => 'Please verify your email to continue.',
+    ]);
+}
+
+// ✅ Agar koi aur role hai (jaise admin), toh direct dashboard par bhejo
+     $redirect = match($user->role) {
+    'tailor'   => '/tailor/dashboard',
+    'customer' => '/customer/dashboard',
+    default    => '/login',  // Fallback
+     };
+
+    return response()->json([
+    'success'  => true,
+    'redirect' => $redirect,
+    ]);
     }
 
     // ─────────────────────────────────────────
