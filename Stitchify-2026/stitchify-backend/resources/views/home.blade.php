@@ -250,7 +250,7 @@
         <div class="container">
             <h1 class="display-3 fw-bold mb-4">Your Style, Our Stitch</h1>
             <p class="lead mb-5">Experience the future of online tailoring. Custom designs, expert tailors, and doorstep delivery.</p>
-            <a href="#categories" class="btn btn-stitchify btn-lg">Explore Now</a>
+            <button onclick="window.location.href='/tailors'">Explore Now</button>
         </div>
     </section>
 

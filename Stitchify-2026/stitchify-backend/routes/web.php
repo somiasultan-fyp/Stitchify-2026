@@ -71,7 +71,9 @@ Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
 });
 
 // Yeh route middleware ke bahar tha tumhara — same rakha
-Route::post('/order/store', [OrderController::class, 'store']);
+Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
+Route::post('/order/store', [OrderController::class, 'store'])->name('order.store');
+});
 
 // ─────────────────────────────────────────
 // TAILOR ROUTES
