@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="csrf-token" content="{{ csrf_token() }}">
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Order Form - Stitchify</title>
+<title>Order Form Stitchify</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <style>
@@ -38,108 +37,109 @@ body {
   border-bottom: 3px solid var(--copyright-bg);
 }
 .logo-container h2 { color:#fff; font-size:22px; font-weight:700; margin-bottom:4px; }
-.logo-container p  { color:rgba(255,255,255,0.65); font-size:13px; }
-.logo-image {
-  width:120px; height:120px; margin:0 auto; display:block;
-  object-fit:contain; border-radius:50%; padding:10px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.3);
-}
+.logo-container p { color:rgba(255,255,255,0.65); font-size:13px; }
+.logo-image { width:120px; height:120px; margin:0 auto; display:block; object-fit:contain; border-radius:50%; padding:10px; box-shadow:0 5px 15px rgba(0,0,0,0.3); }
 .form-body { padding: 36px 40px 30px; }
 .registration-header { text-align:center; margin-bottom:24px; }
 .registration-header h2 { color:var(--accent-color); font-weight:700; font-size:26px; margin-bottom:6px; }
-.registration-header p  { color:var(--copyright-bg); font-size:14px; }
+.registration-header p { color:var(--copyright-bg); font-size:14px; }
 .form-label { color:var(--primary-bg); font-weight:600; margin-bottom:8px; font-size:14px; }
-.form-control, .form-select {
-  border:2px solid #e0e0e0; border-radius:10px;
-  padding:12px 15px; color:var(--primary-bg);
-  background-color:#f8f9fa; transition:all 0.3s ease; font-size:15px;
-}
-.form-control:focus, .form-select:focus {
-  border-color:var(--accent-color);
-  box-shadow:0 0 0 0.25rem rgba(14,24,48,0.15);
-  background-color:var(--text-white);
-}
+.form-control, .form-select { border:2px solid #e0e0e0; border-radius:10px; padding:12px 15px; color:var(--primary-bg); background-color:#f8f9fa; transition:all 0.3s ease; font-size:15px; }
+.form-control:focus, .form-select:focus { border-color:var(--accent-color); box-shadow:0 0 0 0.25rem rgba(14,24,48,0.15); background-color:var(--text-white); }
 .form-control.is-invalid, .form-select.is-invalid { border-color:#dc3545; }
-.section-divider {
-  display:flex; align-items:center; gap:10px; margin:20px 0 16px;
-}
-.section-divider span {
-  font-size:12px; font-weight:700; color:var(--accent-color);
-  letter-spacing:0.8px; text-transform:uppercase; white-space:nowrap;
-}
-.section-divider::before, .section-divider::after {
-  content:''; flex:1; height:1px; background:#e0e0e0;
-}
+.section-divider { display:flex; align-items:center; gap:10px; margin:20px 0 16px; }
+.section-divider span { font-size:12px; font-weight:700; color:var(--accent-color); letter-spacing:0.8px; text-transform:uppercase; white-space:nowrap; }
+.section-divider::before, .section-divider::after { content:''; flex:1; height:1px; background:#e0e0e0; }
 .meas-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:4px; }
 .meas-item label { font-size:13px; font-weight:600; color:var(--primary-bg); margin-bottom:6px; display:block; }
-.meas-item input  { font-size:14px; }
-.pay-locked-block {
-  border:2px dashed #e0e0e0; border-radius:12px;
-  padding:20px; text-align:center; background:#f8f9fa; margin-top:6px;
-}
+.meas-item input { font-size:14px; }
+.pay-locked-block { border:2px dashed #e0e0e0; border-radius:12px; padding:20px; text-align:center; background:#f8f9fa; margin-top:6px; }
 .pay-locked-block .lock-icon { font-size:28px; color:var(--copyright-bg); }
 .pay-locked-block p { color:var(--copyright-bg); font-size:13px; margin-top:8px; line-height:1.5; }
-.info-block {
-  border-radius:10px; padding:14px 16px;
-  background:#E6F1FB; border:1.5px solid #B5D4F4; margin-top:6px;
-}
-.info-block p      { font-size:13px; color:#0C447C; line-height:1.6; }
+.info-block { border-radius:10px; padding:14px 16px; background:#E6F1FB; border:1.5px solid #B5D4F4; margin-top:6px; }
+.info-block p { font-size:13px; color:#0C447C; line-height:1.6; }
 .info-block strong { color:#042C53; }
-.btn-custom {
-  background:linear-gradient(135deg, var(--accent-color), var(--primary-bg));
-  color:var(--text-white); border:none; border-radius:10px;
-  padding:14px; font-weight:600; font-size:16px; width:100%;
-  transition:all 0.3s ease; margin-top:10px;
-  text-transform:uppercase; letter-spacing:0.5px; cursor:pointer;
-}
+.btn-custom { background:linear-gradient(135deg, var(--accent-color), var(--primary-bg)); color:var(--text-white); border:none; border-radius:10px; padding:14px; font-weight:600; font-size:16px; width:100%; transition:all 0.3s ease; margin-top:10px; text-transform:uppercase; letter-spacing:0.5px; cursor:pointer; }
 .btn-custom:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(14,24,48,0.4); }
 .error-text { color:#dc3545; font-size:0.82rem; margin-top:5px; display:block; min-height:16px; }
+.row2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+/* Appointment Toggle Styles */
 .appt-toggle-box {
-  border-radius:12px; border:2px solid #e0e0e0;
-  background:#f8f9fa; padding:16px 18px; margin-bottom:4px;
+  border-radius: 12px;
+  border: 2px solid #e0e0e0;
+  background: #f8f9fa;
+  padding: 16px 18px;
+  margin-bottom: 4px;
 }
 .appt-toggle-label {
-  font-size:14px; font-weight:600; color:var(--primary-bg);
-  margin-bottom:12px; display:block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary-bg);
+  margin-bottom: 12px;
+  display: block;
 }
-.appt-options { display:flex; gap:10px; }
+.appt-options {
+  display: flex;
+  gap: 10px;
+}
 .appt-option {
-  flex:1; display:flex; align-items:center; gap:8px;
-  border:2px solid #e0e0e0; border-radius:10px;
-  padding:10px 14px; cursor:pointer; background:#fff;
-  transition:all 0.2s ease; font-size:14px; font-weight:500;
-  color:var(--primary-bg); user-select:none;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  background: #fff;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--primary-bg);
+  user-select: none;
 }
-.appt-option:hover    { border-color:var(--accent-color); }
-.appt-option.selected { border-color:#1B2A4A; background:#1B2A4A; color:#fff; }
+.appt-option:hover { border-color: var(--accent-color); }
+.appt-option.selected { border-color: #1B2A4A; background: #1B2A4A; color: #fff; }
 .check-circle {
-  width:18px; height:18px; border-radius:50%;
-  border:2px solid #ccc; display:flex; align-items:center;
-  justify-content:center; flex-shrink:0; transition:all 0.2s; background:#fff;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  background: #fff;
 }
-.appt-option.selected .check-circle { border-color:#fff; background:#fff; }
-.check-circle i { font-size:10px; color:#1B2A4A; display:none; }
-.appt-option.selected .check-circle i { display:block; }
+.appt-option.selected .check-circle { border-color: #fff; background: #fff; }
+.check-circle i { font-size: 10px; color: #1B2A4A; display: none; }
+.appt-option.selected .check-circle i { display: block; }
+
 .appt-booking-section {
-  background:#EAF3DE; border:1.5px solid #C0DD97;
-  border-radius:12px; padding:16px 18px; margin-top:12px; display:none;
+  background: #EAF3DE;
+  border: 1.5px solid #C0DD97;
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-top: 12px;
+  display: none;
 }
 .appt-booking-section .appt-title {
-  font-size:13px; font-weight:700; color:#3B6D11;
-  margin-bottom:12px; display:flex; align-items:center; gap:6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #3B6D11;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
-.appt-row  { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-.appt-field label {
-  font-size:13px; font-weight:600; color:var(--primary-bg);
-  margin-bottom:6px; display:block;
-}
+.appt-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.appt-field label { font-size:13px; font-weight:600; color:var(--primary-bg); margin-bottom:6px; display:block; }
 </style>
 </head>
 <body>
 
 <div class="registration-wrapper">
   <div class="logo-container">
-    <img src="{{ asset('logo.png') }}" alt="Stitchify" class="logo-image" onerror="this.style.display='none'">
+    <img src="logo.png" alt="Stitchify" class="logo-image" onerror="this.style.display='none'">
     <h2>Stitchify</h2>
     <p>Place your order below</p>
   </div>
@@ -150,6 +150,7 @@ body {
       <p>Fill in all details to place your order</p>
     </div>
 
+    <!-- CONTACT & DELIVERY -->
     <div class="section-divider"><span>Contact & Delivery</span></div>
 
     <div class="mb-3">
@@ -176,6 +177,7 @@ body {
       <span class="error-text" id="ccityErr"></span>
     </div>
 
+    <!-- GARMENT & ORDER -->
     <div class="section-divider"><span>Garment & Order</span></div>
 
     <div class="mb-3">
@@ -204,6 +206,7 @@ body {
       <input type="file" id="designImages" accept="image/*" multiple style="display:none;">
     </div>
 
+    <!-- MEASUREMENTS SECTION WITH TOGGLE -->
     <div class="section-divider"><span>Measurements</span></div>
 
     <div class="appt-toggle-box mb-2">
@@ -213,16 +216,17 @@ body {
       </span>
       <div class="appt-options">
         <div class="appt-option" id="btnYes" onclick="selectAppt('yes')">
-          <div class="check-circle"><i class="fas fa-check"></i></div>
+          <div class="check-circle" id="circleYes"><i class="fas fa-check"></i></div>
           <span>Yes</span>
         </div>
         <div class="appt-option" id="btnNo" onclick="selectAppt('no')">
-          <div class="check-circle"><i class="fas fa-check"></i></div>
+          <div class="check-circle" id="circleNo"><i class="fas fa-check"></i></div>
           <span>No</span>
         </div>
       </div>
       <span class="error-text" id="apptChoiceErr"></span>
 
+      <!-- Appointment Booking Block (YES) -->
       <div class="appt-booking-section" id="apptBookingSection">
         <div class="appt-title">
           <i class="fas fa-calendar-check"></i> Appointment Details
@@ -258,6 +262,7 @@ body {
       </div>
     </div>
 
+    <!-- Manual Measurements (NO) -->
     <div id="manualMeasSection" style="display:none;">
       <div class="meas-grid mb-3">
         <div class="meas-item">
@@ -287,6 +292,7 @@ body {
       </div>
     </div>
 
+    <!-- FABRIC DETAILS -->
     <div class="section-divider"><span>Fabric Details</span></div>
 
     <div class="mb-3">
@@ -301,10 +307,11 @@ body {
       <span class="error-text" id="fabricColorErr"></span>
     </div>
 
+    <!-- PAYMENT -->
     <div class="section-divider"><span>Payment</span></div>
 
     <div class="info-block mb-3">
-      <p><strong>Payment details</strong> will be available after order accepted. <strong>JazzCash / Easypaisa</strong> options are available.</p>
+      <p><strong>Payment details</strong> will be available after order accepted. <strong>JazzCash / Easypaisa</strong> options are available for this.</p>
     </div>
 
     <div class="pay-locked-block">
@@ -320,25 +327,39 @@ body {
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 <script>
-  let apptChoice    = null;
-  let uploadedFiles = [];
-
-  // CSRF token meta tag se lo
-  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  let apptChoice = null;
 
   function selectAppt(val) {
     apptChoice = val;
     document.getElementById('apptChoiceErr').textContent = '';
-    document.getElementById('btnYes').className = 'appt-option' + (val === 'yes' ? ' selected' : '');
-    document.getElementById('btnNo').className  = 'appt-option' + (val === 'no'  ? ' selected' : '');
-    document.getElementById('apptBookingSection').style.display = val === 'yes' ? 'block' : 'none';
-    document.getElementById('manualMeasSection').style.display  = val === 'no'  ? 'block' : 'none';
+
+    const btnYes = document.getElementById('btnYes');
+    const btnNo  = document.getElementById('btnNo');
+
+    btnYes.className = 'appt-option' + (val === 'yes' ? ' selected' : '');
+    btnNo.className  = 'appt-option' + (val === 'no'  ? ' selected' : '');
+
+    const apptSection   = document.getElementById('apptBookingSection');
+    const manualSection = document.getElementById('manualMeasSection');
+
+    if (val === 'yes') {
+      apptSection.style.display   = 'block';
+      manualSection.style.display = 'none';
+    } else {
+      apptSection.style.display   = 'none';
+      manualSection.style.display = 'block';
+    }
   }
+
+  // Image upload with remove button
+  let uploadedFiles = [];
 
   function renderPreviews() {
     const previewBox = document.getElementById('imagePreviewBox');
+    const label = document.getElementById('imageLabel');
     previewBox.innerHTML = '';
     previewBox.style.display = uploadedFiles.length ? 'flex' : 'none';
+
     uploadedFiles.forEach((file, index) => {
       const reader = new FileReader();
       reader.onload = e => {
@@ -346,25 +367,26 @@ body {
         wrap.style.cssText = 'position:relative; width:72px; height:72px; flex-shrink:0;';
         wrap.innerHTML = `
           <img src="${e.target.result}" style="width:72px;height:72px;object-fit:cover;border-radius:8px;border:2px solid #e0e0e0;">
-          <button onclick="removeImage(${index})" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#dc3545;color:#fff;border:none;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;padding:0;">&#x2715;</button>
+          <button onclick="removeImage(${index})" title="Remove" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#dc3545;color:#fff;border:none;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;">&#x2715;</button>
         `;
         previewBox.appendChild(wrap);
       };
       reader.readAsDataURL(file);
     });
-    document.getElementById('imageLabel').textContent = uploadedFiles.length > 0
-      ? uploadedFiles.length + ' picture(s) selected'
-      : 'Upload design pictures (optional)';
+
+    label.textContent = uploadedFiles.length > 0 ? uploadedFiles.length + ' picture(s) selected' : 'Upload design pictures (optional)';
   }
 
   function removeImage(index) {
     uploadedFiles.splice(index, 1);
     renderPreviews();
+    // Reset file input so same file can be re-added
     document.getElementById('designImages').value = '';
   }
 
   document.getElementById('designImages').addEventListener('change', function () {
-    uploadedFiles = uploadedFiles.concat(Array.from(this.files));
+    const newFiles = Array.from(this.files);
+    uploadedFiles = uploadedFiles.concat(newFiles);
     renderPreviews();
   });
 
@@ -377,7 +399,8 @@ body {
 
   function validate() {
     let ok = true;
-    const fields = [
+
+    const required = [
       ['cname',           'cnameErr',       'Full name is required'],
       ['cphone',          'cphoneErr',      'Phone number is required'],
       ['caddr',           'caddrErr',       'Delivery address is required'],
@@ -386,8 +409,10 @@ body {
       ['fabricName',      'fabricNameErr',  'Fabric name is required'],
       ['fabricColorText', 'fabricColorErr', 'Fabric color is required'],
     ];
-    fields.forEach(([id, errId, msg]) => {
-      const el  = document.getElementById(id);
+
+    required.forEach(([id, errId, msg]) => {
+      const el = document.getElementById(id);
+      if (!el) return;
       const err = document.getElementById(errId);
       if (!el.value.trim()) {
         el.classList.add('is-invalid');
@@ -398,115 +423,101 @@ body {
         err.textContent = '';
       }
     });
+
+    // Appointment choice is compulsory
     if (!apptChoice) {
-      document.getElementById('apptChoiceErr').textContent = 'Please choose at least 1 option';
+      document.getElementById('apptChoiceErr').textContent = 'choose atleast 1 option';
       ok = false;
     } else if (apptChoice === 'yes') {
-      const d = document.getElementById('apptDate');
-      const t = document.getElementById('apptTime');
-      if (!d.value) {
-        d.classList.add('is-invalid');
+      const apptDate = document.getElementById('apptDate');
+      const apptTime = document.getElementById('apptTime');
+      if (!apptDate.value) {
+        apptDate.classList.add('is-invalid');
         document.getElementById('apptDateErr').textContent = 'Appointment date required';
         ok = false;
       } else {
-        d.classList.remove('is-invalid');
+        apptDate.classList.remove('is-invalid');
         document.getElementById('apptDateErr').textContent = '';
       }
-      if (!t.value) {
-        t.classList.add('is-invalid');
+      if (!apptTime.value) {
+        apptTime.classList.add('is-invalid');
         document.getElementById('apptTimeErr').textContent = 'Preferred time required';
         ok = false;
       } else {
-        t.classList.remove('is-invalid');
+        apptTime.classList.remove('is-invalid');
         document.getElementById('apptTimeErr').textContent = '';
       }
     }
+
     return ok;
   }
 
-  document.getElementById('submitBtn').addEventListener('click', async () => {
+  document.getElementById('submitBtn').addEventListener('click', () => {
     if (!validate()) {
-      const firstErr = document.querySelector('.is-invalid');
-      if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const firstError = document.querySelector('.is-invalid');
+      if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
 
-    const btn = document.getElementById('submitBtn');
-    btn.disabled  = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> &nbsp;Submitting...';
-
-    const formData = new FormData();
-    formData.append('name',                 document.getElementById('cname').value.trim());
-    formData.append('phone',                document.getElementById('cphone').value.trim());
-    formData.append('address',              document.getElementById('caddr').value.trim());
-    formData.append('city',                 document.getElementById('ccity').value.trim());
-    formData.append('dress_type',           document.getElementById('garment').value);
-    formData.append('special_instructions', document.getElementById('notes').value.trim());
-    formData.append('fabric_name',          document.getElementById('fabricName').value.trim());
-    formData.append('fabric_color',         document.getElementById('fabricColorText').value.trim());
-    formData.append('measurement_method',   apptChoice === 'yes' ? 'appointment' : 'manual');
-    formData.append('_token',               csrfToken);
-
-    if (apptChoice === 'yes') {
-      formData.append('appointment_date', document.getElementById('apptDate').value);
-      formData.append('appointment_time', document.getElementById('apptTime').value);
-    } else {
-      formData.append('chest',    document.getElementById('mChest').value    || '');
-      formData.append('waist',    document.getElementById('mWaist').value    || '');
-      formData.append('length',   document.getElementById('mLength').value   || '');
-      formData.append('shoulder', document.getElementById('mShoulder').value || '');
-      formData.append('sleeve',   document.getElementById('mSleeve').value   || '');
-      formData.append('neck',     document.getElementById('mNeck').value     || '');
-    }
-
-    uploadedFiles.forEach(file => formData.append('design_images[]', file));
-
-    try {
-      const response = await fetch('/order/store', {
-        method:  'POST',
-        headers: {
-          'X-CSRF-TOKEN': csrfToken,
-          'Accept':       'application/json',
-        },
-        body: formData,
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        document.querySelector('.form-body').innerHTML = `
-          <div style="text-align:center; padding:30px 10px;">
-            <div style="width:70px;height:70px;background:linear-gradient(135deg,#1B2A4A,#212529);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
-              <i class="fas fa-check" style="color:#fff;font-size:28px;"></i>
-            </div>
-            <h3 style="color:#1B2A4A;font-weight:700;font-size:22px;margin-bottom:8px;">Order Submitted!</h3>
-            <p style="color:#575a5b;font-size:14px;margin-bottom:20px;">Your order has been sent to the tailor.</p>
-            <div style="background:#f8f9fa;border-radius:12px;padding:16px;text-align:left;border:2px solid #e0e0e0;margin-bottom:14px;">
-              <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Order Number:</strong> ${result.order_number}</p>
-              <p style="font-size:13px;color:#212529;margin-bottom:0;"><strong>Status:</strong> Pending</p>
-            </div>
-            <div style="background:#E6F1FB;border-radius:10px;padding:12px;border:1.5px solid #B5D4F4;margin-bottom:20px;">
-              <p style="font-size:13px;color:#0C447C;margin:0;">
-                <i class="fas fa-lock"></i>
-                <strong>Payment Pending</strong> — Waiting for tailor to accept your order.
-              </p>
-            </div>
-            <button onclick="location.reload()" style="background:linear-gradient(135deg,#1B2A4A,#212529);color:#fff;border:none;border-radius:10px;padding:12px 30px;font-size:15px;font-weight:600;cursor:pointer;">
-              <i class="fas fa-plus"></i> &nbsp;New Order
-            </button>
-          </div>
-        `;
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        btn.disabled  = false;
-        btn.innerHTML = '<i class="fas fa-check"></i> &nbsp;Submit Order';
-        alert('Error: ' + result.message);
+    const data = {
+      name:    document.getElementById('cname').value.trim(),
+      phone:   document.getElementById('cphone').value.trim(),
+      address: document.getElementById('caddr').value.trim(),
+      city:    document.getElementById('ccity').value.trim(),
+      garment: document.getElementById('garment').value,
+      notes:   document.getElementById('notes').value.trim(),
+      measurementMethod: apptChoice === 'yes' ? 'appointment' : 'manual',
+      appointment: apptChoice === 'yes' ? {
+        date: document.getElementById('apptDate').value,
+        time: document.getElementById('apptTime').value
+      } : null,
+      measurements: apptChoice === 'no' ? {
+        chest:    document.getElementById('mChest').value,
+        waist:    document.getElementById('mWaist').value,
+        length:   document.getElementById('mLength').value,
+        shoulder: document.getElementById('mShoulder').value,
+        sleeve:   document.getElementById('mSleeve').value,
+        neck:     document.getElementById('mNeck').value,
+      } : null,
+      fabric: {
+        name:      document.getElementById('fabricName').value.trim(),
+        colorName: document.getElementById('fabricColorText').value.trim(),
       }
-    } catch (err) {
-      btn.disabled  = false;
-      btn.innerHTML = '<i class="fas fa-check"></i> &nbsp;Submit Order';
-      alert('Something went wrong: ' + err.message);
-    }
+    };
+
+    console.log('Order Data:', data);
+
+    const apptLine = apptChoice === 'yes'
+      ? `<p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Appointment:</strong> ${data.appointment.date} &mdash; ${data.appointment.time}</p>`
+      : '';
+
+    const formBody = document.querySelector('.form-body');
+    formBody.innerHTML = '';
+
+    const success = document.createElement('div');
+    success.style.cssText = 'text-align:center; padding: 30px 10px;';
+    success.innerHTML = `
+      <div style="width:70px;height:70px;background:linear-gradient(135deg,#1B2A4A,#212529);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+        <i class="fas fa-check" style="color:#fff;font-size:28px;"></i>
+      </div>
+      <h3 style="color:#1B2A4A;font-weight:700;font-size:22px;margin-bottom:8px;">Order Submitted!</h3>
+      <p style="color:#575a5b;font-size:14px;margin-bottom:20px;">Your order has been sent to the tailor. Payment will be unlocked after acceptance.</p>
+      <div style="background:#f8f9fa;border-radius:12px;padding:16px;text-align:left;border:2px solid #e0e0e0;margin-bottom:14px;">
+        <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Name:</strong> ${data.name}</p>
+        <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Phone:</strong> ${data.phone}</p>
+        <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Garment:</strong> ${data.garment}</p>
+        <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Fabric:</strong> ${data.fabric.name} &mdash; ${data.fabric.colorName}</p>
+        ${apptLine}
+      </div>
+      <div style="background:#E6F1FB;border-radius:10px;padding:12px;border:1.5px solid #B5D4F4;margin-bottom:20px;">
+        <p style="font-size:13px;color:#0C447C;margin:0;"><i class="fas fa-lock"></i> <strong>Payment Pending</strong> &mdash; Waiting for tailor to accept your order.</p>
+      </div>
+      <button onclick="location.reload()" style="background:linear-gradient(135deg,#1B2A4A,#212529);color:#fff;border:none;border-radius:10px;padding:12px 30px;font-size:15px;font-weight:600;cursor:pointer;letter-spacing:0.5px;">
+        <i class="fas fa-plus"></i> &nbsp;New Order
+      </button>
+    `;
+    formBody.appendChild(success);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 </script>
 </body>

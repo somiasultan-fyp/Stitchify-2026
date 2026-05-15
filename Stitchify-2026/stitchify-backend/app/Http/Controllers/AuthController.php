@@ -11,13 +11,26 @@ use App\Models\Tailor;
 
 class AuthController extends Controller
 {
-    // Show register form
+    // ─────────────────────────────────────────
+    // Register form dikhao
+    // ─────────────────────────────────────────
     public function showRegister()
     {
         return view('auth.register');
     }
 
+    // ─────────────────────────────────────────
+    // Login form dikhao
+    // 1st wale mein tha — 2nd mein missing tha
+    // ─────────────────────────────────────────
+    public function showLogin()
+    {
+        return view('auth.login');
+    }
+
+    // ─────────────────────────────────────────
     // Register process
+    // ─────────────────────────────────────────
     public function register(Request $request)
     {
         $request->validate([
@@ -70,23 +83,20 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        $redirect = $user->role === 'tailor'
-            ? '/tailor/dashboard'
-            : '/customer/dashboard';
+        // Verification email bhejo
+        $user->sendEmailVerificationNotification();
 
+        // Email verify page par bhejo — dashboard nahi
+        // (dashboard tab milega jab email verify ho jaaye)
         return response()->json([
             'success'  => true,
-            'redirect' => $redirect,
+            'redirect' => '/email/verify',
         ]);
     }
 
-    // Show login form
-    public function showLogin()
-    {
-        return view('auth.login');
-    }
-
+    // ─────────────────────────────────────────
     // Login process
+    // ─────────────────────────────────────────
     public function login(Request $request)
     {
         $request->validate([
@@ -96,6 +106,7 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
+        // User exist nahi karta
         if (!$user) {
             return response()->json([
                 'success' => false,
@@ -103,6 +114,7 @@ class AuthController extends Controller
             ], 401);
         }
 
+        // Account blocked hai — 2nd wale mein tha, zaroori hai
         if (!$user->is_active) {
             return response()->json([
                 'success' => false,
@@ -110,16 +122,19 @@ class AuthController extends Controller
             ], 403);
         }
 
+        // Credentials check karo
         if (Auth::attempt([
             'email'    => $request->email,
             'password' => $request->password,
         ])) {
             $request->session()->regenerate();
 
+            // Role ke hisaab se dashboard par bhejo
             $redirect = match(Auth::user()->role) {
-                'admin'  => '/admin/dashboard',
-                'tailor' => '/tailor/dashboard',
-                default  => '/customer/dashboard',
+                'admin'    => '/admin/dashboard',
+                'tailor'   => '/tailor/dashboard',
+                'customer' => '/customer/dashboard',
+                default    => '/login',
             };
 
             return response()->json([
@@ -134,7 +149,9 @@ class AuthController extends Controller
         ], 401);
     }
 
+    // ─────────────────────────────────────────
     // Logout
+    // ─────────────────────────────────────────
     public function logout(Request $request)
     {
         Auth::logout();

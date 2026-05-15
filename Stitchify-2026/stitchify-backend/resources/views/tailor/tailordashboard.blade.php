@@ -291,7 +291,7 @@ body {
 <body>
   <div class="sidebar">
     <div class="sidebar-logo">
-      <img src="logo.png" alt="Logo">
+      <img src="{{ asset('images/logo.png') }}" alt="Logo">
       <h3>Stitchify</h3>
     </div>
 
@@ -311,7 +311,14 @@ body {
     </ul>
 
     <div class="logout-btn">
-      <a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      <form method="POST" action="/logout" style="margin:0;">
+    @csrf
+    <button type="submit" style="background:none;border:none;padding:12px 15px;color:#ff6b6b;width:100%;text-align:left;cursor:pointer;border-radius:8px;font-size:15px;display:flex;align-items:center;transition:all 0.3s ease;"
+        onmouseover="this.style.backgroundColor='rgba(220,53,69,0.3)'"
+        onmouseout="this.style.backgroundColor='transparent'">
+        <i class="fas fa-sign-out-alt" style="margin-right:12px;width:20px;text-align:center;"></i> Logout
+    </button>
+      </form>
     </div>
   </div>
 

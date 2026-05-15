@@ -6,9 +6,29 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Order;
 use App\Models\Tailor;
+use App\Models\User; 
 
 class TailorController extends Controller
 {
+    public function index()
+    {
+        $tailors = User::where('role', 'tailor')
+                       ->where('is_active', true)
+                       ->get();
+
+        return view('tailors.index', compact('tailors'));
+    }
+
+    // Single tailor profile
+    public function show($id)
+    {
+        $tailor = User::where('id', $id)
+                      ->where('role', 'tailor')
+                      ->where('is_active', true)
+                      ->firstOrFail();
+
+        return view('tailors.show', compact('tailor'));
+    }
     public function dashboard()
     {
         $user   = Auth::user();

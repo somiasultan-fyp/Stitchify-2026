@@ -3,10 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-@if(!auth()->check())
-    <script>window.location.href = '/login';</script>
-@endif
-<title>Customer Dashboard - Stitchify</title>
+<title>Customer Dashboard - Tailoring Services</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <style>
@@ -350,9 +347,6 @@ body {
 </style>
 </head>
 <body>
-  @if(!auth()->check())
-    <script>window.location.href = '/login';</script>
-@endif
   <div class="sidebar">
     <div class="sidebar-logo">
       <img src="logo.png" alt="Logo">
@@ -360,7 +354,7 @@ body {
     </div>
 
     <div class="user-info">
-      <h4>{{ auth()->user()->name }}</h4>
+      <h4>Ali Hassan</h4>
       <p>Customer</p>
     </div>
 
@@ -380,7 +374,7 @@ body {
 
   <div class="main-content">
     <div class="top-bar" id="overview">
-      <h2>Welcome Back, {{ auth()->user()->name }}!!</h2>
+      <h2>Welcome Back, Ali Hassan!!</h2>
     </div>
 
     <div class="stats-grid">
