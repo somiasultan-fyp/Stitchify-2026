@@ -70,9 +70,54 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        $redirect = $user->role === 'tailor'
-            ? '/tailor/dashboard'
-            : '/customer/dashboard';
+    // ← Naya: verification email bhejo
+    $user->sendEmailVerificationNotification();
+
+    // ← Naya: verify page par bhejo, dashboard nahi
+    return response()->json([
+        'success'  => true,
+        'redirect' => '/email/verify',
+    ]);
+    }
+
+    // Show login form
+   public function login(Request $request)
+{
+    $request->validate([
+        'email'    => 'required|email',
+        'password' => 'required',
+    ]);
+
+    $user = User::where('email', $request->email)->first();
+
+    if (!$user) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Email or password is incorrect.',
+        ], 401);
+    }
+
+    if (!$user->is_active) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Your account has been blocked. Contact support.',
+        ], 403);
+    }
+
+    if (Auth::attempt([
+        'email'    => $request->email,
+        'password' => $request->password,
+    ])) {
+        $request->session()->regenerate();
+
+        // ← Sirf yeh line change hui hai
+        $redirect = $request->input('redirect') 
+            ?? match(Auth::user()->role) {
+                'admin'    => '/admin/dashboard',
+                'tailor'   => '/tailor/dashboard',
+                'customer' => '/customer/dashboard',
+                default    => '/login',
+            };
 
         return response()->json([
             'success'  => true,
@@ -80,67 +125,17 @@ class AuthController extends Controller
         ]);
     }
 
-    // Show login form
-    public function showLogin()
-    {
-        return view('auth.login');
-    }
-
-    // Login process
-    public function login(Request $request)
-    {
-        $request->validate([
-            'email'    => 'required|email',
-            'password' => 'required',
-        ]);
-
-        $user = User::where('email', $request->email)->first();
-
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Email or password is incorrect.',
-            ], 401);
-        }
-
-        if (!$user->is_active) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Your account has been blocked. Contact support.',
-            ], 403);
-        }
-
-        if (Auth::attempt([
-            'email'    => $request->email,
-            'password' => $request->password,
-        ])) {
-            $request->session()->regenerate();
-
-            $redirect = match(Auth::user()->role) {
-                'admin'  => '/admin/dashboard',
-                'tailor' => '/tailor/dashboard',
-                'customer' => '/customer/dashboard',
-                default => '/home',
-            };
-
-            return response()->json([
-                'success'  => true,
-                'redirect' => $redirect,
-            ]);
-        }
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Email or password is incorrect.',
-        ], 401);
-    }
-
+    return response()->json([
+        'success' => false,
+        'message' => 'Email or password is incorrect.',
+    ], 401);
+}
     // Logout
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/home');
+        return redirect('/login');
     }
 }

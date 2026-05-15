@@ -285,6 +285,8 @@ body {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 
 <script>
+const urlParams  = new URLSearchParams(window.location.search);
+const redirectTo = urlParams.get('redirect') || null;
 const loginForm      = document.getElementById('loginForm');
 const emailInput     = document.getElementById('email');
 const passwordInput  = document.getElementById('password');
@@ -393,7 +395,7 @@ loginForm.addEventListener('submit', async (e) => {
         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
                                 .getAttribute('content'),
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, password, redirect: redirectTo }),
     });
 
     const result = await response.json();

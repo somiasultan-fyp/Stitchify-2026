@@ -257,8 +257,10 @@ body {
 .order-header {
   display: flex;
   justify-content: space-between;
-  align-items: start;
+  align-items: center;
   margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .order-id {
@@ -277,6 +279,39 @@ body {
 .status-pending { background-color: #fff3e0; color: #f57c00; }
 .status-progress { background-color: #e3f2fd; color: #1976d2; }
 .status-completed { background-color: #e8f5e9; color: #388e3c; }
+
+/* ✅ Payment Button Styles - NEW */
+.payment-btn {
+  padding: 6px 16px;
+  background: linear-gradient(135deg, #1976d2, #1565c0);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(25, 118, 210, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.payment-btn:hover {
+  background: linear-gradient(135deg, #1565c0, #0d47a1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.4);
+}
+
+.payment-btn:active {
+  transform: translateY(0);
+}
+
+.order-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
 .order-details {
   color: var(--copyright-bg);
@@ -345,6 +380,14 @@ body {
   }
   .main-content {
     margin-left: 0;
+  }
+  .order-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .order-actions {
+    width: 100%;
+    justify-content: space-between;
   }
 }
 </style>
@@ -427,10 +470,13 @@ body {
     <div class="content-section" id="my-orders">
       <h3 class="section-title">My Orders</h3>
 
+      <!-- Order 1: In Progress - No Payment Button -->
       <div class="order-card">
         <div class="order-header">
           <div class="order-id">#ORD-2024-001</div>
-          <span class="order-status status-progress">In Progress</span>
+          <div class="order-actions">
+            <span class="order-status status-progress">In Progress</span>
+          </div>
         </div>
         <div class="order-details">
           <p><strong>Tailor:</strong> Ahmed Tailors</p>
@@ -440,10 +486,16 @@ body {
         </div>
       </div>
 
+      <!-- Order 2: Pending - ✅ Payment Button Added -->
       <div class="order-card">
         <div class="order-header">
           <div class="order-id">#ORD-2024-002</div>
-          <span class="order-status status-pending">Pending</span>
+          <div class="order-actions">
+            <span class="order-status status-pending">Pending</span>
+            <button class="payment-btn" onclick="handlePayment('#ORD-2024-002')">
+              <i class="fas fa-credit-card"></i> Pay Now
+            </button>
+          </div>
         </div>
         <div class="order-details">
           <p><strong>Tailor:</strong> Fashion Studio</p>
@@ -453,10 +505,13 @@ body {
         </div>
       </div>
 
+      <!-- Order 3: Completed - No Payment Button -->
       <div class="order-card">
         <div class="order-header">
           <div class="order-id">#ORD-2024-003</div>
-          <span class="order-status status-completed">Completed</span>
+          <div class="order-actions">
+            <span class="order-status status-completed">Completed</span>
+          </div>
         </div>
         <div class="order-details">
           <p><strong>Tailor:</strong> Elite Tailoring</p>
@@ -554,6 +609,18 @@ body {
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
   <script>
+    // ✅ Payment Handler Function - Placeholder for future integration
+    function handlePayment(orderId) {
+      // TODO: Add your payment logic here
+      console.log('Payment initiated for order:', orderId);
+      
+      // Example: Show alert for now (remove later)
+      alert('Payment process starting for ' + orderId + '\n\n(Aap yahan apna payment gateway integrate kar sakti hain)');
+      
+      // Example redirect (baad mein uncomment karein):
+      // window.location.href = '/payment/' + orderId;
+    }
+
     // Smooth scroll for sidebar links
     document.querySelectorAll('.sidebar-menu a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function(e) {
