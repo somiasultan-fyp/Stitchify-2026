@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Tailor;
+use App\Models\Customer;
 use App\Models\Measurement;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -27,12 +28,12 @@ class CustomerOrderController extends Controller
     public function placeOrder(Request $request)
     {
         $request->validate([
-            'tailor_id'          => 'required|exists:tailors,id',
-            'dress_type'         => 'required|string',
-            'fabric_name'        => 'required|string',
-            'fabric_color'       => 'required|string',
-            'fabric_provided_by' => 'required|in:customer,tailor',
-            'delivery_type'      => 'required|in:pickup,home_delivery',
+            'tailor_id'            => 'required|exists:tailors,id',
+            'dress_type'           => 'required|string',
+            'fabric_name'          => 'required|string',
+            'fabric_color'         => 'required|string',
+            'fabric_provided_by'   => 'required|in:customer,tailor',
+            'delivery_type'        => 'required|in:pickup,home_delivery',
             'special_instructions' => 'nullable|string',
         ]);
 
@@ -43,7 +44,14 @@ class CustomerOrderController extends Controller
             return back()->with('error', 'Is tailor ke slots full hain. Doosra tailor choose karein.');
         }
 
+        // Customer profile check — agar nahi hai to banao
         $customer = auth()->user()->customer;
+
+        if (!$customer) {
+            $customer = Customer::create([
+                'user_id' => auth()->id(),
+            ]);
+        }
 
         // Order banao
         $order = Order::create([
@@ -62,17 +70,17 @@ class CustomerOrderController extends Controller
         // Measurements save karo (agar manual bhari hain)
         if ($request->measurement_method === 'manual') {
             Measurement::create([
-                'order_id'        => $order->id,
-                'chest'           => $request->chest,
-                'waist'           => $request->waist,
-                'hips'            => $request->hips,
-                'shoulder'        => $request->shoulder,
-                'sleeve_length'   => $request->sleeve_length,
-                'shirt_length'    => $request->shirt_length,
-                'trouser_length'  => $request->trouser_length,
-                'trouser_waist'   => $request->trouser_waist,
-                'neck'            => $request->neck,
-                'additional_notes'=> $request->special_instructions,
+                'order_id'         => $order->id,
+                'chest'            => $request->chest,
+                'waist'            => $request->waist,
+                'hips'             => $request->hips,
+                'shoulder'         => $request->shoulder,
+                'sleeve_length'    => $request->sleeve_length,
+                'shirt_length'     => $request->shirt_length,
+                'trouser_length'   => $request->trouser_length,
+                'trouser_waist'    => $request->trouser_waist,
+                'neck'             => $request->neck,
+                'additional_notes' => $request->special_instructions,
             ]);
         }
 

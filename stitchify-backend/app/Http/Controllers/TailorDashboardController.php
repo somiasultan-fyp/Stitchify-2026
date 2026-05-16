@@ -43,7 +43,7 @@ class TailorDashboardController extends Controller
     public function showOrder(Order $order)
     {
         $this->authorizeTailor($order);
-        $order->load(['customer.user', 'measurements']);
+        $order->load(['customer.user', 'measurement']);
         return view('tailor.order-detail', compact('order'));
     }
 

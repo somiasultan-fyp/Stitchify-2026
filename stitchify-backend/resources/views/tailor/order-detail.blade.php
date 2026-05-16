@@ -195,7 +195,7 @@
         </div>
 
         <!-- Measurements Card -->
-        @if($order->measurements)
+        @if($order->measurement)
         <div class="card">
             <div class="card-header">
                 <i class="fas fa-ruler-combined me-2"></i> Measurements

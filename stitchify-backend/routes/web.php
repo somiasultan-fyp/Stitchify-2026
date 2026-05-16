@@ -16,9 +16,13 @@ Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/login',    [AuthController::class, 'login'])->name('login');
 Route::post('/logout',   [AuthController::class, 'logout'])->name('logout');
 
+// Email verification bypass
+Route::get('/email/verify', fn() => redirect('/login'))->name('verification.notice');
+Route::get('/email/verify/{id}/{hash}', fn() => redirect('/login'))->name('verification.verify');
+
 // Customer Dashboard
 Route::middleware('auth')->group(function () {
-    Route::get('/customer/dashboard', fn() => view('customer.customerdashboard'));
+    Route::get('/customer/dashboard', fn() => view('customer.customerdashboard'))->name('customer.dashboard');
 });
 
 Route::post('/customer/place-order', [CustomerOrderController::class, 'placeOrder'])->name('customer.place.order')->middleware('auth');
