@@ -1,6 +1,5 @@
 <?php
 // app/Models/Order.php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,22 +10,13 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-    'order_number',
-    'customer_id',
-    'tailor_id',
-    'dress_type',
-    'special_instructions',
-    'fabric_provided_by',
-    'fabric_details',
-    'delivery_type',
-    'status',
-    'payment_status',
-    'price',
-    'advance_paid',
-    'expected_delivery_date',
-    'actual_delivery_date',
-    'tracking_id',
-];
+        'order_number', 'customer_id', 'tailor_id', 'dress_type',
+        'special_instructions', 'fabric_provided_by', 'fabric_details',
+        'price', 'advance_paid', 'expected_delivery_date',
+        'actual_delivery_date', 'status', 'payment_status',
+        'delivery_type', 'tracking_id', 'delivery_days', 'rejection_reason', 
+        'accepted_at', 'rejected_at',
+    ];
 
     // ===== RELATIONSHIPS =====
 
@@ -54,7 +44,6 @@ class Order extends Model
         return $this->hasMany(Payment::class);
     }
 
-    // ===== HELPER FUNCTIONS =====
 
     // Unique order number generate karo
     public static function generateOrderNumber(): string
