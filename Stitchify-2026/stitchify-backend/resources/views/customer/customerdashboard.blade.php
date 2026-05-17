@@ -271,7 +271,7 @@
       <li><a href="#find-tailors" data-section="find-tailors"><i class="fas fa-cut"></i> Find Tailors</a></li>
       <li><a href="#order-history" data-section="order-history"><i class="fas fa-history"></i> Order History</a></li>
       <li><a href="#"><i class="fas fa-user"></i> My Profile</a></li>
-      <li><a href="{{ route('customer.settings') ?? '#' }}"><i class="fas fa-cog"></i> Settings</a></li>
+      <li><a href="#" ><i class="fas fa-cog"></i> Settings</a></li>
     </ul>
 
     <div class="logout-btn">
@@ -449,7 +449,7 @@
       </div>
       
       <div class="text-center mt-3">
-        <a href="{{ route('tailor.tailors.index') ?? '#' }}" class="btn btn-outline-secondary btn-sm">
+        <a href="#" class="btn btn-outline-secondary btn-sm">
           View All Tailors <i class="fas fa-arrow-right ms-1"></i>
         </a>
       </div>
