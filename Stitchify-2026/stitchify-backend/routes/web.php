@@ -71,7 +71,7 @@ Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
 });
 
 // Yeh route middleware ke bahar tha tumhara — same rakha
-Route::middleware(['auth', 'verified',  'role:customer'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
 Route::post('/order/store', [OrderController::class, 'store'])->name('order.store');
 });
 
@@ -79,7 +79,7 @@ Route::post('/order/store', [OrderController::class, 'store'])->name('order.stor
 // TAILOR ROUTES
 // verified middleware add kiya
 // ─────────────────────────────────────────
-Route::middleware(['auth', 'verified',  'role:tailor'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:tailor'])->group(function () {
     Route::get('/tailor/dashboard',          [TailorController::class, 'dashboard']);
     Route::post('/tailor/order/{id}/accept', [TailorController::class, 'acceptOrder']);
     Route::post('/tailor/order/{id}/status', [TailorController::class, 'updateStatus']);
@@ -91,6 +91,6 @@ Route::middleware(['auth', 'verified',  'role:tailor'])->group(function () {
 // ─────────────────────────────────────────
 // ADMIN ROUTES — same rakha, verified add kiya
 // ─────────────────────────────────────────
-Route::middleware(['auth','verified', 'role:admin'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', fn() => view('admin.admindashboard'));
 });
