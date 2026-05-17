@@ -11,8 +11,8 @@ class AdminSeeder extends Seeder
         User::firstOrCreate(
             ['email' => 'admin@stitchify.com'],
             [
-                'name'      => 'Admin',
-                'phone'     => '03001234567',
+                'name'      => 'Super Admin',
+                'phone'     => '03000000000',
                 'password'  => Hash::make('admin123'),
                 'role'      => 'admin',
                 'is_active' => true,
