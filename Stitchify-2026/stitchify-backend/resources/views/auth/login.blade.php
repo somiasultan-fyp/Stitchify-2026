@@ -249,13 +249,13 @@ body {
         @csrf
       <div class="mb-3">
         <label for="email" class="form-label">Email Address</label>
-        <input id="email" class="form-control" placeholder="example@gmail.com" type="email" required>
+        <input id="email" name="email" class="form-control" placeholder="example@gmail.com" type="email" required>
         <span id="emailError" class="error-text"></span>
       </div>
 
       <div class="mb-3 password-toggle">
         <label for="password" class="form-label">Password</label>
-        <input id="password" class="form-control" placeholder="Enter your password" type="password" required>
+        <input id="password" name="password" class="form-control" placeholder="Enter your password" type="password" required>
         <i id="togglePassword" class="fas fa-eye toggle-icon" title="Show/hide password" role="button" aria-label="Toggle password visibility"></i>
         <span id="passwordError" class="error-text"></span>
       </div>
@@ -389,13 +389,19 @@ loginForm.addEventListener('submit', async (e) => {
   try {
     const response = await fetch('/login', {
       method:  'POST',
+      credentials: 'include', // Live server par session/cookie handle karne keliye
       headers: {
         'Content-Type': 'application/json',
         'Accept':       'application/json',
         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
                                 .getAttribute('content'),
       },
-      body: JSON.stringify({ email, password, redirect: redirectTo }),
+      body: JSON.stringify({ 
+        email, 
+        password, 
+        redirect: redirectTo,
+        _token: document.querySelector('input[name="_token"]').value // Token body mein bhejne keliye
+      }),
     });
 
     const result = await response.json();
