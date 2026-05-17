@@ -10,7 +10,7 @@ class RoleMiddleware
     public function handle(Request $request, Closure $next, string $role): mixed
     {
         if (!auth()->check() || auth()->user()->role !== $role) {
-            abort(403, 'Access Denied');
+            return redirect('/login');
         }
 
         return $next($request);
