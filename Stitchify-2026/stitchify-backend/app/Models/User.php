@@ -18,7 +18,7 @@ use Illuminate\Notifications\Notifiable;
         'role',
         'phone',
         'profile_image',
-        'is_active',
+        'is_active', 'email_verified_at' ,
     ];
 
     protected $hidden = [

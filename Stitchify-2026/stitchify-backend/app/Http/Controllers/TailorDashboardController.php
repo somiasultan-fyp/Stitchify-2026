@@ -67,7 +67,7 @@ class TailorDashboardController extends Controller
         }
 
         $order->update([
-            'status'                 => 'in_progress',
+            'status'                 => 'accepted',
             'price'                  => $request->price,
             'delivery_days'          => $request->delivery_days,
             'expected_delivery_date' => Carbon::now()->addDays((int)$request->delivery_days),
@@ -137,15 +137,15 @@ class TailorDashboardController extends Controller
         $order->update(['status' => $nextStatus]);
 
         // Return slot when order is dispatched
-        if ($nextStatus === 'dispatched') {
+        if ($nextStatus === 'delivered') {
             auth()->user()->tailor->increment('available_slots');
             
             Notification::create([
                 'user_id' => $order->customer->user_id,
                 'type' => 'order_dispatched',
                 'title' => 'Order Dispatched',
-                'message' => "Good news! Your order #{$order->id} has been dispatched and is on the way.",
-                // 'order_id' => $order->id,
+                'message' => "Good news! Your order #{$order->id} has been delivered successfully!",
+                'order_id' => $order->id,
             ]);
         }
 
