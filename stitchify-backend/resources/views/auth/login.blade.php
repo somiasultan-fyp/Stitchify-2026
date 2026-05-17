@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="csrf-token" content="{{ csrf_token() }}">
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Login - Stitchify</title>
@@ -112,7 +111,6 @@ body {
   width: 18px; height: 18px; margin-right: 8px; cursor: pointer; accent-color: var(--accent-color);
 }
 .remember-me label { color: var(--copyright-bg); font-size: 14px; cursor: pointer; margin: 0; }
-/* Laravel validation errors */
 .alert-danger {
   background-color: #ffe6e6;
   border: 1px solid #dc3545;
@@ -122,7 +120,6 @@ body {
   margin-bottom: 20px;
   font-size: 14px;
 }
-.alert-danger ul { margin: 0; padding-left: 20px; }
 </style>
 </head>
 <body>
@@ -137,58 +134,25 @@ body {
       <p>Login to your account</p>
     </div>
 
-    {{-- ✅ Laravel Validation Errors Display --}}
-    @if($errors->any())
-      <div class="alert-danger">
-        <ul class="mb-0">
-          @foreach($errors->all() as $error)
-            <li>{{ $error }}</li>
-          @endforeach
-        </ul>
-      </div>
-    @endif
+    <div id="loginError" class="alert-danger" style="display:none;"></div>
 
-    {{-- ✅ Session Error Display --}}
-    @if(session('error'))
-      <div class="alert-danger">{{ session('error') }}</div>
-    @endif
-
-    {{-- ✅ NORMAL FORM SUBMIT (No JavaScript fetch) --}}
-    <form method="POST" action="{{ route('login') }}">
+    <form id="loginForm">
       @csrf
-
       <div class="mb-3">
         <label for="email" class="form-label">Email Address</label>
-        {{-- ✅ name="email" add kiya --}}
-        <input 
-          id="email" 
-          name="email" 
-          class="form-control @error('email') is-invalid @enderror" 
-          placeholder="example@gmail.com" 
-          type="email" 
-          value="{{ old('email') }}" 
-          required
-          autocomplete="email"
-        >
+        <input id="email" name="email" class="form-control"
+               placeholder="example@gmail.com" type="email"
+               value="{{ old('email') }}" required autocomplete="email">
         <span id="emailError" class="error-text"></span>
       </div>
-
       <div class="mb-3 password-toggle">
         <label for="password" class="form-label">Password</label>
-        {{-- ✅ name="password" add kiya --}}
-        <input 
-          id="password" 
-          name="password" 
-          class="form-control @error('password') is-invalid @enderror" 
-          placeholder="Enter your password" 
-          type="password" 
-          required
-          autocomplete="current-password"
-        >
-        <i id="togglePassword" class="fas fa-eye toggle-icon" title="Show/hide password" role="button"></i>
+        <input id="password" name="password" class="form-control"
+               placeholder="Enter your password" type="password"
+               required autocomplete="current-password">
+        <i id="togglePassword" class="fas fa-eye toggle-icon" role="button"></i>
         <span id="passwordError" class="error-text"></span>
       </div>
-
       <div class="d-flex justify-content-between align-items-center">
         <div class="remember-me">
           <input type="checkbox" name="remember" id="rememberMe">
@@ -198,7 +162,6 @@ body {
           <a href="#" id="forgotPasswordLink">Forgot Password?</a>
         </div>
       </div>
-
       <button type="submit" class="btn-login" id="loginBtn">
         <i class="fas fa-sign-in-alt"></i> Login
       </button>
@@ -212,20 +175,18 @@ body {
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 <script>
-// ===== UX Enhancements Only (Form submit ko block nahi karenge) =====
-
-const emailInput = document.getElementById('email');
-const passwordInput = document.getElementById('password');
+const emailInput     = document.getElementById('email');
+const passwordInput  = document.getElementById('password');
 const togglePassword = document.getElementById('togglePassword');
-const emailError = document.getElementById('emailError');
-const passwordError = document.getElementById('passwordError');
-const forgotPasswordLink = document.getElementById('forgotPasswordLink');
-const loginBtn = document.getElementById('loginBtn');
+const emailError     = document.getElementById('emailError');
+const passwordError  = document.getElementById('passwordError');
+const loginBtn       = document.getElementById('loginBtn');
+const loginForm      = document.getElementById('loginForm');
+const errorDiv       = document.getElementById('loginError');
 
-// Client-side email validation (UX only - server bhi validate karega)
 function validateEmail(email) {
   emailError.textContent = '';
-  if (!email) return true; // Let server handle required
+  if (!email) return true;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     emailError.textContent = 'Please enter a valid email address';
@@ -241,7 +202,6 @@ emailInput.addEventListener('input', () => {
   if (emailError.textContent) validateEmail(emailInput.value.trim());
 });
 
-// Password toggle
 passwordInput.addEventListener('input', () => {
   togglePassword.classList.toggle('show', passwordInput.value.length > 0);
   passwordError.textContent = '';
@@ -254,17 +214,59 @@ togglePassword.addEventListener('click', () => {
   togglePassword.classList.toggle('fa-eye-slash', isPassword);
 });
 
-// Forgot password (placeholder)
-forgotPasswordLink.addEventListener('click', (e) => {
+document.getElementById('forgotPasswordLink')?.addEventListener('click', (e) => {
   e.preventDefault();
-  alert('Password reset coming soon!\nContact support for help.');
+  alert('Password reset coming soon!');
 });
 
-// ✅ Optional: Loading state on submit (UX only)
-document.querySelector('form').addEventListener('submit', () => {
-  if (validateEmail(emailInput.value.trim())) {
-    loginBtn.disabled = true;
-    loginBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Logging in...';
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const email    = emailInput.value.trim();
+  const password = passwordInput.value;
+  const token    = document.querySelector('input[name="_token"]').value;
+
+  errorDiv.style.display = 'none';
+  errorDiv.textContent   = '';
+
+  if (!validateEmail(email)) return;
+  if (!password) {
+    passwordError.textContent = 'Password is required.';
+    return;
+  }
+
+  loginBtn.disabled  = true;
+  loginBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Logging in...';
+
+  try {
+    const response = await fetch('{{ route("login") }}', {
+      method:  'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept':       'application/json',
+        'X-CSRF-TOKEN': token,
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      loginBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Redirecting...';
+      window.location.href = result.redirect;
+    } else {
+      errorDiv.textContent   = result.message || 'Email or password is incorrect.';
+      errorDiv.style.display = 'block';
+      loginBtn.disabled      = false;
+      loginBtn.innerHTML     = '<i class="fas fa-sign-in-alt"></i> Login';
+    }
+
+  } catch (err) {
+    console.error(err);
+    errorDiv.textContent   = 'Something went wrong. Please try again.';
+    errorDiv.style.display = 'block';
+    loginBtn.disabled      = false;
+    loginBtn.innerHTML     = '<i class="fas fa-sign-in-alt"></i> Login';
   }
 });
 </script>
