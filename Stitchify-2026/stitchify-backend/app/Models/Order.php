@@ -14,8 +14,15 @@ class Order extends Model
         'special_instructions', 'fabric_provided_by', 'fabric_details',
         'price', 'advance_paid', 'expected_delivery_date',
         'actual_delivery_date', 'status', 'payment_status',
-        'delivery_type', 'tracking_id', 'delivery_days', 'rejection_reason', 
-        'accepted_at', 'rejected_at',
+        'delivery_type', 'tracking_id', 'delivery_days', 'rejection_reason',
+        'design_image', 'accepted_at', 'rejected_at',
+    ];
+
+    protected $casts = [
+    'expected_delivery_date' => 'datetime',
+    'actual_delivery_date' => 'datetime',
+    'accepted_at' => 'datetime',
+    'rejected_at' => 'datetime',
     ];
 
     // ===== RELATIONSHIPS =====

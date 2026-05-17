@@ -19,6 +19,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+         // Production pe HTTPS force karein
+    if (app()->environment('production')) {
+        \URL::forceScheme('https');
+        config(['session.secure' => true]);
+        config(['session.same_site' => 'lax']);
+    }
     }
 }
