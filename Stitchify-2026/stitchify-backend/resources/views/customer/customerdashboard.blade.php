@@ -353,7 +353,7 @@
     <li><a href="#overview"     data-sec="overview"     class="active"><i class="fas fa-th-large"></i> Dashboard</a></li>
     <li><a href="#my-orders"    data-sec="my-orders"            ><i class="fas fa-shopping-bag"></i> My Orders</a></li>
     <li><a href="#order-history" data-sec="order-history"       ><i class="fas fa-history"></i> Order History</a></li>
-    <li><a href="{{ route('customer.orders.create') }}"         ><i class="fas fa-plus-circle"></i> New Order</a></li>
+    <li><a href="{{ url('customer/orders-form') }}"         ><i class="fas fa-plus-circle"></i> New Order</a></li>
   </ul>
 
   <div class="sb-logout">
