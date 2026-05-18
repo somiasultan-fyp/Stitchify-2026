@@ -98,3 +98,7 @@ Route::middleware(['auth', 'role:admin'])
 // FALLBACK
 // ─────────────────────────────────────────
 Route::fallback(fn() => response()->view('errors.404', [], 404));
+Route::get('/clear-view', function() {
+    Artisan::call('view:clear');
+    return "Form cache cleared successfully!";
+});
