@@ -157,7 +157,6 @@ body {
       <p>Fill in all details to place your order</p>
     </div>
 
-    <!-- CONTACT & DELIVERY -->
     <div class="section-divider"><span>Contact & Delivery</span></div>
 
     <div class="mb-3">
@@ -184,7 +183,6 @@ body {
       <span class="error-text" id="ccityErr"></span>
     </div>
 
-    <!-- DELIVERY METHOD -->
     <div class="section-divider"><span>Delivery Method</span></div>
 
     <div class="toggle-box mb-3">
@@ -204,7 +202,6 @@ body {
       </div>
       <span class="error-text" id="deliveryChoiceErr"></span>
 
-      <!-- YES: Extra charges note -->
       <div class="note-block warning" id="deliveryYesNote">
         <p>
           <i class="fas fa-exclamation-triangle"></i>
@@ -213,7 +210,6 @@ body {
         </p>
       </div>
 
-      <!-- NO: Self pickup note -->
       <div class="note-block info" id="deliveryNoNote">
         <p>
           <i class="fas fa-info-circle"></i>
@@ -223,7 +219,6 @@ body {
       </div>
     </div>
 
-    <!-- GARMENT & ORDER -->
     <div class="section-divider"><span>Garment & Order</span></div>
 
     <div class="mb-3">
@@ -252,7 +247,6 @@ body {
       <input type="file" id="designImages" accept="image/*" multiple style="display:none;">
     </div>
 
-    <!-- MEASUREMENTS -->
     <div class="section-divider"><span>Measurements (inches)</span></div>
 
     <div class="meas-grid mb-3">
@@ -282,7 +276,6 @@ body {
       </div>
     </div>
 
-    <!-- FABRIC DETAILS -->
     <div class="section-divider"><span>Fabric Details</span></div>
 
     <div class="mb-3">
@@ -298,7 +291,6 @@ body {
       <span class="requirement-text">Type the name of Color</span>
     </div>
 
-    <!-- PAYMENT -->
     <div class="section-divider"><span>Payment</span></div>
 
     <div class="info-block mb-3">
@@ -413,69 +405,99 @@ body {
     return ok;
   }
 
-  // Submit
-  document.getElementById('submitBtn').addEventListener('click', () => {
+  // Submit Logic with Backend API Connection
+  document.getElementById('submitBtn').addEventListener('click', async () => {
     if (!validate()) {
       const firstError = document.querySelector('.is-invalid');
       if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
 
+    // Capture fields tailored perfectly to look for OrderController expectations
     const data = {
-      name:           document.getElementById('cname').value.trim(),
-      phone:          document.getElementById('cphone').value.trim(),
-      address:        document.getElementById('caddr').value.trim(),
-      city:           document.getElementById('ccity').value.trim(),
-      garment:        document.getElementById('garment').value,
-      notes:          document.getElementById('notes').value.trim(),
-      deliveryMethod: deliveryChoice,
-      measurements: {
-        chest:    document.getElementById('mChest').value,
-        waist:    document.getElementById('mWaist').value,
-        length:   document.getElementById('mLength').value,
-        shoulder: document.getElementById('mShoulder').value,
-        sleeve:   document.getElementById('mSleeve').value,
-        neck:     document.getElementById('mNeck').value,
-      },
-      fabric: {
-        name:      document.getElementById('fabricName').value.trim(),
-        colorName: document.getElementById('fabricColorText').value.trim(),
-      }
+      cname:                  document.getElementById('cname').value.trim(),
+      cphone:                 document.getElementById('cphone').value.trim(),
+      caddr:                  document.getElementById('caddr').value.trim(),
+      ccity:                  document.getElementById('ccity').value.trim(),
+      dress_type:             document.getElementById('garment').value,
+      special_instructions:   document.getElementById('notes').value.trim(),
+      delivery_type:          deliveryChoice === 'yes' ? 'home_delivery' : 'self_pickup', 
+      measurement_method:     'manual',
+      chest:                  document.getElementById('mChest').value,
+      waist:                  document.getElementById('mWaist').value,
+      length:                 document.getElementById('mLength').value,
+      shoulder:               document.getElementById('mShoulder').value,
+      sleeve:                 document.getElementById('mSleeve').value,
+      neck:                   document.getElementById('mNeck').value,
+      fabric_name:            document.getElementById('fabricName').value.trim(),
+      fabric_color:           document.getElementById('fabricColorText').value.trim()
     };
 
-    console.log('Order Data:', data);
+    console.log('Sending Request Payload:', data);
 
-    const deliveryLine = deliveryChoice === 'yes'
-      ? `<p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Delivery:</strong> Delivery service requested</p>`
-      : `<p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Delivery:</strong> Self pickup / drop-off</p>`;
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> &nbsp;Placing Order...`;
 
-    const formBody = document.querySelector('.form-body');
-    formBody.innerHTML = '';
+    try {
+      // Connect natively to Laravel secure routing over HTTPS on Railway
+      const response = await fetch('/order/store', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': '{{ csrf_token() }}',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
 
-    const success = document.createElement('div');
-    success.style.cssText = 'text-align:center; padding: 30px 10px;';
-    success.innerHTML = `
-      <div style="width:70px;height:70px;background:linear-gradient(135deg,#1B2A4A,#212529);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
-        <i class="fas fa-check" style="color:#fff;font-size:28px;"></i>
-      </div>
-      <h3 style="color:#1B2A4A;font-weight:700;font-size:22px;margin-bottom:8px;">Order Submitted!</h3>
-      <p style="color:#575a5b;font-size:14px;margin-bottom:20px;">Your order has been sent to the tailor. Payment will be unlocked after acceptance.</p>
-      <div style="background:#f8f9fa;border-radius:12px;padding:16px;text-align:left;border:2px solid #e0e0e0;margin-bottom:14px;">
-        <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Name:</strong> ${data.name}</p>
-        <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Phone:</strong> ${data.phone}</p>
-        <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Garment:</strong> ${data.garment}</p>
-        <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Fabric:</strong> ${data.fabric.name} &mdash; ${data.fabric.colorName}</p>
-        ${deliveryLine}
-      </div>
-      <div style="background:#E6F1FB;border-radius:10px;padding:12px;border:1.5px solid #B5D4F4;margin-bottom:20px;">
-        <p style="font-size:13px;color:#0C447C;margin:0;"><i class="fas fa-lock"></i> <strong>Payment Pending</strong> &mdash; Waiting for tailor to accept your order.</p>
-      </div>
-      <button onclick="location.reload()" style="background:linear-gradient(135deg,#1B2A4A,#212529);color:#fff;border:none;border-radius:10px;padding:12px 30px;font-size:15px;font-weight:600;cursor:pointer;letter-spacing:0.5px;">
-        <i class="fas fa-plus"></i> &nbsp;New Order
-      </button>
-    `;
-    formBody.appendChild(success);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        const deliveryLine = deliveryChoice === 'yes'
+          ? `<p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Delivery:</strong> Delivery service requested</p>`
+          : `<p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Delivery:</strong> Self pickup / drop-off</p>`;
+
+        const formBody = document.querySelector('.form-body');
+        formBody.innerHTML = '';
+
+        const success = document.createElement('div');
+        success.style.cssText = 'text-align:center; padding: 30px 10px;';
+        success.innerHTML = `
+          <div style="width:70px;height:70px;background:linear-gradient(135deg,#1B2A4A,#212529);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+            <i class="fas fa-check" style="color:#fff;font-size:28px;"></i>
+          </div>
+          <h3 style="color:#1B2A4A;font-weight:700;font-size:22px;margin-bottom:8px;">Order Submitted!</h3>
+          <p style="color:#575a5b;font-size:14px;margin-bottom:4px;"><strong>Order Number:</strong> ${result.order_number}</p>
+          <p style="color:#575a5b;font-size:14px;margin-bottom:20px;">Your order has been sent to the tailor. Payment will be unlocked after acceptance.</p>
+          <div style="background:#f8f9fa;border-radius:12px;padding:16px;text-align:left;border:2px solid #e0e0e0;margin-bottom:14px;">
+            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Name:</strong> ${data.cname}</p>
+            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Phone:</strong> ${data.cphone}</p>
+            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Garment:</strong> ${data.dress_type}</p>
+            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Fabric:</strong> ${data.fabric_name} &mdash; ${data.fabric_color}</p>
+            ${deliveryLine}
+          </div>
+          <div style="background:#E6F1FB;border-radius:10px;padding:12px;border:1.5px solid #B5D4F4;margin-bottom:20px;">
+            <p style="font-size:13px;color:#0C447C;margin:0;"><i class="fas fa-lock"></i> <strong>Payment Pending</strong> &mdash; Waiting for tailor to accept your order.</p>
+          </div>
+          <button onclick="location.reload()" style="background:linear-gradient(135deg,#1B2A4A,#212529);color:#fff;border:none;border-radius:10px;padding:12px 30px;font-size:15px;font-weight:600;cursor:pointer;letter-spacing:0.5px;">
+            <i class="fas fa-plus"></i> &nbsp;New Order
+          </button>
+        `;
+        formBody.appendChild(success);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        alert('Error: ' + (result.message || 'Order save nahi ho saka.'));
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<i class="fas fa-check"></i> &nbsp;Submit Order`;
+      }
+
+    } catch (error) {
+      console.error('Submission Error:', error);
+      alert('Backend server se connection fail ho gaya. Logs check karein.');
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = `<i class="fas fa-check"></i> &nbsp;Submit Order`;
+    }
   });
 </script>
 </body>
