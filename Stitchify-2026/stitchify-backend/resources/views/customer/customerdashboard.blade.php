@@ -33,18 +33,21 @@ body {
   display: flex; flex-direction: column;
 }
 .sidebar-logo {
-  text-align: center; padding: 0 20px 15px;
+  text-align: center; 
+  padding: 10px 20px 15px;
   border-bottom: 1px solid rgba(255,255,255,0.1);
   margin-bottom: 15px;
 }
 .sidebar-logo img {
-  width: 70px; height: 70px;
+  width: 75px; 
+  height: 75px;
   border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 8px;
-  border: 2px solid rgba(255,255,255,0.2);
+  object-fit: contain;
+  margin-bottom: 10px;
+  background: transparent;
+  border: none; /* Fixed image wrapping boundaries natively */
 }
-.sidebar-logo h3 { color: var(--text-white); font-size: 17px; font-weight: 600; margin: 0; }
+.sidebar-logo h3 { color: var(--text-white); font-size: 18px; font-weight: 700; margin: 0; letter-spacing: 0.5px; }
 .user-info {
   padding: 12px 15px;
   background-color: rgba(255,255,255,0.1);
@@ -77,7 +80,7 @@ body {
 }
 .sidebar-menu a i { margin-right: 10px; width: 18px; text-align: center; }
 
-/* Logout bottom mein fix */
+/* Logout fixed at bottom edge */
 .sidebar-footer {
   padding: 15px;
   border-top: 1px solid rgba(255,255,255,0.1);
@@ -96,7 +99,7 @@ body {
 .logout-link:hover { background-color: rgba(220,53,69,0.35); color: #ff6b6b; }
 .logout-link i { margin-right: 10px; width: 18px; text-align: center; }
 
-/* ===== TOP BAR ===== */
+/* ===== MAIN CONTENT WORKFLOW ===== */
 .main-content { margin-left: 260px; padding: 20px; min-height: 100vh; }
 .top-bar {
   background-color: var(--text-white);
@@ -115,7 +118,7 @@ body {
   margin: 0;
 }
 
-/* Bell notification */
+/* Notification Core Component */
 .bell-wrapper { position: relative; display: inline-block; }
 .bell-btn {
   background: none; border: none; cursor: pointer;
@@ -134,7 +137,6 @@ body {
   border: 2px solid white;
 }
 
-/* Notification Dropdown */
 .notif-dropdown {
   display: none;
   position: absolute; top: 42px; right: 0;
@@ -164,7 +166,7 @@ body {
   color: #aaa; font-size: 13px;
 }
 
-/* ===== STATS ===== */
+/* ===== METRICS CARDS ===== */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -191,7 +193,7 @@ body {
 .stat-number { font-size: 28px; font-weight: 700; color: var(--accent-color); margin: 0; }
 .stat-label  { color: var(--copyright-bg); font-size: 13px; margin-top: 4px; }
 
-/* ===== ORDER CARDS ===== */
+/* ===== SECTION PANELS ===== */
 .content-section {
   background-color: white; padding: 22px;
   border-radius: 12px;
@@ -226,7 +228,6 @@ body {
 .order-details { color: var(--copyright-bg); font-size: 13px; line-height: 1.7; }
 .order-details strong { color: var(--primary-bg); }
 
-/* Pay Now button */
 .pay-btn {
   margin-top: 10px; padding: 8px 20px;
   background-color: #388e3c; color: white;
@@ -236,7 +237,6 @@ body {
 }
 .pay-btn:hover { background-color: #2e7d32; }
 
-/* Waiting badge */
 .waiting-badge {
   display: inline-block;
   margin-top: 6px; padding: 5px 12px;
@@ -291,7 +291,6 @@ body {
     </li>
   </ul>
 
-  {{-- Logout sidebar ke bilkul neeche --}}
   <div class="sidebar-footer">
     <a class="logout-link"
        href="#"
@@ -303,19 +302,17 @@ body {
 
 </div>
 
-{{-- Logout Form --}}
 <form id="logout-form" action="/logout" method="POST" style="display:none">
   @csrf
 </form>
 
-{{-- ====== MAIN CONTENT ====== --}}
+{{-- ====== MAIN CONTENT AREA ====== --}}
 <div class="main-content">
 
   {{-- ===== TOP BAR ===== --}}
   <div class="top-bar" id="overview">
     <h2>Welcome, {{ auth()->user()->name }}!</h2>
 
-    {{-- Bell Notification --}}
     <div class="bell-wrapper">
       <button class="bell-btn" onclick="toggleNotif()" id="bellBtn">
         <i class="fas fa-bell"></i>
@@ -329,14 +326,14 @@ body {
         <div id="notifList">
           <div class="notif-empty">
             <i class="fas fa-check-circle fa-2x mb-2 d-block" style="color:#ccc"></i>
-            Koi nayi notification nahi
+            No new notifications available
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  {{-- ===== STATS CARDS ===== --}}
+  {{-- ===== METRICS SUMMARY CARDS ===== --}}
   <div class="stats-grid">
     <div class="stat-card">
       <div class="stat-icon blue"><i class="fas fa-shopping-bag"></i></div>
@@ -366,7 +363,7 @@ body {
     </div>
   </div>
 
-  {{-- ===== MY ORDERS ===== --}}
+  {{-- ===== CURRENT ACTIVE ORDERS ===== --}}
   <div class="content-section" id="my-orders">
     <h3 class="section-title">My Orders</h3>
 
@@ -398,14 +395,12 @@ body {
           </p>
 
           @if($order->status === 'pending')
-            {{-- Tailor ne abhi accept/reject nahi kiya --}}
             <span class="waiting-badge">
               <i class="fas fa-hourglass-half me-1"></i>
-              Tailor ke response ka intezaar hai...
+              Awaiting response from tailor...
             </span>
 
           @else
-            {{-- Tailor ne accept kar liya --}}
             @if($order->price)
               <p><strong>Price:</strong>
                 PKR {{ number_format($order->price) }}
@@ -418,12 +413,10 @@ body {
               </p>
             @endif
 
-            {{-- Payment Section --}}
             @if($order->payment_status === 'unpaid')
               <p>
                 <span class="badge bg-danger">Payment Pending</span>
               </p>
-              {{-- Pay Now — active button, Phase 5 mein link lagega --}}
               <button class="pay-btn">
                 <i class="fas fa-credit-card me-1"></i> Pay Now
               </button>
@@ -450,15 +443,15 @@ body {
     @empty
       <div class="text-center py-4">
         <i class="fas fa-shopping-bag fa-3x text-muted mb-3 d-block"></i>
-        <p class="text-muted mb-3">Koi active order nahi hai.</p>
-        <a href="/customer/order-form" class="btn btn-primary">
-          <i class="fas fa-plus me-1"></i> Naya Order Place Karo
+        <p class="text-muted mb-3">No active orders available.</p>
+        <a href="/customer/order-form" class="btn btn-primary" style="background-color: var(--accent-color); border: none;">
+          <i class="fas fa-plus me-1"></i> Place New Order
         </a>
       </div>
     @endforelse
   </div>
 
-  {{-- ===== ORDER HISTORY ===== --}}
+  {{-- ===== ARCHIVED ORDER HISTORY ===== --}}
   <div class="content-section" id="order-history">
     <h3 class="section-title">Order History</h3>
 
@@ -497,41 +490,40 @@ body {
       </div>
     @empty
       <p class="text-muted text-center py-3">
-        Abhi koi completed order nahi hai.
+        No completed order records found.
       </p>
     @endforelse
   </div>
 
-</div>{{-- end main-content --}}
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 <script>
-
-  // ===== BELL NOTIFICATION TOGGLE =====
+  // ===== NOTIFICATION HANDLER =====
   function toggleNotif() {
     const dd = document.getElementById('notifDropdown');
     dd.classList.toggle('show');
   }
 
-  // Bell ke bahar click karne par band ho
   document.addEventListener('click', function(e) {
     const wrapper = document.querySelector('.bell-wrapper');
-    if (!wrapper.contains(e.target)) {
+    if (wrapper && !wrapper.contains(e.target)) {
       document.getElementById('notifDropdown').classList.remove('show');
     }
   });
 
-  // Badge count — abhi 0, Phase 5/6 mein real count aayega
   const notifCount = 0;
   const badge = document.getElementById('bellBadge');
-  if (notifCount > 0) {
-    badge.textContent = notifCount;
-    badge.style.display = 'flex';
-  } else {
-    badge.style.display = 'none';
+  if (badge) {
+    if (notifCount > 0) {
+      badge.textContent = notifCount;
+      badge.style.display = 'flex';
+    } else {
+      badge.style.display = 'none';
+    }
   }
 
-  // ===== SIDEBAR SMOOTH SCROLL =====
+  // ===== INTERACTIVE SMOOTH SCROLL =====
   document.querySelectorAll('.sidebar-menu a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
       e.preventDefault();
@@ -540,7 +532,7 @@ body {
     });
   });
 
-  // ===== SCROLL SPY =====
+  // ===== ACTIVE STATUS NAVIGATION SCROLL SPY =====
   const sections = document.querySelectorAll('.content-section, .top-bar');
   const navLinks = document.querySelectorAll('.sidebar-menu a[data-section]');
 
