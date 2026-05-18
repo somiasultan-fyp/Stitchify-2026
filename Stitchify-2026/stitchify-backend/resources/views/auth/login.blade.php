@@ -1,12 +1,17 @@
+# Fixed Laravel Login Blade (Railway + CSRF Safe)
+
+```php
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="csrf-token" content="{{ csrf_token() }}">
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Login - Tailoring Services</title>
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<title>Login - Stitchify</title>
+
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
 <style>
 :root {
   --primary-bg: #212529;
@@ -16,7 +21,6 @@
 }
 
 body {
-  /* background: linear-gradient(135deg, var(--primary-bg) 0%, var(--accent-color) 100%); */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   min-height: 100vh;
   display: flex;
@@ -96,10 +100,6 @@ body {
   background-color: var(--text-white);
 }
 
-.form-control.is-invalid {
-  border-color: #dc3545;
-}
-
 .btn-login {
   background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
   color: var(--text-white);
@@ -134,11 +134,6 @@ body {
   opacity: 0.6;
   display: none;
   font-size: 1.1rem;
-  transition: opacity 0.3s ease;
-}
-
-.password-toggle .toggle-icon:hover {
-  opacity: 1;
 }
 
 .password-toggle .toggle-icon.show {
@@ -150,24 +145,6 @@ body {
   font-size: 0.875rem;
   margin-top: 5px;
   display: block;
-}
-
-.forgot-password {
-  text-align: right;
-  margin-top: 10px;
-  margin-bottom: 20px;
-}
-
-.forgot-password a {
-  color: var(--copyright-bg);
-  text-decoration: none;
-  font-size: 14px;
-  transition: color 0.3s ease;
-}
-
-.forgot-password a:hover {
-  color: var(--accent-color);
-  text-decoration: underline;
 }
 
 .register-link {
@@ -185,32 +162,6 @@ body {
   font-weight: 600;
 }
 
-.register-link a:hover {
-  text-decoration: underline;
-}
-
-.btn-social {
-  flex: 1;
-  padding: 12px;
-  border: 2px solid #e0e0e0;
-  border-radius: 10px;
-  background-color: var(--text-white);
-  color: var(--primary-bg);
-  font-weight: 600;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.btn-social:hover {
-  border-color: var(--accent-color);
-  background-color: #f8f9fa;
-  transform: translateY(-2px);
-}
-
-.btn-social i {
-  margin-right: 5px;
-}
-
 .remember-me {
   display: flex;
   align-items: center;
@@ -224,126 +175,139 @@ body {
   cursor: pointer;
   accent-color: var(--accent-color);
 }
-
-.remember-me label {
-  color: var(--copyright-bg);
-  font-size: 14px;
-  cursor: pointer;
-  margin: 0;
-}
 </style>
 </head>
+
 <body>
+
 <div class="login-wrapper">
+
   <div class="logo-container">
-    <img src= "{{ asset('images/logo.png') }}" alt="Stitchify" class="logo-image">
+    <img src="{{ asset('images/logo.png') }}" alt="Stitchify" class="logo-image">
   </div>
 
   <div class="form-container">
+
     <div class="login-header">
       <h2>Welcome Back</h2>
       <p>Login to your account</p>
     </div>
 
-    <form method="POST" action="{{ route('login') }}" id="loginForm" novalidate>
-        @csrf
+    @if(session('error'))
+      <div class="alert alert-danger">
+        {{ session('error') }}
+      </div>
+    @endif
+
+    @if($errors->any())
+      <div class="alert alert-danger">
+        {{ $errors->first() }}
+      </div>
+    @endif
+
+    <form method="POST" action="{{ route('login') }}" id="loginForm">
+
+      @csrf
+
       <div class="mb-3">
         <label for="email" class="form-label">Email Address</label>
-        <input id="email" name="email" class="form-control" placeholder="example@gmail.com" type="email" required>
+
+        <input
+          id="email"
+          name="email"
+          class="form-control"
+          placeholder="example@gmail.com"
+          type="email"
+          required
+        >
+
         <span id="emailError" class="error-text"></span>
       </div>
 
       <div class="mb-3 password-toggle">
+
         <label for="password" class="form-label">Password</label>
-        <input id="password" name="password" class="form-control" placeholder="Enter your password" type="password" required>
-        <i id="togglePassword" class="fas fa-eye toggle-icon" title="Show/hide password" role="button" aria-label="Toggle password visibility"></i>
+
+        <input
+          id="password"
+          name="password"
+          class="form-control"
+          placeholder="Enter your password"
+          type="password"
+          required
+        >
+
+        <i
+          id="togglePassword"
+          class="fas fa-eye toggle-icon"
+        ></i>
+
         <span id="passwordError" class="error-text"></span>
       </div>
-      <div id="loginError" style="display:none; color:red; margin-bottom:10px;"></div>
 
-      <div class="d-flex justify-content-between align-items-center">
-        <div class="remember-me">
-          <input type="checkbox" id="rememberMe">
-          <label for="rememberMe">Remember me</label>
-        </div>
-        <div class="forgot-password">
-          <a href="#" id="forgotPasswordLink">Forgot Password?</a>
-        </div>
+      <div class="remember-me mb-3">
+        <input type="checkbox" id="rememberMe" name="remember">
+        <label for="rememberMe">Remember me</label>
       </div>
 
       <button type="submit" class="btn-login">
-        <i class="fas fa-sign-in-alt"></i> Login
+        <i class="fas fa-sign-in-alt"></i>
+        Login
       </button>
+
     </form>
 
     <div class="register-link">
-      Don't have an account? <a href="{{ route('register') }}">Sign Up</a>
+      Don't have an account?
+      <a href="{{ route('register') }}">Sign Up</a>
     </div>
+
   </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 
 <script>
-const urlParams  = new URLSearchParams(window.location.search);
-const redirectTo = urlParams.get('redirect') || null;
-const loginForm      = document.getElementById('loginForm');
+
 const emailInput     = document.getElementById('email');
 const passwordInput  = document.getElementById('password');
 const togglePassword = document.getElementById('togglePassword');
 const emailError     = document.getElementById('emailError');
 const passwordError  = document.getElementById('passwordError');
-const forgotPasswordLink = document.getElementById('forgotPasswordLink');
 
-// Email validation
 function validateEmail(email) {
+
   emailError.textContent = '';
-  if (!email) return false;
+
   if (!email.includes('@')) {
-    emailError.textContent = 'Email must contain @ symbol';
+    emailError.textContent = 'Invalid email format';
     return false;
   }
-  const parts = email.split('@');
-  if (parts.length !== 2 || !parts[0] || !parts[1]) {
-    emailError.textContent = 'Invalid email format. Use: example@domain.com';
-    return false;
-  }
-  if (!parts[1].includes('.')) {
-    emailError.textContent = 'Email must contain a domain (e.g., gmail.com)';
-    return false;
-  }
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    emailError.textContent = 'Please enter a valid email address';
-    return false;
-  }
+
   return true;
 }
 
-// Email listeners
 emailInput.addEventListener('blur', () => {
-  if (emailInput.value.trim()) validateEmail(emailInput.value.trim());
-});
-emailInput.addEventListener('input', () => {
-  if (emailError.textContent) validateEmail(emailInput.value.trim());
+  if (emailInput.value.trim()) {
+    validateEmail(emailInput.value.trim());
+  }
 });
 
-// Password toggle
 passwordInput.addEventListener('input', () => {
+
   const value = passwordInput.value;
+
   if (value.length > 0) {
     togglePassword.classList.add('show');
   } else {
     togglePassword.classList.remove('show');
-    passwordInput.setAttribute('type', 'password');
-    togglePassword.classList.remove('fa-eye-slash');
-    togglePassword.classList.add('fa-eye');
   }
-  passwordError.textContent = '';
 });
 
 togglePassword.addEventListener('click', () => {
+
   const currentType = passwordInput.getAttribute('type');
+
   if (currentType === 'password') {
     passwordInput.setAttribute('type', 'text');
     togglePassword.classList.remove('fa-eye');
@@ -355,78 +319,7 @@ togglePassword.addEventListener('click', () => {
   }
 });
 
-// Forgot password
-forgotPasswordLink.addEventListener('click', (e) => {
-  e.preventDefault();
-  alert('Password reset functionality coming soon!\n\nPlease contact support for assistance.');
-});
-
-// ✅ NAYA Login Submit
-loginForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  const email     = document.getElementById('email').value.trim();
-  const password  = document.getElementById('password').value;
-  const errorDiv  = document.getElementById('loginError');
-  const submitBtn = loginForm.querySelector('button[type="submit"]');
-
-  errorDiv.textContent = '';
-  errorDiv.style.display = 'none';
-
-  if (!validateEmail(email)) return;
-
-  if (!password) {
-    passwordError.textContent = 'Password is required.';
-    return;
-  }
-
-  submitBtn.disabled = true;
-  submitBtn.innerHTML = `
-    <span class="spinner-border spinner-border-sm me-2"></span>
-    Logging in...
-  `;
-
-  try {
-    const response = await fetch('/login', {
-      method:  'POST',
-      credentials: 'include', // Live server par session/cookie handle karne keliye
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept':       'application/json',
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                .getAttribute('content'),
-      },
-      body: JSON.stringify({ 
-        email, 
-        password, 
-        redirect: redirectTo,
-        _token: document.querySelector('input[name="_token"]').value // Token body mein bhejne keliye
-      }),
-    });
-
-    const result = await response.json();
-
-    if (result.success) {
-      submitBtn.innerHTML = `
-        <span class="spinner-border spinner-border-sm me-2"></span>
-        Redirecting...
-      `;
-      window.location.href = result.redirect;
-    } else {
-      errorDiv.textContent   = result.message || 'Invalid credentials.';
-      errorDiv.style.display = 'block';
-      submitBtn.disabled     = false;
-      submitBtn.innerHTML    = 'Login';
-    }
-
-  } catch (err) {
-    console.error('Error:', err);
-    errorDiv.textContent   = 'Something went wrong. Please try again.';
-    errorDiv.style.display = 'block';
-    submitBtn.disabled     = false;
-    submitBtn.innerHTML    = 'Login';
-  }
-});    
 </script>
+
 </body>
 </html>
