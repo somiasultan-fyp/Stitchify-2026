@@ -1,6 +1,3 @@
-# Fixed Laravel Login Blade (Railway + CSRF Safe)
-
-```php
 <!DOCTYPE html>
 <html lang="en">
 <head>
