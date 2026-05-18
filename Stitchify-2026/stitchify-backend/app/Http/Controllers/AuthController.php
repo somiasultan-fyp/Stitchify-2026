@@ -11,26 +11,17 @@ use App\Models\Tailor;
 
 class AuthController extends Controller
 {
-    // ─────────────────────────────────────────
-    // Register form dikhao
-    // ─────────────────────────────────────────
     public function showRegister()
     {
         return view('auth.register');
     }
 
-    // ─────────────────────────────────────────
-    // Login form dikhao
-    // 1st wale mein tha — 2nd mein missing tha
-    // ─────────────────────────────────────────
     public function showLogin()
     {
         return view('auth.login');
     }
 
-    // ─────────────────────────────────────────
-    // Register process
-    // ─────────────────────────────────────────
+    // ✅ Register Process — Testing ke liye simplified
     public function register(Request $request)
     {
         $request->validate([
@@ -43,13 +34,13 @@ class AuthController extends Controller
             'category'      => 'required_if:role,tailor|nullable|string',
             'slot_capacity' => 'required_if:role,tailor|nullable|integer|min:1',
         ], [
-            'email.unique'              => 'Email is already registered.',
-            'address.required_if'       => 'Address is compulsory.',
-            'category.required_if'      => 'Specialization is compulsory.',
-            'slot_capacity.required_if' => 'Slot is compulsory',
+            'email.unique' => 'Email already registered.',
+            'address.required_if' => 'Address is required for tailors.',
+            'category.required_if' => 'Specialization is required for tailors.',
+            'slot_capacity.required_if' => 'Slot capacity is required for tailors.',
         ]);
 
-        // User banao
+        // User create karein
         $user = User::create([
             'name'          => $request->name,
             'email'         => $request->email,
@@ -60,16 +51,15 @@ class AuthController extends Controller
             'category'      => $request->role === 'tailor' ? $request->category : null,
             'slot_capacity' => $request->role === 'tailor' ? $request->slot_capacity : null,
             'is_active'     => true,
+            'email_verified_at' => now(), // ✅ Testing ke liye auto-verify
         ]);
 
-        // Customer profile banao
+        // Customer profile
         if ($user->role === 'customer') {
-            Customer::create([
-                'user_id' => $user->id,
-            ]);
+            Customer::create(['user_id' => $user->id]);
         }
 
-        // Tailor profile banao
+        // Tailor profile
         if ($user->role === 'tailor') {
             Tailor::create([
                 'user_id'         => $user->id,
@@ -81,95 +71,41 @@ class AuthController extends Controller
             ]);
         }
 
-        // Register method ke end mein yeh code use karein:
+        // ✅ Auto-login
+        Auth::login($user);
+        $request->session()->regenerate();
 
-     Auth::login($user);
-
-    // ✅ Sirf customer aur tailor ke liye email verification
-     if (in_array($user->role, ['customer', 'tailor'])) {
-    
-    // Verification email bhejo
-     $user->sendEmailVerificationNotification();
-    
-    // Email verify page par redirect karo
-     return response()->json([
-        'success'  => true,
-        'redirect' => '/email/verify',
-        'message'  => 'Please verify your email to continue.',
-    ]);
-}
-
-// ✅ Agar koi aur role hai (jaise admin), toh direct dashboard par bhejo
-     $redirect = match($user->role) {
-    'tailor'   => '/tailor/dashboard',
-    'customer' => '/customer/dashboard',
-    default    => '/login',  // Fallback
-     };
-
-    return response()->json([
-    'success'  => true,
-    'redirect' => $redirect,
-    ]);
+        // ✅ Direct dashboard redirect (no verification step for testing)
+        return match($user->role) {
+            'tailor'   => redirect()->route('tailor.dashboard')->with('success', 'Welcome, Tailor!'),
+            'customer' => redirect()->route('customer.dashboard')->with('success', 'Welcome, Customer!'),
+            default    => redirect('/'),
+        };
     }
 
-    // ─────────────────────────────────────────
-    // Login process
-    // ─────────────────────────────────────────
+    // ✅ Login Process
     public function login(Request $request)
     {
-        $request->validate([
+        $credentials = $request->validate([
             'email'    => 'required|email',
             'password' => 'required',
         ]);
 
-        $user = User::where('email', $request->email)->first();
-
-        // User exist nahi karta
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Email or password is incorrect.',
-            ], 401);
-        }
-
-        // Account blocked hai — 2nd wale mein tha, zaroori hai
-        if (!$user->is_active) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Your account has been blocked. Contact support.',
-            ], 403);
-        }
-
-        // Credentials check karo
-        if (Auth::attempt([
-            'email'    => $request->email,
-            'password' => $request->password,
-        ])) {
+        if (auth()->attempt($credentials)) {
             $request->session()->regenerate();
+            $user = auth()->user();
 
-            // Role ke hisaab se dashboard par bhejo
-            $redirect = match(Auth::user()->role) {
-                'admin'    => '/admin/dashboard',
-                'tailor'   => '/tailor/dashboard',
-                'customer' => '/customer/dashboard',
-                default    => '/login',
+            return match($user->role) {
+                'admin'    => redirect()->route('admin.dashboard'),
+                'tailor'   => redirect()->route('tailor.dashboard'),
+                'customer' => redirect()->route('customer.dashboard'),
+                default    => redirect('/'),
             };
-
-            return response()->json([
-                'success'  => true,
-                'redirect' => $redirect,
-            ]);
         }
 
-        return response()->json([
-            'success' => false,
-            'message' => 'Email or password is incorrect.',
-        ], 401);
+        return back()->withErrors(['email' => 'Invalid credentials.'])->onlyInput('email');
     }
 
-    // ─────────────────────────────────────────
-    // Logout
-    // ─────────────────────────────────────────
     public function logout(Request $request)
     {
         Auth::logout();
