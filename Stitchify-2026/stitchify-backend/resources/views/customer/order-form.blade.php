@@ -251,27 +251,27 @@ body {
 
     <div class="meas-grid mb-3">
       <div class="meas-item">
-        <label>Chest / Seena</label>
+        <label>Chest</label>
         <input id="mChest" class="form-control" type="number" placeholder="e.g. 40">
       </div>
       <div class="meas-item">
-        <label>Waist / Kamar</label>
+        <label>Waist</label>
         <input id="mWaist" class="form-control" type="number" placeholder="e.g. 36">
       </div>
       <div class="meas-item">
-        <label>Length / Lambai</label>
+        <label>Length</label>
         <input id="mLength" class="form-control" type="number" placeholder="e.g. 46">
       </div>
       <div class="meas-item">
-        <label>Shoulder / Kandha</label>
+        <label>Shoulder</label>
         <input id="mShoulder" class="form-control" type="number" placeholder="e.g. 18">
       </div>
       <div class="meas-item">
-        <label>Sleeve / Baazu</label>
+        <label>Sleeve</label>
         <input id="mSleeve" class="form-control" type="number" placeholder="e.g. 25">
       </div>
       <div class="meas-item">
-        <label>Neck / Gala</label>
+        <label>Neck</label>
         <input id="mNeck" class="form-control" type="number" placeholder="e.g. 15">
       </div>
     </div>
@@ -413,7 +413,6 @@ body {
       return;
     }
 
-    // Capture fields tailored perfectly to look for OrderController expectations
     const data = {
       cname:                  document.getElementById('cname').value.trim(),
       cphone:                 document.getElementById('cphone').value.trim(),
@@ -440,7 +439,6 @@ body {
     submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> &nbsp;Placing Order...`;
 
     try {
-      // Connect natively to Laravel secure routing over HTTPS on Railway
       const response = await fetch('/order/store', {
         method: 'POST',
         headers: {
@@ -480,9 +478,10 @@ body {
           <div style="background:#E6F1FB;border-radius:10px;padding:12px;border:1.5px solid #B5D4F4;margin-bottom:20px;">
             <p style="font-size:13px;color:#0C447C;margin:0;"><i class="fas fa-lock"></i> <strong>Payment Pending</strong> &mdash; Waiting for tailor to accept your order.</p>
           </div>
-          <button onclick="location.reload()" style="background:linear-gradient(135deg,#1B2A4A,#212529);color:#fff;border:none;border-radius:10px;padding:12px 30px;font-size:15px;font-weight:600;cursor:pointer;letter-spacing:0.5px;">
-            <i class="fas fa-plus"></i> &nbsp;New Order
-          </button>
+          
+          <a href="/customer/dashboard" style="display:inline-block; text-decoration:none; background:linear-gradient(135deg,#1B2A4A,#212529);color:#fff;border:none;border-radius:10px;padding:12px 30px;font-size:15px;font-weight:600;cursor:pointer;letter-spacing:0.5px;">
+            <i class="fas fa-arrow-left"></i> &nbsp;Back to Dashboard
+          </a>
         `;
         formBody.appendChild(success);
         window.scrollTo({ top: 0, behavior: 'smooth' });
