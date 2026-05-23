@@ -21,9 +21,6 @@ Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/login',    [AuthController::class, 'login'])->name('login');
 Route::post('/logout',   [AuthController::class, 'logout'])->name('logout');
 
-// ─────────────────────────────────────────
-// EMAIL VERIFICATION ROUTES — naye add kiye
-// ─────────────────────────────────────────
 
 // Step 1: Yeh page tab dikhe ga jab user login kare
 //         lekin email verify na ki ho
@@ -42,13 +39,13 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
     if ($user->role === 'admin') {
         return redirect('/admin/dashboard')
-            ->with('success', 'Email verify ho gayi!');
+            ->with('success', 'Email verified!');
     } elseif ($user->role === 'tailor') {
         return redirect('/tailor/dashboard')
-            ->with('success', 'Email verify ho gayi!');
+            ->with('success', 'Email verified!');
     } else {
         return redirect('/customer/dashboard')
-            ->with('success', 'Email verify ho gayi!');
+            ->with('success', 'Email verified!');
     }
 
 })->middleware(['auth', 'signed'])->name('verification.verify');
@@ -70,19 +67,16 @@ Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
     Route::get('/customer/order-form', [OrderController::class, 'create']);
 });
 
-// Yeh route middleware ke bahar tha tumhara — same rakha
 Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
 Route::post('/order/store', [OrderController::class, 'store'])->name('order.store');
 });
 
-// ─────────────────────────────────────────
 // TAILOR ROUTES
-// verified middleware add kiya
-// ─────────────────────────────────────────
 Route::middleware(['auth', 'verified', 'role:tailor'])->group(function () {
     Route::get('/tailor/dashboard',          [TailorController::class, 'dashboard']);
     Route::post('/tailor/order/{id}/accept', [TailorController::class, 'acceptOrder']);
     Route::post('/tailor/order/{id}/status', [TailorController::class, 'updateStatus']);
+    Route::post('/tailor/order/{id}/reject', [TailorController::class, 'rejectOrder']);
     Route::get('/tailor/order/{id}/detail',  [TailorController::class, 'orderDetail']);
     Route::get('/tailors',                   [TailorController::class, 'index'])->name('tailors.index');
     Route::get('/tailors/{id}',              [TailorController::class, 'show'])->name('tailors.show');
