@@ -87,7 +87,7 @@ class TailorController extends Controller
 
         $order->update(['status' => 'accepted', 
         'price' => $request->price,
-        'expected_delivery_date' => now()->addDays($request->delivery_days)
+        'expected_delivery_date' => now()->addDays((int) $request->delivery_days)
         ]);
 
         $tailor->decrementSlot();
@@ -99,7 +99,7 @@ class TailorController extends Controller
             'message' => 'Tailor accept the order no. #' . $order->order_number .
                          'Price: Rs. ' . $request->price .
                          '. Expected delivery: ' .
-                         now()->addDays($request->delivery_days)->format('d M Y') .
+                         now()->addDays((int) $request->delivery_days)->format('d M Y') .
                          '. You can pay now.',
             'type'       => 'order',
             'action_url' => '/customer/dashboard',
