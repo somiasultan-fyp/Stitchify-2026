@@ -76,7 +76,7 @@ class AuthController extends Controller
 
         // Auto-login
         Auth::login($user);
-        $redirect= $user->role === 'tailor' ? 'tailor.dashboard' : 'customer.dashboard';
+        // $redirect= $user->role === 'tailor' ? 'tailor.dashboard' : 'customer.dashboard';
         $request->session()->regenerate();
 
         // Direct dashboard redirect (no verification step for testing)
