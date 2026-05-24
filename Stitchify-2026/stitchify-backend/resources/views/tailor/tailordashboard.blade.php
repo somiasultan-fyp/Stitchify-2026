@@ -260,6 +260,9 @@ body {
     <li><a href="#active-orders"  data-section="active-orders"><i class="fas fa-tasks"></i> Active Orders</a></li>
     <li><a href="#performance"    data-section="performance"><i class="fas fa-chart-line"></i> Performance</a></li>
     <li><a href="#reviews"        data-section="reviews"><i class="fas fa-star"></i> Reviews</a></li>
+    <li><a href="{{ route('tailor.profile') }}">
+        <i class="fas fa-user"></i> My Profile
+    </a> </li>
   </ul>
 
   <div class="logout-btn">

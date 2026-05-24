@@ -80,6 +80,8 @@ Route::middleware(['auth', 'verified', 'role:tailor'])->group(function () {
     Route::get('/tailor/order/{id}/detail',  [TailorController::class, 'orderDetail']);
     Route::get('/tailors',                   [TailorController::class, 'index'])->name('tailors.index');
     Route::get('/tailors/{id}',              [TailorController::class, 'show'])->name('tailors.show');
+    Route::get('/tailor/profile',            [TailorController::class, 'profile'])->name('tailor.profile');
+    Route::post('/tailor/profile/update',    [TailorController::class, 'updateProfile'])->name('tailor.profile.update');
 });
 
 // ─────────────────────────────────────────

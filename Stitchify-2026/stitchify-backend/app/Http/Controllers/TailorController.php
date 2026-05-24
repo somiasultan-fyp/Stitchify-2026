@@ -121,6 +121,7 @@ class TailorController extends Controller
         $order  = Order::where('id', $orderId)
                        ->where('tailor_id', $tailor->id)
                        ->where('status', 'pending')
+                       ->with('customer.user')
                        ->firstOrFail();
  
         // Order cancel
