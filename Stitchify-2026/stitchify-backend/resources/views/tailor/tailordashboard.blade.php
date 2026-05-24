@@ -424,8 +424,8 @@ body {
         <p><strong>Price:</strong> Rs. {{ number_format($order->price) }}</p>
         @if($order->expected_delivery_date)
           <p><strong>Expected Delivery:</strong>
-            {{ $order->expected_delivery_date->format('M d, Y') }}
-            @if($order->expected_delivery_date->isPast())
+            {{ \Carbon\Carbon::parse($order->expected_delivery_date)->format('M d, Y') }}
+           @if(\Carbon\Carbon::parse($order->expected_delivery_date)->isPast())
               <span class="badge bg-danger ms-1">Overdue!</span>
             @endif
           </p>
