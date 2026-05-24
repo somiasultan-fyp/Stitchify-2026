@@ -7,27 +7,48 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <style>
-:root { --primary-bg: #212529; --accent-color: #1B2A4A; --copyright-bg: #575a5b; --text-white: #ffffff; }
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background-color: #f8f9fa; }
-.registration-wrapper { width: 500px; max-width: 95%; background-color: var(--text-white); border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); overflow: hidden; }
-.logo-container { background: linear-gradient(135deg, var(--accent-color), var(--primary-bg)); padding: 30px; text-align: center; border-bottom: 3px solid var(--copyright-bg); }
-.logo-image { width: 120px; height: 120px; margin: 0 auto; display: block; object-fit: contain; border-radius: 50%; padding: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-.form-step { padding: 40px; }
-.registration-header { text-align: center; margin-bottom: 30px; }
-.registration-header h2 { color: var(--accent-color); font-weight: 700; font-size: 28px; margin-bottom: 8px; }
-.registration-header p { color: var(--copyright-bg); font-size: 14px; }
-.form-label { color: var(--primary-bg); font-weight: 600; margin-bottom: 8px; font-size: 14px; }
-.form-control, .form-select { border: 2px solid #e0e0e0; border-radius: 10px; padding: 12px 15px; color: var(--primary-bg); background-color: #f8f9fa; font-size: 15px; }
-.form-control:focus, .form-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 0.25rem rgba(14,24,48,0.15); background-color: var(--text-white); }
-.btn-custom { background: linear-gradient(135deg, var(--accent-color), var(--primary-bg)); color: var(--text-white); border: none; border-radius: 10px; padding: 14px; font-weight: 600; font-size: 16px; width: 100%; margin-top: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
-.btn-custom:hover { opacity: 0.9; color: var(--text-white); }
-.login-link { text-align: center; margin-top: 20px; color: var(--copyright-bg); font-size: 14px; }
-.login-link a { color: var(--accent-color); text-decoration: none; font-weight: 600; }
-.password-toggle { position: relative; }
-.toggle-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--copyright-bg); opacity: 0.6; }
-.step-indicator { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
-.step-dot { width: 12px; height: 12px; border-radius: 50%; background-color: #e0e0e0; transition: all 0.3s; }
-.step-dot.active { background-color: var(--accent-color); width: 30px; border-radius: 6px; }
+:root {
+   --primary-bg: #212529; --accent-color: #1B2A4A; --copyright-bg: #575a5b; --text-white: #ffffff; }
+body {
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background-color: #f8f9fa; }
+.registration-wrapper { 
+  width: 500px; max-width: 95%; background-color: var(--text-white); border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); overflow: hidden; }
+.logo-container {
+   background: linear-gradient(135deg, var(--accent-color), var(--primary-bg)); padding: 30px; text-align: center; border-bottom: 3px solid var(--copyright-bg); }
+.logo-image {
+   width: 120px; height: 120px; margin: 0 auto; display: block; object-fit: contain; border-radius: 50%; padding: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+.form-step {
+   padding: 40px; }
+.registration-header {
+   text-align: center; margin-bottom: 30px; }
+.registration-header h2 {
+   color: var(--accent-color); font-weight: 700; font-size: 28px; margin-bottom: 8px; }
+.registration-header p { 
+  color: var(--copyright-bg); font-size: 14px; }
+.form-label {
+   color: var(--primary-bg); font-weight: 600; margin-bottom: 8px; font-size: 14px; }
+.form-control, .form-select { 
+  border: 2px solid #e0e0e0; border-radius: 10px; padding: 12px 15px; color: var(--primary-bg); background-color: #f8f9fa; font-size: 15px; }
+.form-control:focus, .form-select:focus { 
+  border-color: var(--accent-color); box-shadow: 0 0 0 0.25rem rgba(14,24,48,0.15); background-color: var(--text-white); }
+.btn-custom { 
+  background: linear-gradient(135deg, var(--accent-color), var(--primary-bg)); color: var(--text-white); border: none; border-radius: 10px; padding: 14px; font-weight: 600; font-size: 16px; width: 100%; margin-top: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+.btn-custom:hover { 
+  opacity: 0.9; color: var(--text-white); }
+.login-link { 
+  text-align: center; margin-top: 20px; color: var(--copyright-bg); font-size: 14px; }
+.login-link a { 
+  color: var(--accent-color); text-decoration: none; font-weight: 600; }
+.password-toggle { 
+  position: relative; }
+.toggle-icon { 
+  position: absolute; right: 15px; top: 70%; transform: translateY(-50%); cursor: pointer; color: var(--copyright-bg); opacity: 0.6; }
+.step-indicator { 
+  display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+.step-dot { 
+  width: 12px; height: 12px; border-radius: 50%; background-color: #e0e0e0; transition: all 0.3s; }
+.step-dot.active { 
+  background-color: var(--accent-color); width: 30px; border-radius: 6px; }
 </style>
 </head>
 <body>
