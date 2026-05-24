@@ -221,4 +221,47 @@ class TailorController extends Controller
             ]
         ]);
     }
+public function profile()
+{
+    $user   = Auth::user();
+    $tailor = $user->tailor;
+
+    return view('tailor.profile', compact('user', 'tailor'));
+}
+public function updateProfile(Request $request)
+{
+    $user   = Auth::user();
+    $tailor = $user->tailor;
+
+    $request->validate([
+        'name'           => 'required|string|max:255',
+        'phone'          => 'required|string|max:20',
+        'address'        => 'required|string|max:500',
+        'bio'            => 'nullable|string|max:1000',
+        'city'         => 'nullable|string|max:100',
+        'address'      => 'nullable|string|max:500',
+        'experience_years' => 'nullable|integer|min:0',
+        'specialization'   => 'nullable|string|max:255',
+        'base_price'       => 'nullable|numeric|min:0',
+        'max_slots'        => 'nullable|integer|min:0',
+    ]);
+
+    $user->update([
+        'name'  => $request->name,
+        'phone' => $request->phone,
+    ]);
+
+    $tailor->update([
+        'address'         => $request->address,
+        'bio'              => $request->bio,
+        'city'             => $request->city,
+        'address'          => $request->address,
+        'experience_years' => $request->experience_years,
+        'specialization'   => $request->specialization,
+        'base_price'       => $request->base_price,
+        'max_slots'        => $request->max_slots,
+    ]);
+
+    return redirect()->route('tailor.profile')->with('success', 'Profile updated successfully!');
+}
 }
