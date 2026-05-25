@@ -22,7 +22,6 @@ body {
   min-height: 100vh;
 }
 
-/* ===== SIDEBAR ===== */
 .sidebar {
   position: fixed; top: 0; left: 0;
   height: 100vh; width: 260px;
@@ -45,7 +44,7 @@ body {
   object-fit: contain;
   margin-bottom: 10px;
   background: transparent;
-  border: none; /* Fixed image wrapping boundaries natively */
+  border: none; 
 }
 .sidebar-logo h3 { color: var(--text-white); font-size: 18px; font-weight: 700; margin: 0; letter-spacing: 0.5px; }
 .user-info {
@@ -80,7 +79,6 @@ body {
 }
 .sidebar-menu a i { margin-right: 10px; width: 18px; text-align: center; }
 
-/* Logout fixed at bottom edge */
 .sidebar-footer {
   padding: 15px;
   border-top: 1px solid rgba(255,255,255,0.1);
@@ -118,7 +116,6 @@ body {
   margin: 0;
 }
 
-/* Notification Core Component */
 .bell-wrapper { position: relative; display: inline-block; }
 .bell-btn {
   background: none; border: none; cursor: pointer;
@@ -166,7 +163,6 @@ body {
   color: #aaa; font-size: 13px;
 }
 
-/* ===== METRICS CARDS ===== */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -193,7 +189,6 @@ body {
 .stat-number { font-size: 28px; font-weight: 700; color: var(--accent-color); margin: 0; }
 .stat-label  { color: var(--copyright-bg); font-size: 13px; margin-top: 4px; }
 
-/* ===== SECTION PANELS ===== */
 .content-section {
   background-color: white; padding: 22px;
   border-radius: 12px;
@@ -255,7 +250,6 @@ body {
 </head>
 <body>
 
-{{-- ====== SIDEBAR ====== --}}
 <div class="sidebar">
 
   <div class="sidebar-logo">
@@ -285,7 +279,7 @@ body {
       </a>
     </li>
     <li>
-      <a href="/customer/order-form">
+      <a href="/tailors">
         <i class="fas fa-plus-circle"></i> New Order
       </a>
     </li>

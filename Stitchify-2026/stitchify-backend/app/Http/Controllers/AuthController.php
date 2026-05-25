@@ -11,26 +11,18 @@ use App\Models\Tailor;
 
 class AuthController extends Controller
 {
-    // ─────────────────────────────────────────
     // Register form dikhao
-    // ─────────────────────────────────────────
     public function showRegister()
     {
         return view('auth.register');
     }
 
-    // ─────────────────────────────────────────
-    // Login form dikhao
-    // 1st wale mein tha — 2nd mein missing tha
-    // ─────────────────────────────────────────
     public function showLogin()
     {
         return view('auth.login');
     }
 
-    // ─────────────────────────────────────────
-    // Register process
-    // ─────────────────────────────────────────
+    // Register Process
     public function register(Request $request)
     {
         $request->validate([
@@ -49,7 +41,7 @@ class AuthController extends Controller
             'slot_capacity.required_if' => 'Slot is compulsory',
         ]);
 
-        // User banao
+        // User createion
         $user = User::create([
             'name'          => $request->name,
             'email'         => $request->email,
@@ -60,6 +52,7 @@ class AuthController extends Controller
             'category'      => $request->role === 'tailor' ? $request->category : null,
             'slot_capacity' => $request->role === 'tailor' ? $request->slot_capacity : null,
             'is_active'     => true,
+            'email_verified_at' => now(), // Testing ke liye auto-verify
         ]);
 
         // Customer profile banao
@@ -81,40 +74,20 @@ class AuthController extends Controller
             ]);
         }
 
-        // Register method ke end mein yeh code use karein:
+        // Auto-login
+        Auth::login($user);
+        // $redirect= $user->role === 'tailor' ? 'tailor.dashboard' : 'customer.dashboard';
+        $request->session()->regenerate();
 
-     Auth::login($user);
-
-    // ✅ Sirf customer aur tailor ke liye email verification
-     if (in_array($user->role, ['customer', 'tailor'])) {
-    
-    // Verification email bhejo
-     $user->sendEmailVerificationNotification();
-    
-    // Email verify page par redirect karo
-     return response()->json([
-        'success'  => true,
-        'redirect' => '/email/verify',
-        'message'  => 'Please verify your email to continue.',
-    ]);
-}
-
-// ✅ Agar koi aur role hai (jaise admin), toh direct dashboard par bhejo
-     $redirect = match($user->role) {
-    'tailor'   => '/tailor/dashboard',
-    'customer' => '/customer/dashboard',
-    default    => '/login',  // Fallback
-     };
-
-    return response()->json([
-    'success'  => true,
-    'redirect' => $redirect,
-    ]);
+        // Direct dashboard redirect (no verification step for testing)
+        return match($user->role) {
+            'tailor'   => redirect()->route('tailor.dashboard')->with('success', 'Welcome, Tailor!'),
+            'customer' => redirect()->route('customer.dashboard')->with('success', 'Welcome, Customer!'),
+            default    => redirect('/'),
+        };
     }
 
-    // ─────────────────────────────────────────
     // Login process
-    // ─────────────────────────────────────────
     public function login(Request $request)
     {
         $request->validate([
@@ -132,7 +105,6 @@ class AuthController extends Controller
             ], 401);
         }
 
-        // Account blocked hai — 2nd wale mein tha, zaroori hai
         if (!$user->is_active) {
             return response()->json([
                 'success' => false,
@@ -167,9 +139,7 @@ class AuthController extends Controller
         ], 401);
     }
 
-    // ─────────────────────────────────────────
     // Logout
-    // ─────────────────────────────────────────
     public function logout(Request $request)
     {
         Auth::logout();
