@@ -11,14 +11,13 @@ use App\Models\User;
 class TailorController extends Controller
 {
     public function index()
-    {
-        $tailors = User::where('role', 'tailor')
-                       ->where('is_active', true)
-                       ->get();
+{
+    $tailors = Tailor::with('user')
+                     ->where('available_slots', '>', 0)
+                     ->get();
 
-        return view('tailors.index', compact('tailors'));
-    }
-
+    return view('tailors.index', compact('tailors'));
+}
     // Single tailor profile
     public function show($id)
     {
@@ -214,7 +213,7 @@ class TailorController extends Controller
                 'price'                => $order->price,
                 'status'               => $order->status,
                 'expected_delivery_date' => $order->expected_delivery_date
-                ? $order->expected_delivery_date->format('M d, Y')
+                ? \Carbon\Carbon::parse($order->expected_delivery_date)->format('M d, Y')
                 : null,
                 'created_at'           => $order->created_at->format('M d, Y'),
                 'measurement'          => $order->measurement,
