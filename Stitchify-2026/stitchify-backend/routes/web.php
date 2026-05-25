@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TailorDashboardController;
 use App\Http\Controllers\CustomerOrderController;
 use App\Http\Controllers\TailorController;
+use App\Http\Controllers\Admin\AdminController;
 
 // ─────────────────────────────────────────
 // PUBLIC ROUTES
@@ -87,14 +88,30 @@ Route::middleware(['auth', 'role:tailor'])
 // ─────────────────────────────────────────
 // ADMIN ROUTES
 // ─────────────────────────────────────────
-Route::middleware(['auth', 'role:admin'])
+Route::middleware(['auth', 'verified' , 'role:admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
-        Route::get('/dashboard', fn() => view('admin.admindashboard'))->name('dashboard');
+        
+    // Dashboard
+    Route::get('/dashboard' , [AdminController::class, 'dashboard'])->name('dashboard');
+    
+    // Users manage
+    Route::get('/users', [AdminController::class, 'users'])->name('users');
+    Route::patch('/users/{user}/toggle', [AdminController::class, 'toggleUser'])->name('users.toggle');
+    
+    // Orders monitor
+    Route::get('/orders', [AdminController::class, 'orders'])->name('orders');
+
+    // Complaints
+    Route::get('/complaints', [AdminController::class, 'complaints'])->name('complaints');
+    Route::patch('/complaints/{complaint}/respond', [AdminController::class, 'respondComplaint'])->name('complaints.respond');
+
+        // Route::get('/dashboard', fn() => view('admin.admindashboard'))->name('dashboard');
 });
 
 // ─────────────────────────────────────────
 // FALLBACK
 // ─────────────────────────────────────────
-Route::fallback(fn() => response()->view('errors.404', [], 404));
+// Route::fallback(fn() => response()->view('errors.404', [], 404));
+   Route::fallback(fn() => abort(404));
