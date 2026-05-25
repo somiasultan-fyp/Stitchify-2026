@@ -257,6 +257,7 @@ body {
 </head>
 <body>
 
+<div class="sidebar">
   <div class="sidebar-logo">
     <img src="{{ asset('images/logo.png') }}" alt="Logo">
     <h3>Stitchify</h3>
