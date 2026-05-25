@@ -20,14 +20,15 @@ class TailorController extends Controller
 }
     // Single tailor profile
     public function show($id)
-    {
-        $tailor = User::where('id', $id)
-                      ->where('role', 'tailor')
-                      ->where('is_active', true)
-                      ->firstOrFail();
+{
+    // Tailor ID fetch
+    $tailor = Tailor::where('id', $id)
+                    ->with(['user', 'portfolios'])
+                    ->firstOrFail();
 
-        return view('tailors.show', compact('tailor'));
-    }
+    return view('tailor.publicprofilepage', compact('tailor'));
+
+}
     public function dashboard()
     {
         $user   = Auth::user();
