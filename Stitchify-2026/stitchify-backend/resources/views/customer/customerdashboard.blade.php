@@ -279,7 +279,7 @@ body {
       </a>
     </li>
     <li>
-      <a href="/tailors">New Order">
+      <a href="/tailors">
         <i class="fas fa-plus-circle"></i> New Order
       </a>
     </li>
