@@ -32,20 +32,18 @@ class AdminController extends Controller
         $orders = Order::with(['customer.user', 'tailor.user'])->latest()->paginate(15);
         $complaints = Complaint::with('user')->latest()->get();
 
-        // Recent 5 orders
         $recentOrders = Order::with(['customer.user', 'tailor.user'])
             ->latest()
             ->take(5)
             ->get();
 
-        // Recent 5 users
         $recentUsers = User::where('role', '!=', 'admin')
             ->latest()
             ->take(5)
             ->get();
 
         return view('admin.admindashboard',
-            compact('stats', 'recentOrders', 'recentUsers'));
+            compact('stats','users', 'orders', 'complaints' , 'recentOrders' , 'recentUsers'));
     }
 
     // ── All Users ────────────────────────────────
