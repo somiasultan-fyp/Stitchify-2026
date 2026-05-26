@@ -16,28 +16,21 @@ class AdminController extends Controller
     public function dashboard()
     {
         $stats = [
-            // Total users
             'total_users'     => User::where('role', '!=', 'admin')->count(),
             'total_customers' => User::where('role', 'customer')->count(),
             'total_tailors'   => User::where('role', 'tailor')->count(),
-
-            // Orders
             'total_orders'    => Order::count(),
             'pending_orders'  => Order::where('status', 'pending')->count(),
-            'active_orders'   => Order::whereIn('status',
-                                    ['accepted', 'in_progress', 'ready'])->count(),
+            'active_orders'   => Order::whereIn('status',['accepted', 'in_progress', 'ready'])->count(),
             'completed_orders'=> Order::where('status', 'delivered')->count(),
-
-            // Revenue — advance payments
-            'total_revenue'   => Order::where('payment_status', '!=', 'unpaid')
-                                    ->sum('advance_paid'),
-
-            // Complaints
+            'total_revenue'   => Order::where('payment_status', '!=', 'unpaid')->sum('advance_paid'),
             'open_complaints' => Complaint::where('status', 'open')->count(),
-
-            // Blocked users
             'blocked_users'   => User::where('is_active', false)->count(),
         ];
+
+        $users = User::where('role', '!=', 'admin')->latest()->paginate(15);
+        $orders = Order::with(['customer.user', 'tailor.user'])->latest()->paginate(15);
+        $complaints = Complaint::with('user')->latest()->get();
 
         // Recent 5 orders
         $recentOrders = Order::with(['customer.user', 'tailor.user'])
