@@ -35,10 +35,10 @@ class AuthController extends Controller
             'category'      => 'required_if:role,tailor|nullable|string',
             'slot_capacity' => 'required_if:role,tailor|nullable|integer|min:1',
         ], [
-            'email.unique'              => 'Email is already registered.',
-            'address.required_if'       => 'Address is compulsory.',
-            'category.required_if'      => 'Specialization is compulsory.',
-            'slot_capacity.required_if' => 'Slot is compulsory',
+            'email.unique' => 'Email already registered.',
+            'address.required_if' => 'Address is required for tailors.',
+            'category.required_if' => 'Specialization is required for tailors.',
+            'slot_capacity.required_if' => 'Slot capacity is required for tailors.',
         ]);
 
         // User createion
@@ -55,14 +55,12 @@ class AuthController extends Controller
             'email_verified_at' => now(), // Testing ke liye auto-verify
         ]);
 
-        // Customer profile banao
+        // Customer profile
         if ($user->role === 'customer') {
-            Customer::create([
-                'user_id' => $user->id,
-            ]);
+            Customer::create(['user_id' => $user->id]);
         }
 
-        // Tailor profile banao
+        // Tailor profile
         if ($user->role === 'tailor') {
             Tailor::create([
                 'user_id'         => $user->id,
@@ -90,7 +88,7 @@ class AuthController extends Controller
     // Login process
     public function login(Request $request)
     {
-        $request->validate([
+        $credentials = $request->validate([
             'email'    => 'required|email',
             'password' => 'required',
         ]);
@@ -118,25 +116,17 @@ class AuthController extends Controller
             'password' => $request->password,
         ])) {
             $request->session()->regenerate();
+            $user = auth()->user();
 
-            // Role ke hisaab se dashboard par bhejo
-            $redirect = match(Auth::user()->role) {
-                'admin'    => '/admin/dashboard',
-                'tailor'   => '/tailor/dashboard',
-                'customer' => '/customer/dashboard',
-                default    => '/login',
+            return match($user->role) {
+                'admin'    => redirect()->route('admin.dashboard'),
+                'tailor'   => redirect()->route('tailor.dashboard'),
+                'customer' => redirect()->route('customer.dashboard'),
+                default    => redirect('/'),
             };
-
-            return response()->json([
-                'success'  => true,
-                'redirect' => $redirect,
-            ]);
         }
 
-        return response()->json([
-            'success' => false,
-            'message' => 'Email or password is incorrect.',
-        ], 401);
+        return back()->withErrors(['email' => 'Invalid credentials.'])->onlyInput('email');
     }
 
     // Logout

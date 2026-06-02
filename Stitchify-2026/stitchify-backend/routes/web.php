@@ -4,8 +4,10 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\OrderController;
+use App\Http\Controllers\TailorDashboardController;
+use App\Http\Controllers\CustomerOrderController;
 use App\Http\Controllers\TailorController;
+use App\Http\Controllers\Admin\AdminController;
 
 Route::get('/', fn() => view('home'))->name('home');
 Route::get('/tailors',                   [TailorController::class, 'index'])->name('tailors.index');
@@ -14,8 +16,8 @@ Route::get('/tailors/{id}',              [TailorController::class, 'show'])->nam
 Route::get('/register',  [AuthController::class, 'showRegister'])->name('register.form');
 Route::get('/login',     [AuthController::class, 'showLogin'])->name('login.form');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
-Route::post('/login',    [AuthController::class, 'login'])->name('login');
-Route::post('/logout',   [AuthController::class, 'logout'])->name('logout');
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
 Route::get('/email/verify', function () {
@@ -42,7 +44,7 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
 Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
-    return back()->with('status', 'Verification email dobara bhej di gayi!');
+    return back()->with('status', 'Verification link sent!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
