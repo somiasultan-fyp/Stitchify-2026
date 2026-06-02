@@ -9,38 +9,37 @@ use App\Http\Controllers\CustomerOrderController;
 use App\Http\Controllers\TailorController;
 use App\Http\Controllers\Admin\AdminController;
 
-// ─────────────────────────────────────────
-// PUBLIC ROUTES
-// ─────────────────────────────────────────
 Route::get('/', fn() => view('home'))->name('home');
-Route::get('/about', fn() => view('about'))->name('about');
-Route::get('/contact', fn() => view('contact'))->name('contact');
-Route::get('/terms', fn() => view('terms'))->name('terms');
+Route::get('/tailors',                   [TailorController::class, 'index'])->name('tailors.index');
+Route::get('/tailors/{id}',              [TailorController::class, 'show'])->name('tailors.show');
 
-// ─────────────────────────────────────────
-// AUTH ROUTES
-// ─────────────────────────────────────────
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register.form');
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login.form');
+Route::get('/register',  [AuthController::class, 'showRegister'])->name('register.form');
+Route::get('/login',     [AuthController::class, 'showLogin'])->name('login.form');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// ─────────────────────────────────────────
-// EMAIL VERIFICATION
-// ─────────────────────────────────────────
+
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
+
     $user = auth()->user();
-    return match($user->role) {
-        'admin' => redirect()->route('admin.dashboard'),
-        'tailor' => redirect()->route('tailor.dashboard'),
-        default => redirect()->route('customer.dashboard'),
-    };
+
+    if ($user->role === 'admin') {
+        return redirect('/admin/dashboard')
+            ->with('success', 'Email verified!');
+    } elseif ($user->role === 'tailor') {
+        return redirect('/tailor/dashboard')
+            ->with('success', 'Email verified!');
+    } else {
+        return redirect('/customer/dashboard')
+            ->with('success', 'Email verified!');
+    }
+
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 Route::post('/email/verification-notification', function (Request $request) {
@@ -48,70 +47,26 @@ Route::post('/email/verification-notification', function (Request $request) {
     return back()->with('status', 'Verification link sent!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
-// ─────────────────────────────────────────
-// CUSTOMER ROUTES ✅ FIXED
-// ─────────────────────────────────────────
-Route::middleware(['auth', 'role:customer'])
-    ->prefix('customer')
-    ->name('customer.')
-    ->group(function () {
-        
-        Route::get('/dashboard', [CustomerOrderController::class, 'myOrders'])->name('dashboard');
-        
-        // ✅ Order Routes - Yeh 404 fix karenge
-        Route::get('/orders', [CustomerOrderController::class, 'myOrders'])->name('orders.index');
-        Route::get('/orders/create', [CustomerOrderController::class, 'showForm'])->name('orders.create');
-        Route::post('/orders', [CustomerOrderController::class, 'placeOrder'])->name('orders.store');
-        Route::get('/orders/{order}', [CustomerOrderController::class, 'showOrder'])->name('orders.show');
-        
-        // Actions
-        Route::patch('/orders/{order}/cancel', [CustomerOrderController::class, 'cancelOrder'])->name('orders.cancel');
-        Route::get('/orders/live-status', [CustomerOrderController::class, 'liveStatus'])->name('orders.live');
+Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
+    Route::get('/customer/dashboard',  [OrderController::class, 'myOrders']);
+    Route::get('/customer/order-form', [OrderController::class, 'create']);
 });
 
-// ─────────────────────────────────────────
-// TAILOR ROUTES
-// ─────────────────────────────────────────
-Route::middleware(['auth', 'role:tailor'])
-    ->prefix('tailor')
-    ->name('tailor.')
-    ->group(function () {
-        
-        Route::get('/dashboard', [TailorDashboardController::class, 'index'])->name('dashboard');
-        Route::get('/orders', [TailorDashboardController::class, 'index'])->name('orders.index');
-        Route::get('/orders/{order}', [TailorDashboardController::class, 'showOrder'])->name('orders.show');
-        Route::patch('/orders/{order}/accept', [TailorDashboardController::class, 'acceptOrder'])->name('orders.accept');
-        Route::patch('/orders/{order}/reject', [TailorDashboardController::class, 'rejectOrder'])->name('orders.reject');
-        Route::patch('/orders/{order}/status', [TailorDashboardController::class, 'updateStatus'])->name('orders.status');
+Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
+Route::post('/order/store', [OrderController::class, 'store'])->name('order.store');
 });
 
-// ─────────────────────────────────────────
-// ADMIN ROUTES
-// ─────────────────────────────────────────
-Route::middleware(['auth', 'verified' , 'role:admin'])
-    ->prefix('admin')
-    ->name('admin.')
-    ->group(function () {
-        
-    // Dashboard
-    Route::get('/dashboard' , [AdminController::class, 'dashboard'])->name('dashboard');
-    
-    // Users manage
-    Route::get('/users', [AdminController::class, 'users'])->name('users');
-    Route::patch('/users/{user}/toggle', [AdminController::class, 'toggleUser'])->name('users.toggle');
-    
-    // Orders monitor
-    Route::get('/orders', [AdminController::class, 'orders'])->name('orders');
-
-    // Complaints
-    Route::get('/complaints', [AdminController::class, 'complaints'])->name('complaints');
-    Route::patch('/complaints/{complaint}/respond', [AdminController::class, 'respondComplaint'])->name('complaints.respond');
-
-        // Route::get('/dashboard', fn() => view('admin.admindashboard'))->name('dashboard');
+Route::middleware(['auth', 'verified', 'role:tailor'])->group(function () {
+    Route::get('/tailor/dashboard',          [TailorController::class, 'dashboard']);
+    Route::post('/tailor/order/{id}/accept', [TailorController::class, 'acceptOrder']);
+    Route::post('/tailor/order/{id}/status', [TailorController::class, 'updateStatus']);
+    Route::post('/tailor/order/{id}/reject', [TailorController::class, 'rejectOrder']);
+    Route::get('/tailor/order/{id}/detail',  [TailorController::class, 'orderDetail']);
+    Route::get('/tailor/profile',            [TailorController::class, 'profile'])->name('tailor.profile');
+    Route::post('/tailor/profile/update',    [TailorController::class, 'updateProfile'])->name('tailor.profile.update');
 });
 
-// ─────────────────────────────────────────
-// FALLBACK
-// ─────────────────────────────────────────
-// Route::fallback(fn() => response()->view('errors.404', [], 404));
-   Route::fallback(fn() => abort(404));
+
+Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
+    Route::get('/admin/dashboard', fn() => view('admin.admindashboard'));
+});

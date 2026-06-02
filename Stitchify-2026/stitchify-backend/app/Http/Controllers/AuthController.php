@@ -11,6 +11,7 @@ use App\Models\Tailor;
 
 class AuthController extends Controller
 {
+    // Register form dikhao
     public function showRegister()
     {
         return view('auth.register');
@@ -21,7 +22,7 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    // ✅ Register Process — Testing ke liye simplified
+    // Register Process
     public function register(Request $request)
     {
         $request->validate([
@@ -40,7 +41,7 @@ class AuthController extends Controller
             'slot_capacity.required_if' => 'Slot capacity is required for tailors.',
         ]);
 
-        // User create karein
+        // User createion
         $user = User::create([
             'name'          => $request->name,
             'email'         => $request->email,
@@ -51,7 +52,7 @@ class AuthController extends Controller
             'category'      => $request->role === 'tailor' ? $request->category : null,
             'slot_capacity' => $request->role === 'tailor' ? $request->slot_capacity : null,
             'is_active'     => true,
-            'email_verified_at' => now(), // ✅ Testing ke liye auto-verify
+            'email_verified_at' => now(), // Testing ke liye auto-verify
         ]);
 
         // Customer profile
@@ -71,11 +72,12 @@ class AuthController extends Controller
             ]);
         }
 
-        // ✅ Auto-login
+        // Auto-login
         Auth::login($user);
+        // $redirect= $user->role === 'tailor' ? 'tailor.dashboard' : 'customer.dashboard';
         $request->session()->regenerate();
 
-        // ✅ Direct dashboard redirect (no verification step for testing)
+        // Direct dashboard redirect (no verification step for testing)
         return match($user->role) {
             'tailor'   => redirect()->route('tailor.dashboard')->with('success', 'Welcome, Tailor!'),
             'customer' => redirect()->route('customer.dashboard')->with('success', 'Welcome, Customer!'),
@@ -83,7 +85,7 @@ class AuthController extends Controller
         };
     }
 
-    // ✅ Login Process
+    // Login process
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -91,7 +93,28 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (auth()->attempt($credentials)) {
+        $user = User::where('email', $request->email)->first();
+
+        // User exist nahi karta
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Email or password is incorrect.',
+            ], 401);
+        }
+
+        if (!$user->is_active) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Your account has been blocked. Contact support.',
+            ], 403);
+        }
+
+        // Credentials check karo
+        if (Auth::attempt([
+            'email'    => $request->email,
+            'password' => $request->password,
+        ])) {
             $request->session()->regenerate();
             $user = auth()->user();
 
@@ -106,11 +129,12 @@ class AuthController extends Controller
         return back()->withErrors(['email' => 'Invalid credentials.'])->onlyInput('email');
     }
 
+    // Logout
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/login');
+        return redirect('/');
     }
 }
