@@ -68,5 +68,5 @@ Route::middleware(['auth', 'verified', 'role:tailor'])->group(function () {
 
 
 Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', fn() => view('admin.admindashboard'));
+    Route::get('/admin/dashboard', fn() => view('admin.admindashboard'))->name('admin.dashboard');
 });
