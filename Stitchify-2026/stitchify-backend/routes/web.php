@@ -70,11 +70,18 @@ Route::middleware(['auth', 'verified', 'role:tailor'])->group(function () {
 Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
    Route::get('/admin/dashboard', function() {
     $stats = [
-        'total_users'    => \App\Models\User::count(),
-        'total_orders'   => \App\Models\Order::count(),
-        'total_tailors'  => \App\Models\Tailor::count(),
-        'total_customers'=> \App\Models\Customer::count(),
+        'total_users'      => \App\Models\User::count(),
+        'total_orders'     => \App\Models\Order::count(),
+        'total_tailors'    => \App\Models\Tailor::count(),
+        'total_customers'  => \App\Models\Customer::count(),
+        'completed_orders' => \App\Models\Order::where('status', 'completed')->count(),
+        'pending_orders'   => \App\Models\Order::where('status', 'pending')->count(),
+        'blocked_users'    => \App\Models\User::where('is_active', false)->count(),
     ];
-    return view('admin.admindashboard', compact('stats'));
+    $users      = \App\Models\User::whereIn('role', ['customer', 'tailor'])->paginate(10);
+    $orders     = \App\Models\Order::with(['customer.user', 'tailor.user'])->latest()->paginate(10);
+    $complaints = \App\Models\Complaint::with('user')->latest()->get();
+
+    return view('admin.admindashboard', compact('stats', 'users', 'orders', 'complaints'));
 })->name('admin.dashboard');
 });
