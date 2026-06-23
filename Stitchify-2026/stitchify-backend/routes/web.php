@@ -48,24 +48,20 @@ Route::post('/email/verification-notification', function (Request $request) {
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
-    Route::get('/customer/dashboard',  [OrderController::class, 'myOrders']);
-    Route::get('/customer/order-form', [OrderController::class, 'create']);
-});
-
-Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
-Route::post('/order/store', [OrderController::class, 'store'])->name('order.store');
+    Route::get('/customer/dashboard',  [CustomerOrderController::class, 'myOrders'])->name('customer.dashboard');
+    Route::get('/customer/order-form', [CustomerOrderController::class, 'create'])->name('customer.order.form');
+    Route::post('/order/store', [CustomerOrderController::class, 'store'])->name('order.store');
 });
 
 Route::middleware(['auth', 'verified', 'role:tailor'])->group(function () {
-    Route::get('/tailor/dashboard',          [TailorController::class, 'dashboard']);
-    Route::post('/tailor/order/{id}/accept', [TailorController::class, 'acceptOrder']);
-    Route::post('/tailor/order/{id}/status', [TailorController::class, 'updateStatus']);
-    Route::post('/tailor/order/{id}/reject', [TailorController::class, 'rejectOrder']);
-    Route::get('/tailor/order/{id}/detail',  [TailorController::class, 'orderDetail']);
+    Route::get('/tailor/dashboard',          [TailorController::class, 'dashboard'])->name('tailor.dashboard');
+    Route::post('/tailor/order/{id}/accept', [TailorController::class, 'acceptOrder'])->name('tailor.order.accept');
+    Route::post('/tailor/order/{id}/status', [TailorController::class, 'updateStatus'])->name('tailor.order.status');
+    Route::post('/tailor/order/{id}/reject', [TailorController::class, 'rejectOrder'])->name('tailor.order.reject');
+    Route::get('/tailor/order/{id}/detail',  [TailorController::class, 'orderDetail'])->name('tailor.order.detail');
     Route::get('/tailor/profile',            [TailorController::class, 'profile'])->name('tailor.profile');
     Route::post('/tailor/profile/update',    [TailorController::class, 'updateProfile'])->name('tailor.profile.update');
 });
-
 
 Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
    Route::get('/admin/dashboard', function() {

@@ -11,14 +11,14 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();   // duplicate email allow nahi hogi
+            $table->string('email')->unique();  
             $table->string('phone');
-            $table->string('password');          // hashed password store hoga
-            $table->enum('role', ['customer', 'tailor', 'admin']); // admin add karo
-            // tailor ke liye extra fields (nullable kyunki customer ke liye zaroorat nahi)
+            $table->string('password');        
+            $table->enum('role', ['customer', 'tailor', 'admin']); 
             $table->text('address')->nullable();
             $table->string('category')->nullable();
             $table->integer('slot_capacity')->nullable();
+            $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
         });
     }
