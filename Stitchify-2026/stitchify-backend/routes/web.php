@@ -68,5 +68,13 @@ Route::middleware(['auth', 'verified', 'role:tailor'])->group(function () {
 
 
 Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', fn() => view('admin.admindashboard'))->name('admin.dashboard');
+   Route::get('/admin/dashboard', function() {
+    $stats = [
+        'total_users'    => \App\Models\User::count(),
+        'total_orders'   => \App\Models\Order::count(),
+        'total_tailors'  => \App\Models\Tailor::count(),
+        'total_customers'=> \App\Models\Customer::count(),
+    ];
+    return view('admin.admindashboard', compact('stats'));
+})->name('admin.dashboard');
 });
