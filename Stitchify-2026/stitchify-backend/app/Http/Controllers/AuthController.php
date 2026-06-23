@@ -112,19 +112,29 @@ class AuthController extends Controller
 
         // Credentials check karo
         if (Auth::attempt([
-            'email'    => $request->email,
-            'password' => $request->password,
-        ])) {
-            $request->session()->regenerate();
-            $user = auth()->user();
+    'email'    => $request->email,
+    'password' => $request->password,
+])) {
+    $request->session()->regenerate();
+    $user = auth()->user();
 
-            return match($user->role) {
-                'admin'    => redirect()->route('admin.dashboard'),
-                'tailor'   => redirect()->route('tailor.dashboard'),
-                'customer' => redirect()->route('customer.dashboard'),
-                default    => redirect('/'),
-            };
-        }
+    $redirect = match($user->role) {
+        'admin'    => route('admin.dashboard'),
+        'tailor'   => route('tailor.dashboard'),
+        'customer' => route('customer.dashboard'),
+        default    => '/',
+    };
+
+    return response()->json([
+        'success'  => true,
+        'redirect' => $redirect,
+    ]);
+}
+
+return response()->json([
+    'success' => false,
+    'message' => 'Invalid credentials.',
+], 401);
 
         return back()->withErrors(['email' => 'Invalid credentials.'])->onlyInput('email');
     }
