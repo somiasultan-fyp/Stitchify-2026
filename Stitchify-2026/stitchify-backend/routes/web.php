@@ -8,6 +8,8 @@ use App\Http\Controllers\TailorDashboardController;
 use App\Http\Controllers\CustomerOrderController;
 use App\Http\Controllers\TailorController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\ChatbotController;
+
 
 Route::get('/', fn() => view('home'))->name('home');
 Route::get('/tailors',                   [TailorController::class, 'index'])->name('tailors.index');
@@ -82,3 +84,5 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::patch('/admin/users/{user}/toggle', [\App\Http\Controllers\Admin\AdminController::class, 'toggleUser'])->name('admin.users.toggle');
     Route::patch('/admin/complaints/{complaint}/respond', [\App\Http\Controllers\Admin\AdminController::class, 'respondComplaint'])->name('admin.complaints.respond');
 });
+Route::post('/chatbot', [ChatbotController::class, 'reply'])
+     ->name('chatbot.reply');
