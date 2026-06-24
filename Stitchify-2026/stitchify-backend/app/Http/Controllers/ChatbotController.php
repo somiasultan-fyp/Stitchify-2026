@@ -13,29 +13,60 @@ class ChatbotController extends Controller
             'message' => 'required|string|max:500',
         ]);
 
-        $apiKey = env('GEMINI_API_KEY');
+        $apiKey = env('GROQ_API_KEY');
 
-        $response = Http::post(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={$apiKey}",
-            [
-                'contents' => [
+        $userContext = '';
+        if (auth()->check()) {
+            $user = auth()->user();
+            $userContext = "Current user: {$user->name}, Role: {$user->role}.";
+        }
+
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $apiKey,
+                'Content-Type'  => 'application/json',
+            ])->post('https://api.groq.com/openai/v1/chat/completions', [
+                'model'    => 'llama-3.1-8b-instant',
+                'messages' => [
                     [
-                        'parts' => [
-                            [
-                                'text' => "You are Stitch, the helpful AI assistant for Stitchify — an online tailoring platform in Pakistan. Help users with orders, measurements, payments, tailors, and delivery. Keep responses short and friendly. User says: " . $request->message
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        );
+                        'role'    => 'system',
+                        'content' => "You are Stitch, the helpful AI assistant for Stitchify — an online tailoring platform in Pakistan.
+                        You help customers and tailors with:
+                        - How to place orders
+                        - How to take measurements
+                        - Order status questions
+                        - Pricing and payment queries
+                        - How to register as a tailor
+                        - Delivery related questions
+                        - General tailoring advice
+                        {$userContext}
+                        Keep responses short, friendly and helpful.
+                        If asked something unrelated to tailoring or Stitchify, politely redirect.
+                        Respond in the same language the user writes in (English, Urdu, or Roman Urdu).",
+                    ],
+                    [
+                        'role'    => 'user',
+                        'content' => $request->message,
+                    ],
+                ],
+                'max_tokens'  => 300,
+                'temperature' => 0.7,
+            ]);
 
-        $reply = $response->json('candidates.0.content.parts.0.text') 
-                 ?? 'Sorry, I could not process your request. Please try again.';
+            $reply = $response->json('choices.0.message.content')
+                     ?? 'Sorry, I could not process your request.';
 
-        return response()->json([
-            'success' => true,
-            'reply'   => $reply,
-        ]);
+            return response()->json([
+                'success' => true,
+                'reply'   => $reply,
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Groq Error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'reply'   => 'Sorry, I am unable to respond right now.',
+            ], 500);
+        }
     }
 }
