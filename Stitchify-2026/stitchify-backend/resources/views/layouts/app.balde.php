@@ -12,92 +12,75 @@
         @yield('content') {{-- Yahan aapke baaki pages ka data aayega --}}
     </div>
 
-    {{-- Navbar mein user login ho toh bell icon dikhao --}}
+    {{-- Navbar ke andar jahan icons hain, wahan ye check lagayein --}}
 @auth
-<div class="dropdown me-3">
-  {{-- Bell icon with badge --}}
-  <a href="#" class="position-relative text-dark"
-     id="notifBell" data-bs-toggle="dropdown">
-    <i class="fas fa-bell fs-5"></i>
-    {{-- Unread count badge --}}
-    <span id="notifBadge"
-          class="position-absolute top-0 start-100 translate-middle
-                 badge rounded-pill bg-danger"
-          style="font-size:10px; display:none;">
-      0
-    </span>
-  </a>
+  @if(in_array(auth()->user()->role, ['customer', 'tailor']))
+    
+    <div class="dropdown me-3">
+      <a href="#" class="position-relative text-dark" id="notifBell" data-bs-toggle="dropdown">
+        <i class="fas fa-bell fs-5"></i>
+        <span id="notifBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:10px; display:none;">
+          0
+        </span>
+      </a>
 
-  {{-- Dropdown --}}
-  <div class="dropdown-menu dropdown-menu-end shadow"
-       style="width:320px; max-height:400px; overflow-y:auto">
-    <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
-      <span class="fw-bold">Notifications</span>
-      <form method="POST" action="{{ route('notifications.readAll') }}">
-        @csrf @method('PATCH')
-        <button type="submit"
-                class="btn btn-link btn-sm p-0 text-muted">
-          Mark all read
-        </button>
-      </form>
-    </div>
+      {{-- Dropdown Menu --}}
+      <div class="dropdown-menu dropdown-menu-end shadow" style="width:320px; max-height:400px; overflow-y:auto">
+        <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
+          <span class="fw-bold">Notifications</span>
+          <form method="POST" action="{{ route('notifications.readAll') }}">
+            @csrf @method('PATCH')
+            <button type="submit" class="btn btn-link btn-sm p-0 text-muted">
+              Mark all read
+            </button>
+          </form>
+        </div>
 
-    {{-- Latest 5 notifications --}}
-    @php
-      $latestNotifs = auth()->user()
-          ->notifications()
-          ->latest()
-          ->take(5)
-          ->get();
-    @endphp
+        @php
+          $latestNotifs = auth()->user()->notifications()->latest()->take(5)->get();
+        @endphp
 
-    @forelse($latestNotifs as $notif)
-    <a href="{{ route('notifications.read', $notif->id) }}"
-       class="dropdown-item py-2 px-3 border-bottom
-              {{ $notif->is_read ? '' : 'bg-light' }}">
-      <div class="fw-bold small">{{ $notif->title }}</div>
-      <div class="text-muted" style="font-size:12px; white-space:normal">
-        {{ Str::limit($notif->message, 60) }}
+        @forelse($latestNotifs as $notif)
+        <a href="{{ route('notifications.read', $notif->id) }}" class="dropdown-item py-2 px-3 border-bottom {{ $notif->is_read ? '' : 'bg-light' }}">
+          <div class="fw-bold small">{{ $notif->title }}</div>
+          <div class="text-muted" style="font-size:12px; white-space:normal">
+            {{ Str::limit($notif->message, 60) }}
+          </div>
+          <div class="text-muted" style="font-size:11px">
+            {{ $notif->created_at->diffForHumans() }}
+          </div>
+        </a>
+        @empty
+        <div class="text-center text-muted py-3" style="font-size:13px">
+          Koi notification nahi
+        </div>
+        @endforelse
+
+        <div class="text-center py-2">
+          <a href="{{ route('notifications.index') }}" class="text-primary small">View All</a>
+        </div>
       </div>
-      <div class="text-muted" style="font-size:11px">
-        {{ $notif->created_at->diffForHumans() }}
-      </div>
-    </a>
-    @empty
-    <div class="text-center text-muted py-3" style="font-size:13px">
-      Koi notification nahi
     </div>
-    @endforelse
 
-    <div class="text-center py-2">
-      <a href="{{ route('notifications.index') }}"
-         class="text-primary small">View All</a>
-    </div>
-  </div>
-</div>
-
-{{-- Auto-update badge script --}}
-<script>
-function updateNotifBadge() {
-  fetch('{{ route("notifications.count") }}')
-    .then(r => r.json())
-    .then(data => {
-      const badge = document.getElementById('notifBadge');
-      if (data.count > 0) {
-        badge.textContent = data.count > 9 ? '9+' : data.count;
-        badge.style.display = 'block';
-      } else {
-        badge.style.display = 'none';
-      }
-    });
-}
-
-// Page load par check karo
-updateNotifBadge();
-
-// Har 30 second mein check karo
-setInterval(updateNotifBadge, 30000);
-</script>
+    {{-- Script for Auto-Update --}}
+    <script>
+    function updateNotifBadge() {
+      fetch('{{ route("notifications.count") }}')
+        .then(r => r.json())
+        .then(data => {
+          const badge = document.getElementById('notifBadge');
+          if (badge && data.count > 0) {
+            badge.textContent = data.count > 9 ? '9+' : data.count;
+            badge.style.display = 'block';
+          } else if (badge) {
+            badge.style.display = 'none';
+          }
+        });
+    }
+    updateNotifBadge();
+    setInterval(updateNotifBadge, 30000); // 30 Seconds Auto Refresh
+    </script>
+    @endif
 @endauth
 
     {{-- ══════════════════════════════════════ --}}
