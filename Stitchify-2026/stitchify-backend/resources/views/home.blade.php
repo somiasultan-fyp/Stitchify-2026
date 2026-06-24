@@ -582,7 +582,7 @@
         <i class="fas fa-robot"></i>
       </div>
       <div>
-        <div style="font-weight:600; font-size:14px">Stitch AI</div>
+        <div style="font-weight:600; font-size:14px">Stitch </div>
         <div style="font-size:11px; opacity:0.8">Always here to help</div>
       </div>
     </div>
@@ -606,7 +606,7 @@
                   border-radius:0 12px 12px 12px;
                   font-size:13px; max-width:80%;
                   box-shadow:0 1px 3px rgba(0,0,0,0.1)">
-        Hi! I'm Stitch, your Stitchify assistant 👋 How can I help you today?
+        Hi! I'm Stitch, your Stitchify assistant  How can I help you today?
       </div>
     </div>
   </div>
