@@ -78,6 +78,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     $orders     = \App\Models\Order::with(['customer.user', 'tailor.user'])->latest()->paginate(10);
     $complaints = \App\Models\Complaint::with('user')->latest()->get();
 
-    return view('admin.admindashboard', compact('stats', 'users', 'orders', 'complaints'));
-})->name('admin.dashboard');
+    return view('admin.admindashboard', compact('stats', 'users', 'orders', 'complaints'));})->name('admin.dashboard');
+    Route::patch('/admin/users/{user}/toggle', [\App\Http\Controllers\Admin\AdminController::class, 'toggleUser'])->name('admin.users.toggle');
+    Route::patch('/admin/complaints/{complaint}/respond', [\App\Http\Controllers\Admin\AdminController::class, 'respondComplaint'])->name('admin.complaints.respond');
 });
