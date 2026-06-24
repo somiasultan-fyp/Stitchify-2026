@@ -86,3 +86,21 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
 });
 Route::post('/chatbot', [ChatbotController::class, 'reply'])
      ->name('chatbot.reply');
+// Customer aur Tailor dono ke liye — auth ke andar
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Sab notifications dekho
+    Route::get('/notifications',
+        [NotificationController::class, 'index'])->name('notifications.index');
+
+    // Ek notification read mark karo
+    Route::patch('/notifications/{notification}/read',
+        [NotificationController::class, 'markRead'])->name('notifications.read');
+
+    // Sab read mark karo
+    Route::patch('/notifications/read-all',
+        [NotificationController::class, 'markAllRead'])->name('notifications.readAll');
+
+    // Unread count — AJAX ke liye
+    Route::get('/notifications/unread-count',
+        [NotificationController::class, 'unreadCount'])->name('notifications.count');
+});
