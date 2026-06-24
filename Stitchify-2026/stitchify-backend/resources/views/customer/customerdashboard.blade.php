@@ -10,12 +10,10 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <style>
 :root {
-  /* Updated Stitchify Brand Colors */
-  --primary-bg: #ababcf; 
-  --accent-color: #B76E79; 
+  --primary-bg: #212529;
+  --accent-color: #1b2a4a;
   --copyright-bg: #575a5b;
   --text-white: #ffffff;
-  --dark-text: #212529;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -37,7 +35,7 @@ body {
 .sidebar-logo {
   text-align: center; 
   padding: 10px 20px 15px;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
   margin-bottom: 15px;
 }
 .sidebar-logo img {
@@ -52,17 +50,17 @@ body {
 .sidebar-logo h3 { color: var(--text-white); font-size: 18px; font-weight: 700; margin: 0; letter-spacing: 0.5px; }
 .user-info {
   padding: 12px 15px;
-  background-color: rgba(255,255,255,0.2);
+  background-color: rgba(255,255,255,0.1);
   margin: 0 15px 15px; border-radius: 10px;
 }
 .user-info h4 { color: var(--text-white); font-size: 15px; margin: 0 0 3px 0; }
-.user-info p  { color: rgba(255,255,255,0.9); font-size: 12px; margin: 0; }
+.user-info p  { color: rgba(255,255,255,0.7); font-size: 12px; margin: 0; }
 .sidebar-menu { list-style: none; padding: 0 15px; flex: 1; }
 .sidebar-menu li { margin-bottom: 4px; }
 .sidebar-menu a {
   display: flex; align-items: center;
   padding: 11px 15px;
-  color: rgba(255,255,255,0.9);
+  color: rgba(255,255,255,0.8);
   text-decoration: none; border-radius: 8px;
   transition: all 0.3s ease; font-size: 14px;
   cursor: pointer; position: relative;
@@ -77,27 +75,27 @@ body {
 }
 .sidebar-menu a.active::before { width: 4px; }
 .sidebar-menu a:hover, .sidebar-menu a.active {
-  background-color: rgba(255,255,255,0.25);
+  background-color: rgba(255,255,255,0.15);
   color: var(--text-white); padding-left: 20px;
 }
 .sidebar-menu a i { margin-right: 10px; width: 18px; text-align: center; }
 
 .sidebar-footer {
   padding: 15px;
-  border-top: 1px solid rgba(255,255,255,0.2);
+  border-top: 1px solid rgba(255,255,255,0.1);
   margin-top: 10px;
 }
 .logout-link {
   display: flex; align-items: center;
   padding: 11px 15px;
-  background-color: rgba(220,53,69,0.8);
-  color: white !important;
+  background-color: rgba(220,53,69,0.2);
+  color: #ff6b6b !important;
   text-decoration: none; border-radius: 8px;
   font-size: 14px; cursor: pointer;
   transition: all 0.3s ease;
   border: none; width: 100%;
 }
-.logout-link:hover { background-color: #dc3545; }
+.logout-link:hover { background-color: rgba(220,53,69,0.35); color: #ff6b6b; }
 .logout-link i { margin-right: 10px; width: 18px; text-align: center; }
 
 /* ===== MAIN CONTENT WORKFLOW ===== */
@@ -119,13 +117,52 @@ body {
   margin: 0;
 }
 
+.bell-wrapper { position: relative; display: inline-block; }
 .bell-btn {
   background: none; border: none; cursor: pointer;
   color: var(--accent-color); font-size: 20px;
   padding: 6px 8px; border-radius: 8px;
   transition: all 0.3s ease; position: relative;
 }
-.bell-btn:hover { background-color: #f0f0f0; }
+.bell-btn:hover { background-color: #f0f0f0; color: #1976d2; }
+.bell-badge {
+  position: absolute; top: 2px; right: 2px;
+  background-color: #e53935;
+  color: white; font-size: 10px; font-weight: 700;
+  width: 17px; height: 17px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid white;
+}
+
+.notif-dropdown {
+  display: none;
+  position: absolute; top: 42px; right: 0;
+  width: 300px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  z-index: 9999;
+  overflow: hidden;
+}
+.notif-dropdown.show { display: block; }
+.notif-header {
+  padding: 12px 16px;
+  background: var(--accent-color);
+  color: white; font-weight: 600; font-size: 14px;
+}
+.notif-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 13px; color: #444;
+  display: flex; gap: 10px; align-items: flex-start;
+}
+.notif-item:last-child { border-bottom: none; }
+.notif-item i { color: var(--accent-color); margin-top: 2px; }
+.notif-empty {
+  padding: 20px; text-align: center;
+  color: #aaa; font-size: 13px;
+}
 
 .stats-grid {
   display: grid;
@@ -185,7 +222,7 @@ body {
 .status-completed { background-color: #e8f5e9; color: #388e3c; }
 .status-cancelled { background-color: #fce4ec; color: #c62828; }
 .order-details { color: var(--copyright-bg); font-size: 13px; line-height: 1.7; }
-.order-details strong { color: var(--dark-text); }
+.order-details strong { color: var(--primary-bg); }
 
 .pay-btn {
   margin-top: 10px; padding: 8px 20px;
@@ -215,6 +252,7 @@ body {
 <body>
 
 <div class="sidebar">
+
   <div class="sidebar-logo">
     <img src="{{ asset('images/logo.png') }}" alt="Stitchify Logo">
     <h3>Stitchify</h3>
@@ -251,10 +289,12 @@ body {
   <div class="sidebar-footer">
     <a class="logout-link"
        href="#"
-       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+       onclick="event.preventDefault();
+                document.getElementById('logout-form').submit();">
       <i class="fas fa-sign-out-alt"></i> Logout
     </a>
   </div>
+
 </div>
 
 <form id="logout-form" action="/logout" method="POST" style="display:none">
@@ -268,53 +308,25 @@ body {
   <div class="top-bar" id="overview">
     <h2>Welcome, {{ auth()->user()->name }}!</h2>
 
-    <div class="dropdown bell-wrapper">
-      <a href="#" class="bell-btn text-decoration-none position-relative" id="notifBell" data-bs-toggle="dropdown" aria-expanded="false">
+    <div class="bell-wrapper">
+      <button class="bell-btn" onclick="toggleNotif()" id="bellBtn">
         <i class="fas fa-bell"></i>
-        <span id="notifBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:10px; display:none; border: 2px solid white;">
-          0
-        </span>
-      </a>
+        <span class="bell-badge" id="bellBadge">0</span>
+      </button>
 
-      {{-- Dropdown Menu --}}
-      <div class="dropdown-menu dropdown-menu-end shadow" style="width:320px; max-height:400px; overflow-y:auto; border-radius: 12px; border:none; margin-top: 10px;">
-        <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom" style="background: var(--accent-color); color: white;">
-          <span class="fw-bold"><i class="fas fa-bell me-2"></i> Notifications</span>
-          <form method="POST" action="{{ route('notifications.readAll') }}" class="m-0">
-            @csrf @method('PATCH')
-            <button type="submit" class="btn btn-link btn-sm p-0 text-white" style="text-decoration:none; opacity:0.8;">
-              Mark all read
-            </button>
-          </form>
+      <div class="notif-dropdown" id="notifDropdown">
+        <div class="notif-header">
+          <i class="fas fa-bell me-2"></i> Notifications
         </div>
-
-        @php
-          $latestNotifs = auth()->user()->notifications()->latest()->take(5)->get();
-        @endphp
-
-        @forelse($latestNotifs as $notif)
-        <a href="{{ route('notifications.read', $notif->id) }}" class="dropdown-item py-2 px-3 border-bottom {{ $notif->is_read ? '' : 'bg-light' }}">
-          <div class="fw-bold small" style="color: var(--accent-color);">{{ $notif->title }}</div>
-          <div class="text-muted" style="font-size:12px; white-space:normal">
-            {{ Str::limit($notif->message, 60) }}
+        <div id="notifList">
+          <div class="notif-empty">
+            <i class="fas fa-check-circle fa-2x mb-2 d-block" style="color:#ccc"></i>
+            No new notifications available
           </div>
-          <div class="text-muted" style="font-size:11px">
-            {{ $notif->created_at->diffForHumans() }}
-          </div>
-        </a>
-        @empty
-        <div class="text-center py-4">
-          <i class="fas fa-check-circle fa-2x mb-2 d-block" style="color:#ccc"></i>
-          <span class="text-muted" style="font-size:13px">No new notifications</span>
-        </div>
-        @endforelse
-
-        <div class="text-center py-2 border-top">
-          <a href="{{ route('notifications.index') }}" class="text-decoration-none small" style="color: var(--accent-color); font-weight:600;">View All Notifications</a>
         </div>
       </div>
     </div>
-    </div>
+  </div>
 
   {{-- ===== METRICS SUMMARY CARDS ===== --}}
   <div class="stats-grid">
@@ -482,24 +494,29 @@ body {
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 <script>
-  // ===== ASAL NOTIFICATION AUTO-UPDATE =====
-  function updateNotifBadge() {
-    fetch('{{ route("notifications.count") }}')
-      .then(r => r.json())
-      .then(data => {
-        const badge = document.getElementById('notifBadge');
-        if (badge && data.count > 0) {
-          badge.textContent = data.count > 9 ? '9+' : data.count;
-          badge.style.display = 'inline-block';
-        } else if (badge) {
-          badge.style.display = 'none';
-        }
-      })
-      .catch(err => console.log('Notification Fetch Error:', err));
+  // ===== NOTIFICATION HANDLER =====
+  function toggleNotif() {
+    const dd = document.getElementById('notifDropdown');
+    dd.classList.toggle('show');
   }
-  
-  updateNotifBadge(); // Page load hotay hi count laye
-  setInterval(updateNotifBadge, 30000); // Har 30 seconds baad refresh kare
+
+  document.addEventListener('click', function(e) {
+    const wrapper = document.querySelector('.bell-wrapper');
+    if (wrapper && !wrapper.contains(e.target)) {
+      document.getElementById('notifDropdown').classList.remove('show');
+    }
+  });
+
+  const notifCount = 0;
+  const badge = document.getElementById('bellBadge');
+  if (badge) {
+    if (notifCount > 0) {
+      badge.textContent = notifCount;
+      badge.style.display = 'flex';
+    } else {
+      badge.style.display = 'none';
+    }
+  }
 
   // ===== INTERACTIVE SMOOTH SCROLL =====
   document.querySelectorAll('.sidebar-menu a[href^="#"]').forEach(anchor => {
@@ -529,4 +546,4 @@ body {
   updateActiveLink();
 </script>
 </body>
-</html>
+</html> 
