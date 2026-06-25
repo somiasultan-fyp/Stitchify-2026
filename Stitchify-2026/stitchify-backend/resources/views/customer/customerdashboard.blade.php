@@ -22,7 +22,6 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   min-height: 100vh;
 }
-
 .sidebar {
   position: fixed; top: 0; left: 0;
   height: 100vh; width: 260px;
@@ -33,21 +32,17 @@ body {
   display: flex; flex-direction: column;
 }
 .sidebar-logo {
-  text-align: center; 
+  text-align: center;
   padding: 10px 20px 15px;
   border-bottom: 1px solid rgba(255,255,255,0.1);
   margin-bottom: 15px;
 }
 .sidebar-logo img {
-  width: 75px; 
-  height: 75px;
-  border-radius: 50%;
-  object-fit: contain;
+  width: 75px; height: 75px;
+  border-radius: 50%; object-fit: contain;
   margin-bottom: 10px;
-  background: transparent;
-  border: none; 
 }
-.sidebar-logo h3 { color: var(--text-white); font-size: 18px; font-weight: 700; margin: 0; letter-spacing: 0.5px; }
+.sidebar-logo h3 { color: var(--text-white); font-size: 18px; font-weight: 700; margin: 0; }
 .user-info {
   padding: 12px 15px;
   background-color: rgba(255,255,255,0.1);
@@ -79,7 +74,6 @@ body {
   color: var(--text-white); padding-left: 20px;
 }
 .sidebar-menu a i { margin-right: 10px; width: 18px; text-align: center; }
-
 .sidebar-footer {
   padding: 15px;
   border-top: 1px solid rgba(255,255,255,0.1);
@@ -95,11 +89,12 @@ body {
   transition: all 0.3s ease;
   border: none; width: 100%;
 }
-.logout-link:hover { background-color: rgba(220,53,69,0.35); color: #ff6b6b; }
+.logout-link:hover { background-color: rgba(220,53,69,0.35); }
 .logout-link i { margin-right: 10px; width: 18px; text-align: center; }
 
-/* ===== MAIN CONTENT WORKFLOW ===== */
 .main-content { margin-left: 260px; padding: 20px; min-height: 100vh; }
+
+/* TOP BAR */
 .top-bar {
   background-color: var(--text-white);
   padding: 12px 25px;
@@ -110,35 +105,33 @@ body {
   justify-content: space-between;
   align-items: center;
 }
-.top-bar h2 {
-  color: var(--accent-color);
-  font-size: 20px;
-  font-weight: 700;
-  margin: 0;
-}
+.top-bar h2 { color: var(--accent-color); font-size: 20px; font-weight: 700; margin: 0; }
 
+/* BELL */
 .bell-wrapper { position: relative; display: inline-block; }
 .bell-btn {
   background: none; border: none; cursor: pointer;
   color: var(--accent-color); font-size: 20px;
-  padding: 6px 8px; border-radius: 8px;
+  padding: 6px 10px; border-radius: 8px;
   transition: all 0.3s ease; position: relative;
 }
 .bell-btn:hover { background-color: #f0f0f0; color: #1976d2; }
 .bell-badge {
-  position: absolute; top: 2px; right: 2px;
+  position: absolute; top: 0px; right: 0px;
   background-color: #e53935;
   color: white; font-size: 10px; font-weight: 700;
-  width: 17px; height: 17px;
+  width: 18px; height: 18px;
   border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
+  display: none;
+  align-items: center; justify-content: center;
   border: 2px solid white;
 }
 
+/* NOTIFICATION DROPDOWN */
 .notif-dropdown {
   display: none;
-  position: absolute; top: 42px; right: 0;
-  width: 300px;
+  position: absolute; top: 45px; right: 0;
+  width: 320px;
   background: white;
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.15);
@@ -150,25 +143,42 @@ body {
   padding: 12px 16px;
   background: var(--accent-color);
   color: white; font-weight: 600; font-size: 14px;
+  display: flex; justify-content: space-between; align-items: center;
 }
+.notif-header a {
+  color: rgba(255,255,255,0.8); font-size: 12px;
+  text-decoration: none;
+}
+.notif-header a:hover { color: white; }
 .notif-item {
   padding: 12px 16px;
   border-bottom: 1px solid #f0f0f0;
   font-size: 13px; color: #444;
-  display: flex; gap: 10px; align-items: flex-start;
+  cursor: pointer;
+  transition: background 0.2s;
 }
+.notif-item:hover { background: #f8f9fa; }
+.notif-item.unread { background: #e8f4fd; }
 .notif-item:last-child { border-bottom: none; }
-.notif-item i { color: var(--accent-color); margin-top: 2px; }
+.notif-title { font-weight: 600; color: #1b2a4a; margin-bottom: 3px; }
+.notif-msg { font-size: 12px; color: #666; }
+.notif-time { font-size: 11px; color: #aaa; margin-top: 3px; }
 .notif-empty {
-  padding: 20px; text-align: center;
+  padding: 25px; text-align: center;
   color: #aaa; font-size: 13px;
 }
+.notif-footer {
+  padding: 10px 16px; text-align: center;
+  border-top: 1px solid #f0f0f0;
+  font-size: 13px;
+}
+.notif-footer a { color: var(--accent-color); text-decoration: none; }
 
+/* STATS */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
-  margin-bottom: 20px;
+  gap: 15px; margin-bottom: 20px;
 }
 .stat-card {
   background: white; padding: 20px;
@@ -190,6 +200,7 @@ body {
 .stat-number { font-size: 28px; font-weight: 700; color: var(--accent-color); margin: 0; }
 .stat-label  { color: var(--copyright-bg); font-size: 13px; margin-top: 4px; }
 
+/* CONTENT */
 .content-section {
   background-color: white; padding: 22px;
   border-radius: 12px;
@@ -223,7 +234,6 @@ body {
 .status-cancelled { background-color: #fce4ec; color: #c62828; }
 .order-details { color: var(--copyright-bg); font-size: 13px; line-height: 1.7; }
 .order-details strong { color: var(--primary-bg); }
-
 .pay-btn {
   margin-top: 10px; padding: 8px 20px;
   background-color: #388e3c; color: white;
@@ -232,7 +242,6 @@ body {
   font-size: 13px; transition: background 0.3s;
 }
 .pay-btn:hover { background-color: #2e7d32; }
-
 .waiting-badge {
   display: inline-block;
   margin-top: 6px; padding: 5px 12px;
@@ -241,7 +250,6 @@ body {
   font-size: 12px; font-weight: 600;
   border: 1px solid #ffe082;
 }
-
 @media (max-width: 768px) {
   .sidebar { transform: translateX(-100%); }
   .main-content { margin-left: 0; }
@@ -252,62 +260,37 @@ body {
 <body>
 
 <div class="sidebar">
-
   <div class="sidebar-logo">
     <img src="{{ asset('images/logo.png') }}" alt="Stitchify Logo">
     <h3>Stitchify</h3>
   </div>
-
   <div class="user-info">
     <h4>{{ auth()->user()->name }}</h4>
     <p>Customer</p>
   </div>
-
   <ul class="sidebar-menu">
-    <li>
-      <a href="#overview" data-section="overview">
-        <i class="fas fa-th-large"></i> Dashboard
-      </a>
-    </li>
-    <li>
-      <a href="#my-orders" data-section="my-orders">
-        <i class="fas fa-shopping-bag"></i> My Orders
-      </a>
-    </li>
-    <li>
-      <a href="#order-history" data-section="order-history">
-        <i class="fas fa-history"></i> Order History
-      </a>
-    </li>
-    <li>
-      <a href="/tailors">
-        <i class="fas fa-plus-circle"></i> New Order
-      </a>
-    </li>
+    <li><a href="#overview" data-section="overview"><i class="fas fa-th-large"></i> Dashboard</a></li>
+    <li><a href="#my-orders" data-section="my-orders"><i class="fas fa-shopping-bag"></i> My Orders</a></li>
+    <li><a href="#order-history" data-section="order-history"><i class="fas fa-history"></i> Order History</a></li>
+    <li><a href="/tailors"><i class="fas fa-plus-circle"></i> New Order</a></li>
   </ul>
-
   <div class="sidebar-footer">
-    <a class="logout-link"
-       href="#"
-       onclick="event.preventDefault();
-                document.getElementById('logout-form').submit();">
+    <a class="logout-link" href="#"
+       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
       <i class="fas fa-sign-out-alt"></i> Logout
     </a>
   </div>
-
 </div>
 
-<form id="logout-form" action="/logout" method="POST" style="display:none">
-  @csrf
-</form>
+<form id="logout-form" action="/logout" method="POST" style="display:none">@csrf</form>
 
-{{-- ====== MAIN CONTENT AREA ====== --}}
 <div class="main-content">
 
-  {{-- ===== TOP BAR ===== --}}
+  {{-- TOP BAR --}}
   <div class="top-bar" id="overview">
     <h2>Welcome, {{ auth()->user()->name }}!</h2>
 
+    {{-- BELL NOTIFICATION --}}
     <div class="bell-wrapper">
       <button class="bell-btn" onclick="toggleNotif()" id="bellBtn">
         <i class="fas fa-bell"></i>
@@ -316,39 +299,37 @@ body {
 
       <div class="notif-dropdown" id="notifDropdown">
         <div class="notif-header">
-          <i class="fas fa-bell me-2"></i> Notifications
+          <span><i class="fas fa-bell me-2"></i> Notifications</span>
+          <a href="#" onclick="markAllRead(event)">Mark all read</a>
         </div>
         <div id="notifList">
           <div class="notif-empty">
             <i class="fas fa-check-circle fa-2x mb-2 d-block" style="color:#ccc"></i>
-            No new notifications available
+            No new notifications
           </div>
+        </div>
+        <div class="notif-footer">
+          <a href="/notifications">View All Notifications</a>
         </div>
       </div>
     </div>
   </div>
 
-  {{-- ===== METRICS SUMMARY CARDS ===== --}}
+  {{-- STATS --}}
   <div class="stats-grid">
     <div class="stat-card">
       <div class="stat-icon blue"><i class="fas fa-shopping-bag"></i></div>
-      <h3 class="stat-number">
-        {{ $orders->whereIn('status',['accepted','in_progress','ready','dispatched'])->count() }}
-      </h3>
+      <h3 class="stat-number">{{ $orders->whereIn('status',['accepted','in_progress','ready','dispatched'])->count() }}</h3>
       <p class="stat-label">Active Orders</p>
     </div>
     <div class="stat-card">
       <div class="stat-icon orange"><i class="fas fa-clock"></i></div>
-      <h3 class="stat-number">
-        {{ $orders->where('status','pending')->count() }}
-      </h3>
+      <h3 class="stat-number">{{ $orders->where('status','pending')->count() }}</h3>
       <p class="stat-label">Pending Orders</p>
     </div>
     <div class="stat-card">
       <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
-      <h3 class="stat-number">
-        {{ $orders->where('status','delivered')->count() }}
-      </h3>
+      <h3 class="stat-number">{{ $orders->where('status','delivered')->count() }}</h3>
       <p class="stat-label">Completed Orders</p>
     </div>
     <div class="stat-card">
@@ -358,135 +339,84 @@ body {
     </div>
   </div>
 
-  {{-- ===== CURRENT ACTIVE ORDERS ===== --}}
+  {{-- MY ORDERS --}}
   <div class="content-section" id="my-orders">
     <h3 class="section-title">My Orders</h3>
-
     @php
-      $activeOrders = $orders->whereIn('status',
-        ['pending','accepted','in_progress','ready','dispatched']);
+      $activeOrders = $orders->whereIn('status', ['pending','accepted','in_progress','ready','dispatched']);
     @endphp
-
     @forelse($activeOrders as $order)
       <div class="order-card">
         <div class="order-header">
           <div class="order-id">#{{ $order->order_number }}</div>
           <span class="order-status
-            @if($order->status === 'pending')        status-pending
+            @if($order->status === 'pending') status-pending
             @elseif($order->status === 'dispatched') status-completed
-            @else                                    status-progress
-            @endif">
+            @else status-progress @endif">
             {{ ucfirst(str_replace('_',' ',$order->status)) }}
           </span>
         </div>
-
         <div class="order-details">
-          <p><strong>Tailor:</strong>
-            {{ optional(optional($order->tailor)->user)->name ?? 'N/A' }}
-          </p>
+          <p><strong>Tailor:</strong> {{ optional(optional($order->tailor)->user)->name ?? 'N/A' }}</p>
           <p><strong>Item:</strong> {{ $order->dress_type }}</p>
-          <p><strong>Order Date:</strong>
-            {{ $order->created_at->format('M d, Y') }}
-          </p>
-
+          <p><strong>Order Date:</strong> {{ $order->created_at->format('M d, Y') }}</p>
           @if($order->status === 'pending')
             <span class="waiting-badge">
-              <i class="fas fa-hourglass-half me-1"></i>
-              Awaiting response from tailor...
+              <i class="fas fa-hourglass-half me-1"></i> Awaiting response from tailor...
             </span>
-
           @else
             @if($order->price)
-              <p><strong>Price:</strong>
-                PKR {{ number_format($order->price) }}
-              </p>
+              <p><strong>Price:</strong> PKR {{ number_format($order->price) }}</p>
             @endif
-
             @if($order->expected_delivery_date)
-              <p><strong>Expected Delivery:</strong>
-                {{ \Carbon\Carbon::parse($order->expected_delivery_date)->format('M d, Y') }}
-              </p>
+              <p><strong>Expected Delivery:</strong> {{ \Carbon\Carbon::parse($order->expected_delivery_date)->format('M d, Y') }}</p>
             @endif
-
             @if($order->payment_status === 'unpaid')
-              <p>
-                <span class="badge bg-danger">Payment Pending</span>
-              </p>
-              <button class="pay-btn">
-                <i class="fas fa-credit-card me-1"></i> Pay Now
-              </button>
-
+              <p><span class="badge bg-danger">Payment Pending</span></p>
+              <button class="pay-btn"><i class="fas fa-credit-card me-1"></i> Pay Now</button>
             @elseif($order->payment_status === 'advance_paid')
-              <p>
-                <span class="badge bg-warning text-dark">
-                  <i class="fas fa-check me-1"></i> Advance Paid
-                </span>
-              </p>
-
+              <p><span class="badge bg-warning text-dark"><i class="fas fa-check me-1"></i> Advance Paid</span></p>
             @elseif($order->payment_status === 'fully_paid')
-              <p>
-                <span class="badge bg-success">
-                  <i class="fas fa-check-double me-1"></i> Fully Paid
-                </span>
-              </p>
+              <p><span class="badge bg-success"><i class="fas fa-check-double me-1"></i> Fully Paid</span></p>
             @endif
-
           @endif
         </div>
       </div>
-
     @empty
       <div class="text-center py-4">
         <i class="fas fa-shopping-bag fa-3x text-muted mb-3 d-block"></i>
         <p class="text-muted mb-3">No active orders available.</p>
-        <a href="/customer/order-form" class="btn btn-primary" style="background-color: var(--accent-color); border: none;">
+        <a href="/tailors" class="btn btn-primary" style="background-color: var(--accent-color); border: none;">
           <i class="fas fa-plus me-1"></i> Place New Order
         </a>
       </div>
     @endforelse
   </div>
 
-  {{-- ===== ARCHIVED ORDER HISTORY ===== --}}
+  {{-- ORDER HISTORY --}}
   <div class="content-section" id="order-history">
     <h3 class="section-title">Order History</h3>
-
-    @php
-      $historyOrders = $orders->whereIn('status',['delivered','cancelled']);
-    @endphp
-
+    @php $historyOrders = $orders->whereIn('status',['delivered','cancelled']); @endphp
     @forelse($historyOrders as $order)
       <div class="order-card">
         <div class="order-header">
           <div class="order-id">#{{ $order->order_number }}</div>
-          <span class="order-status
-            {{ $order->status === 'delivered' ? 'status-completed' : 'status-cancelled' }}">
+          <span class="order-status {{ $order->status === 'delivered' ? 'status-completed' : 'status-cancelled' }}">
             {{ ucfirst($order->status) }}
           </span>
         </div>
         <div class="order-details">
-          <p><strong>Tailor:</strong>
-            {{ optional(optional($order->tailor)->user)->name ?? 'N/A' }}
-          </p>
+          <p><strong>Tailor:</strong> {{ optional(optional($order->tailor)->user)->name ?? 'N/A' }}</p>
           <p><strong>Item:</strong> {{ $order->dress_type }}</p>
-          <p><strong>Order Date:</strong>
-            {{ $order->created_at->format('M d, Y') }}
-          </p>
-          @if($order->price)
-            <p><strong>Price:</strong>
-              PKR {{ number_format($order->price) }}
-            </p>
-          @endif
+          <p><strong>Order Date:</strong> {{ $order->created_at->format('M d, Y') }}</p>
+          @if($order->price)<p><strong>Price:</strong> PKR {{ number_format($order->price) }}</p>@endif
           @if($order->actual_delivery_date)
-            <p><strong>Delivered On:</strong>
-              {{ \Carbon\Carbon::parse($order->actual_delivery_date)->format('M d, Y') }}
-            </p>
+            <p><strong>Delivered On:</strong> {{ \Carbon\Carbon::parse($order->actual_delivery_date)->format('M d, Y') }}</p>
           @endif
         </div>
       </div>
     @empty
-      <p class="text-muted text-center py-3">
-        No completed order records found.
-      </p>
+      <p class="text-muted text-center py-3">No completed order records found.</p>
     @endforelse
   </div>
 
@@ -494,56 +424,109 @@ body {
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 <script>
-  // ===== NOTIFICATION HANDLER =====
-  function toggleNotif() {
-    const dd = document.getElementById('notifDropdown');
-    dd.classList.toggle('show');
+// ===== NOTIFICATION SYSTEM =====
+function toggleNotif() {
+  const dd = document.getElementById('notifDropdown');
+  dd.classList.toggle('show');
+  if (dd.classList.contains('show')) {
+    loadNotifications();
   }
+}
 
-  document.addEventListener('click', function(e) {
-    const wrapper = document.querySelector('.bell-wrapper');
-    if (wrapper && !wrapper.contains(e.target)) {
-      document.getElementById('notifDropdown').classList.remove('show');
+document.addEventListener('click', function(e) {
+  const wrapper = document.querySelector('.bell-wrapper');
+  if (wrapper && !wrapper.contains(e.target)) {
+    document.getElementById('notifDropdown').classList.remove('show');
+  }
+});
+
+function loadNotifications() {
+  fetch('/notifications/latest', {
+    headers: {
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+      'Accept': 'application/json'
     }
-  });
+  })
+  .then(r => r.json())
+  .then(data => {
+    const list = document.getElementById('notifList');
+    if (data.notifications && data.notifications.length > 0) {
+      list.innerHTML = data.notifications.map(n => `
+        <div class="notif-item ${n.is_read ? '' : 'unread'}">
+          <div class="notif-title">${n.title}</div>
+          <div class="notif-msg">${n.message}</div>
+          <div class="notif-time">${n.time}</div>
+        </div>
+      `).join('');
+    } else {
+      list.innerHTML = '<div class="notif-empty"><i class="fas fa-check-circle fa-2x mb-2 d-block" style="color:#ccc"></i>No new notifications</div>';
+    }
+  })
+  .catch(() => {});
+}
 
-  const notifCount = 0;
-  const badge = document.getElementById('bellBadge');
-  if (badge) {
-    if (notifCount > 0) {
-      badge.textContent = notifCount;
+function markAllRead(e) {
+  e.preventDefault();
+  fetch('/notifications/read-all', {
+    method: 'PATCH',
+    headers: {
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+      'Accept': 'application/json'
+    }
+  })
+  .then(() => {
+    updateNotifBadge();
+    loadNotifications();
+  });
+}
+
+function updateNotifBadge() {
+  fetch('/notifications/unread-count', {
+    headers: {
+      'Accept': 'application/json'
+    }
+  })
+  .then(r => r.json())
+  .then(data => {
+    const badge = document.getElementById('bellBadge');
+    if (data.count > 0) {
+      badge.textContent = data.count > 9 ? '9+' : data.count;
       badge.style.display = 'flex';
     } else {
       badge.style.display = 'none';
     }
-  }
+  })
+  .catch(() => {});
+}
 
-  // ===== INTERACTIVE SMOOTH SCROLL =====
-  document.querySelectorAll('.sidebar-menu a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-      e.preventDefault();
-      const target = document.querySelector(this.getAttribute('href'));
-      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+updateNotifBadge();
+setInterval(updateNotifBadge, 30000);
+
+// ===== SMOOTH SCROLL =====
+document.querySelectorAll('.sidebar-menu a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
+});
 
-  // ===== ACTIVE STATUS NAVIGATION SCROLL SPY =====
-  const sections = document.querySelectorAll('.content-section, .top-bar');
-  const navLinks = document.querySelectorAll('.sidebar-menu a[data-section]');
+// ===== SCROLL SPY =====
+const sections = document.querySelectorAll('.content-section, .top-bar');
+const navLinks = document.querySelectorAll('.sidebar-menu a[data-section]');
 
-  function updateActiveLink() {
-    let current = '';
-    sections.forEach(s => {
-      if (window.scrollY >= (s.offsetTop - 100)) current = s.getAttribute('id');
-    });
-    navLinks.forEach(link => {
-      link.classList.remove('active');
-      if (link.getAttribute('data-section') === current) link.classList.add('active');
-    });
-  }
-
-  window.addEventListener('scroll', updateActiveLink);
-  updateActiveLink();
+function updateActiveLink() {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= (s.offsetTop - 100)) current = s.getAttribute('id');
+  });
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('data-section') === current) link.classList.add('active');
+  });
+}
+window.addEventListener('scroll', updateActiveLink);
+updateActiveLink();
 </script>
 </body>
-</html> 
+</html>

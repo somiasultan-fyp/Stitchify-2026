@@ -87,20 +87,26 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
 Route::post('/chatbot', [ChatbotController::class, 'reply'])
      ->name('chatbot.reply');
 // Customer aur Tailor dono ke liye — auth ke andar
-Route::middleware(['auth', 'verified'])->group(function () {
-    // Sab notifications dekho
-    Route::get('/notifications',
-        [NotificationController::class, 'index'])->name('notifications.index');
+// Route::middleware(['auth', 'verified'])->group(function () {
+//     // Sab notifications dekho
+//     Route::get('/notifications',
+//         [NotificationController::class, 'index'])->name('notifications.index');
 
-    // Ek notification read mark karo
-    Route::patch('/notifications/{notification}/read',
-        [NotificationController::class, 'markRead'])->name('notifications.read');
+//     // Ek notification read mark karo
+//     Route::patch('/notifications/{notification}/read',
+//         [NotificationController::class, 'markRead'])->name('notifications.read');
 
-    // Sab read mark karo
-    Route::patch('/notifications/read-all',
-        [NotificationController::class, 'markAllRead'])->name('notifications.readAll');
+//     // Sab read mark karo
+//     Route::patch('/notifications/read-all',
+//         [NotificationController::class, 'markAllRead'])->name('notifications.readAll');
 
-    // Unread count — AJAX ke liye
-    Route::get('/notifications/unread-count',
-        [NotificationController::class, 'unreadCount'])->name('notifications.count');
+//     // Unread count — AJAX ke liye
+//     Route::get('/notifications/unread-count',
+//         [NotificationController::class, 'unreadCount'])->name('notifications.count');
+// });
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/notifications/latest', [App\Http\Controllers\NotificationController::class, 'latest'])->name('notifications.latest');
+    Route::get('/notifications/unread-count', [App\Http\Controllers\NotificationController::class, 'unreadCount'])->name('notifications.count');
+    Route::patch('/notifications/read-all', [App\Http\Controllers\NotificationController::class, 'markAllRead'])->name('notifications.readAll');
 });
