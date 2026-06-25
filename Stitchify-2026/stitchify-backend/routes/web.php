@@ -53,6 +53,9 @@ Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
     Route::get('/customer/dashboard',  [CustomerOrderController::class, 'myOrders'])->name('customer.dashboard');
     Route::get('/customer/order-form', [CustomerOrderController::class, 'create'])->name('customer.order.form');
     Route::post('/order/store', [CustomerOrderController::class, 'store'])->name('order.store');
+    Route::get('/customer/order/{order}', [CustomerOrderController::class, 'showOrder'])->name('customer.order.show');
+    Route::post('/customer/order/{order}/cancel', [CustomerOrderController::class, 'cancelOrder'])->name('customer.order.cancel');
+    Route::get('/customer/live-status', [CustomerOrderController::class, 'liveStatus'])->name('customer.live.status');
 });
 
 Route::middleware(['auth', 'verified', 'role:tailor'])->group(function () {
