@@ -16,7 +16,6 @@ class NotificationController extends Controller
             ->latest()
             ->paginate(20);
 
-        // Page khulte hi sab read mark ho jaayein
         auth()->user()
             ->notifications()
             ->where('is_read', false)
@@ -28,14 +27,12 @@ class NotificationController extends Controller
     // ── Single notification read mark karo ───────
     public function markRead(Notification $notification)
     {
-        // Sirf apni notification read kar sako
         if ($notification->user_id !== auth()->id()) {
             abort(403);
         }
 
         $notification->update(['is_read' => true]);
 
-        // Agar action URL hai toh wahan redirect karo
         if ($notification->action_url) {
             return redirect($notification->action_url);
         }
@@ -63,5 +60,28 @@ class NotificationController extends Controller
             ->count();
 
         return response()->json(['count' => $count]);
+    }
+
+    // ── Latest notifications — AJAX ──────────────
+    public function latest()
+    {
+        $notifications = auth()->user()
+            ->notifications()
+            ->latest()
+            ->take(5)
+            ->get()
+            ->map(function($n) {
+                return [
+                    'id'      => $n->id,
+                    'title'   => $n->type ?? 'Notification',
+                    'message' => $n->message,
+                    'is_read' => $n->is_read,
+                    'time'    => $n->created_at->diffForHumans(),
+                ];
+            });
+
+        return response()->json([
+            'notifications' => $notifications
+        ]);
     }
 }
