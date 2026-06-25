@@ -301,9 +301,59 @@ body {
   {{-- Top Bar --}}
   <div class="top-bar" id="overview">
     <h2>
-      <i class="fas fa-shield-alt" style="color:#e74c3c;margin-right:10px;font-size:22px;"></i>
-      Admin Dashboard
+        <i class="fas fa-shield-alt" style="color:#e74c3c;margin-right:10px;font-size:22px;"></i>
+        Admin Dashboard
     </h2>
+    <div style="display:flex; align-items:center; gap:20px;">
+        <span style="color:#777;font-size:14px;">
+            <i class="fas fa-calendar-alt" style="margin-right:5px;"></i>
+            {{ now()->format('D, d M Y') }}
+        </span>
+
+        {{-- BELL --}}
+        <div style="position:relative; display:inline-block;">
+            <button onclick="toggleNotif()"
+                    style="background:none; border:none; cursor:pointer;
+                           color:#1b2a4a; font-size:20px; padding:6px 10px;
+                           border-radius:8px; position:relative;">
+                <i class="fas fa-bell"></i>
+                <span id="bellBadge"
+                      style="position:absolute; top:0; right:0;
+                             background:#e53935; color:white; font-size:10px;
+                             font-weight:700; width:18px; height:18px;
+                             border-radius:50%; display:none;
+                             align-items:center; justify-content:center;
+                             border:2px solid white;">0</span>
+            </button>
+
+            <div id="notifDropdown"
+                 style="display:none; position:absolute; top:45px; right:0;
+                        width:320px; background:white; border-radius:12px;
+                        box-shadow:0 8px 25px rgba(0,0,0,0.15); z-index:9999;">
+                <div style="padding:12px 16px; background:#1b2a4a; color:white;
+                            font-weight:600; font-size:14px; border-radius:12px 12px 0 0;
+                            display:flex; justify-content:space-between; align-items:center;">
+                    <span><i class="fas fa-bell me-2"></i> Notifications</span>
+                    <a href="#" onclick="markAllRead(event)"
+                       style="color:rgba(255,255,255,0.8); font-size:12px; text-decoration:none;">
+                       Mark all read
+                    </a>
+                </div>
+                <div id="notifList">
+                    <div style="padding:25px; text-align:center; color:#aaa; font-size:13px;">
+                        <i class="fas fa-check-circle fa-2x mb-2 d-block" style="color:#ccc"></i>
+                        No new notifications
+                    </div>
+                </div>
+                <div style="padding:10px 16px; text-align:center; border-top:1px solid #f0f0f0;">
+                    <a href="/notifications" style="color:#1b2a4a; text-decoration:none; font-size:13px;">
+                        View All Notifications
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
     <span style="color:#777;font-size:14px;">
       <i class="fas fa-calendar-alt" style="margin-right:5px;"></i>
       {{ now()->format('D, d M Y') }}
@@ -712,6 +762,71 @@ function updateActiveLink() {
 }
 window.addEventListener('scroll', updateActiveLink);
 updateActiveLink();
+// ── NOTIFICATION SYSTEM ──
+const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+function toggleNotif() {
+    const dd = document.getElementById('notifDropdown');
+    dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
+    if (dd.style.display === 'block') loadNotifications();
+}
+
+document.addEventListener('click', function(e) {
+    const bell = document.querySelector('[onclick="toggleNotif()"]');
+    const dd = document.getElementById('notifDropdown');
+    if (bell && dd && !bell.contains(e.target) && !dd.contains(e.target)) {
+        dd.style.display = 'none';
+    }
+});
+
+function loadNotifications() {
+    fetch('/notifications/latest', {
+        headers: { 'X-CSRF-TOKEN': CSRF_TOKEN, 'Accept': 'application/json' }
+    })
+    .then(r => r.json())
+    .then(data => {
+        const list = document.getElementById('notifList');
+        if (data.notifications && data.notifications.length > 0) {
+            list.innerHTML = data.notifications.map(n => `
+                <div style="padding:12px 16px; border-bottom:1px solid #f0f0f0;
+                            font-size:13px; background:${n.is_read ? 'white' : '#e8f4fd'}">
+                    <div style="font-weight:600; color:#1b2a4a">${n.title}</div>
+                    <div style="color:#666; font-size:12px">${n.message}</div>
+                    <div style="color:#aaa; font-size:11px; margin-top:3px">${n.time}</div>
+                </div>
+            `).join('');
+        } else {
+            list.innerHTML = '<div style="padding:25px; text-align:center; color:#aaa;"><i class="fas fa-check-circle fa-2x mb-2 d-block" style="color:#ccc"></i>No new notifications</div>';
+        }
+    }).catch(() => {});
+}
+
+function markAllRead(e) {
+    e.preventDefault();
+    fetch('/notifications/read-all', {
+        method: 'PATCH',
+        headers: { 'X-CSRF-TOKEN': CSRF_TOKEN, 'Accept': 'application/json' }
+    }).then(() => { updateNotifBadge(); loadNotifications(); });
+}
+
+function updateNotifBadge() {
+    fetch('/notifications/unread-count', {
+        headers: { 'Accept': 'application/json' }
+    })
+    .then(r => r.json())
+    .then(data => {
+        const badge = document.getElementById('bellBadge');
+        if (data.count > 0) {
+            badge.textContent = data.count > 9 ? '9+' : data.count;
+            badge.style.display = 'flex';
+        } else {
+            badge.style.display = 'none';
+        }
+    }).catch(() => {});
+}
+
+updateNotifBadge();
+setInterval(updateNotifBadge, 30000);
 </script>
 </body>
 </html>
