@@ -52,7 +52,7 @@ class CustomerOrderController extends Controller
         $tailor = Tailor::with('user')->findOrFail($request->tailor_id);
 
         if (!$tailor->hasAvailableSlot() || $tailor->status !== 'approved') {
-            return back()->with('error', 'Is tailor ke paas slots available nahi hain.')->withInput();
+            return back()->with('error', 'slots are not available for this tailor. Please select another tailor.')->withInput();
         }
 
         $customer = auth()->user()->customer;
