@@ -49,7 +49,7 @@ Route::post('/email/verification-notification', function (Request $request) {
     return back()->with('status', 'Verification link sent!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
-Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
+Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/customer/dashboard',  [CustomerOrderController::class, 'myOrders'])->name('customer.dashboard');
     Route::get('/customer/order-form', [CustomerOrderController::class, 'showForm'])->name('customer.order.form');
     Route::post('/order/store', [CustomerOrderController::class, 'placeOrder'])->name('order.store');
