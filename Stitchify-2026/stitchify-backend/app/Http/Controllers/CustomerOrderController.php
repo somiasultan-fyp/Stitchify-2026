@@ -41,12 +41,12 @@ class CustomerOrderController extends Controller
             'delivery_type' => 'required|in:pickup,home_delivery',
             'special_instructions' => 'nullable|string|max:1000',
             'design_image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
-            'measurement_method' => 'required|in:manual,appointment',
-            'chest' => 'required_if:measurement_method,manual|numeric|min:1|max:100',
-            'waist' => 'required_if:measurement_method,manual|numeric|min:1|max:100',
-            'shoulder' => 'required_if:measurement_method,manual|numeric|min:1|max:100',
-            'sleeve_length' => 'required_if:measurement_method,manual|numeric|min:1|max:100',
-            'shirt_length' => 'required_if:measurement_method,manual|numeric|min:1|max:100',
+            'measurement_method' => 'required|in:manual',
+            'chest' => 'nullable|numeric|min:1|max:100',
+            'waist' => 'nullable|numeric|min:1|max:100',
+            'shoulder' => 'nullable|numeric|min:1|max:100',
+            'sleeve_length' => 'nullable|numeric|min:1|max:100',
+            'shirt_length' => 'nullable|numeric|min:1|max:100',
         ]);
 
         $tailor = Tailor::with('user')->findOrFail($request->tailor_id);
@@ -96,12 +96,7 @@ class CustomerOrderController extends Controller
                         'neck' => $request->neck ?? null,
                         'additional_notes' => $request->special_instructions,
                     ]);
-                } else {
-                    Measurement::create([
-                        'order_id' => $order->id,
-                        'additional_notes' => 'Appointment: ' . ($request->appointment_date ?? '') . ' at ' . ($request->appointment_time ?? ''),
-                    ]);
-                }
+                } 
 
                 Notification::create([
                     'user_id' => $tailor->user_id,
@@ -113,14 +108,21 @@ class CustomerOrderController extends Controller
                 ]);
             });
 
-            return redirect()->route('customer.dashboard')->with('success', 'Order placed successfully!');
+     return response()->json([
+        'success'      => true,
+        'order_number' => $order->order_number,
+        'message'      => 'Order placed successfully!',
+]);
 
         } catch (\Exception $e) {
             \Log::error('Order failed: ' . $e->getMessage());
             if ($designImagePath && Storage::disk('public')->exists($designImagePath)) {
                 Storage::disk('public')->delete($designImagePath);
             }
-            return back()->with('error', 'There is an error while placing the order.')->withInput();
+       return response()->json([
+        'success' => false,
+        'message' => 'Order place karne mein error aaya.',
+        ], 500);
         }
     }
 

@@ -823,19 +823,22 @@ body {
 
     const measurements = getMeasurements();
 
-    const data = {
-      cname:                document.getElementById('cname').value.trim(),
-      cphone:               document.getElementById('cphone').value.trim(),
-      caddr:                document.getElementById('caddr').value.trim(),
-      ccity:                document.getElementById('ccity').value.trim(),
-      dress_type:           document.getElementById('garment').value,
-      special_instructions: document.getElementById('notes').value.trim(),
-      delivery_type:        deliveryChoice === 'yes' ? 'home_delivery' : 'self_pickup',
-      measurement_method:   'manual',
-      measurements:         measurements,   // ← Dynamic measurements object
-      fabric_name:          document.getElementById('fabricName').value.trim(),
-      fabric_color:         document.getElementById('fabricColorText').value.trim(),
-    };
+   const data = {
+  tailor_id:            {{ $tailor->id }},
+  dress_type:           document.getElementById('garment').value,
+  fabric_name:          document.getElementById('fabricName').value.trim(),
+  fabric_color:         document.getElementById('fabricColorText').value.trim(),
+  fabric_provided_by:   'customer',
+  special_instructions: document.getElementById('notes').value.trim(),
+  delivery_type:        deliveryChoice === 'yes' ? 'home_delivery' : 'pickup',
+  measurement_method:   'manual',
+  chest:                measurements.chest || null,
+  waist:                measurements.waist || null,
+  shoulder:             measurements.shoulder || null,
+  sleeve_length:        measurements.sleeve || measurements.sleeve_length || null,
+  shirt_length:         measurements.length || null,
+  measurements:         measurements,
+};
 
     console.log('Sending Request Payload:', data);
 
