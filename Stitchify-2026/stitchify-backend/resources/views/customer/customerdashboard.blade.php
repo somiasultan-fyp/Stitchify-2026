@@ -373,7 +373,11 @@ body {
             @endif
             @if($order->payment_status === 'unpaid')
               <p><span class="badge bg-danger">Payment Pending</span></p>
-              <button class="pay-btn"><i class="fas fa-credit-card me-1"></i> Pay Now</button>
+              <a href="{{ route('payment.show', $order->id) }}"
+              class="pay-btn"
+              style="text-decoration:none; display:inline-block;">
+              <i class="fas fa-credit-card me-1"></i> Pay Now
+             </a>
             @elseif($order->payment_status === 'advance_paid')
               <p><span class="badge bg-warning text-dark"><i class="fas fa-check me-1"></i> Advance Paid</span></p>
             @elseif($order->payment_status === 'fully_paid')
