@@ -64,9 +64,10 @@ class CustomerOrderController extends Controller
         if ($request->hasFile('design_image')) {
             $designImagePath = $request->file('design_image')->store('designs', 'public');
         }
+        $order = null;
 
         try {
-            DB::transaction(function () use ($request, $tailor, $customer, $designImagePath) {
+            DB::transaction(function () use ($request, $tailor, $customer, $designImagePath, &$order) {
                 
                 $order = Order::create([
                     'order_number' => Order::generateOrderNumber(),
@@ -121,7 +122,7 @@ class CustomerOrderController extends Controller
             }
        return response()->json([
         'success' => false,
-        'message' => 'Order place karne mein error aaya.',
+        'message' => 'Failed to place order.',
         ], 500);
         }
     }
