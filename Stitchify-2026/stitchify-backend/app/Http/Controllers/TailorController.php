@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Order;
 use App\Models\Tailor;
 use App\Models\User; 
+use App\Models\Notification;
 
 class TailorController extends Controller
 {
