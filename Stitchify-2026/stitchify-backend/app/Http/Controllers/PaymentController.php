@@ -14,7 +14,7 @@ class PaymentController extends Controller
     // Show Payment Page  
     public function show(Order $order)
     {
-        if ($order->customer->user_id !== auth()->id()) {
+        if ($order->customer->user_id != auth()->id()) {
             abort(403);
         }
 
