@@ -9,7 +9,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-    {{-- Stripe JS --}}
+    <!----- Stripe JS ---->
     <script src="https://js.stripe.com/v3/"></script>
 
     <style>
@@ -189,12 +189,12 @@
 
 <div class="payment-wrapper">
 
-    {{-- Back link --}}
+    <!----- Back link ---->
     <a href="/customer/dashboard" class="back-link">
         <i class="fas fa-arrow-left"></i> Back to Dashboard
     </a>
 
-    {{-- Order Summary --}}
+    <!----- Order Summary ---->
     <div class="order-summary">
         <h5>Order Payment</h5>
         <h2>#{{ $order->order_number }}</h2>
@@ -222,7 +222,7 @@
         </div>
     </div>
 
-    {{-- Payment Form --}}
+    <!----- Payment Form ---->
     <div class="payment-form-card">
 
         <div class="form-title">
@@ -230,7 +230,7 @@
             Card Details
         </div>
 
-        {{-- Test card info — sandbox mein --}}
+        <!---- Test card info — sandbox mein ---->
         <div class="test-info">
             <strong><i class="fas fa-info-circle me-1"></i> Test Mode</strong>
             Test card: <strong>4242 4242 4242 4242</strong><br>
@@ -290,7 +290,7 @@ cardElement.on('blur', () => {
     document.getElementById('cardElementWrap').classList.remove('focused');
 });
 
-// Show Card errors real-time
+// Show Card errors in real-time
 cardElement.on('change', (event) => {
     const errorDiv = document.getElementById('cardError');
     errorDiv.textContent = event.error ? event.error.message : '';
@@ -311,7 +311,7 @@ async function processPayment() {
     errorDiv.textContent = '';
 
     try {
-        // Step 1: Payment method banao
+        // Step 1:Make Payment method 
         const { paymentMethod, error } = await stripe.createPaymentMethod({
             type: 'card',
             card: cardElement,

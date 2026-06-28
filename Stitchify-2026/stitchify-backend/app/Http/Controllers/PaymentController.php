@@ -21,13 +21,13 @@ class PaymentController extends Controller
         // // Only accepted orders can be paid
         if ($order->status !== 'accepted') {
             return redirect('/customer/dashboard')
-                ->with('error', 'Order accepted nahi hua abhi.');
+                ->with('error', 'Order has not been accepted yet.');
         }
 
         
         if ($order->payment_status !== 'unpaid') {
             return redirect('/customer/dashboard')
-                ->with('error', 'Payment pehle ho chuki hai.');
+                ->with('error', 'Payment has already been made.');
         }
 
         $stripeKey = env('STRIPE_KEY');
@@ -87,7 +87,7 @@ class PaymentController extends Controller
                     'title'      => 'Payment Received!',
                     'message'    => 'Customer ne order #' .
                                    $order->order_number .
-                                   ' ka payment kar diya. Stitching shuru karo.',
+                                   ' has been paid by the customer. Please start stitching.',
                     'type'       => 'payment',
                     'action_url' => '/tailor/dashboard',
                 ]);

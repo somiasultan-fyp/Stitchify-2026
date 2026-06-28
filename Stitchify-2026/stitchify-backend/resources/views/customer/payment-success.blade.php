@@ -165,7 +165,7 @@
 
 <div class="success-wrapper">
 
-    {{-- Success Header --}}
+    <!---- Success Header ---->
     <div class="success-top">
         <div class="success-icon">
             <i class="fas fa-check"></i>
@@ -174,10 +174,10 @@
         <p>Your order has been confirmed and payment received</p>
     </div>
 
-    {{-- Details --}}
+    <!---- Details ---->
     <div class="success-body">
 
-        {{-- Order details --}}
+        <!---- Order details ----->
         <div class="detail-row">
             <span class="label">Order Number</span>
             <span class="value">#{{ $order->order_number }}</span>
@@ -205,7 +205,7 @@
             </span>
         </div>
 
-        {{-- Amount --}}
+        <!---- Amount -->
         <div class="amount-highlight">
             <span class="label">
                 <i class="fas fa-receipt me-2"></i>Amount Paid
@@ -213,7 +213,7 @@
             <span class="amount">Rs. {{ number_format($order->price) }}</span>
         </div>
 
-        {{-- What's Next --}}
+        <!--- What's Next -->
         <div class="whats-next">
             <h6><i class="fas fa-list-check me-2"></i>What Happens Next?</h6>
             <div class="next-step">
@@ -234,7 +234,7 @@
             </div>
         </div>
 
-        {{-- Dashboard Button --}}
+        <!-- Dashboard Button --->
         <a href="/customer/dashboard" class="btn-dashboard">
             <i class="fas fa-th-large me-2"></i>
             Go to Dashboard
