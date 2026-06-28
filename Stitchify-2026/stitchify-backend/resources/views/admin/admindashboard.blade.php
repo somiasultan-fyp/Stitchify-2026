@@ -19,7 +19,6 @@
   --warning: #ffc107;
   --info: #17a2b8;
 }
-
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
@@ -27,7 +26,6 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   min-height: 100vh;
 }
-
 .sidebar {
   position: fixed;
   top: 0; left: 0;
@@ -84,7 +82,6 @@ body {
 }
 .sidebar-menu a i { margin-right: 12px; width: 20px; text-align: center; }
 .logout-btn { margin-top: 20px; padding: 0 15px; }
-
 .main-content { margin-left: 260px; padding: 20px; min-height: 100vh; }
 .top-bar {
   background-color: var(--text-white);
@@ -94,7 +91,6 @@ body {
   display: flex; align-items: center; justify-content: space-between;
 }
 .top-bar h2 { color: var(--accent-color); font-size: 28px; font-weight: 700; margin: 0; }
-
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -121,7 +117,6 @@ body {
 .stat-icon.teal   { background-color: #e0f7fa; color: #00796b; }
 .stat-number { font-size: 32px; font-weight: 700; color: var(--accent-color); margin: 0; }
 .stat-label  { color: var(--copyright-bg); font-size: 14px; margin-top: 5px; }
-
 .content-section {
   background-color: var(--text-white);
   padding: 25px; border-radius: 15px;
@@ -134,7 +129,6 @@ body {
   border-bottom: 2px solid #f0f0f0;
   display: flex; align-items: center; justify-content: space-between;
 }
-
 .admin-table { width: 100%; border-collapse: collapse; font-size: 14px; }
 .admin-table thead th {
   background-color: #f1f3f8; color: var(--accent-color);
@@ -144,7 +138,6 @@ body {
 .admin-table tbody tr { border-bottom: 1px solid #f0f0f0; transition: background 0.2s; }
 .admin-table tbody tr:hover { background-color: #f8f9fa; }
 .admin-table td { padding: 12px 15px; color: #444; vertical-align: middle; }
-
 .badge-status { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
 .badge-active    { background-color: #e8f5e9; color: #388e3c; }
 .badge-blocked   { background-color: #fde8e8; color: #c0392b; }
@@ -154,7 +147,6 @@ body {
 .badge-rejected  { background-color: #fde8e8; color: #c0392b; }
 .badge-customer  { background-color: #e3f2fd; color: #1565c0; }
 .badge-tailor    { background-color: #f3e5f5; color: #6a1b9a; }
-
 .btn-action {
   border: none; border-radius: 6px;
   padding: 5px 12px; font-size: 12px; font-weight: 600;
@@ -166,7 +158,6 @@ body {
 .btn-unblock:hover { background: #27ae60; color: white; }
 .btn-view    { background: #e3f2fd; color: #1565c0; }
 .btn-view:hover    { background: #1565c0; color: white; }
-
 .filter-row {
   display: flex; gap: 12px; margin-bottom: 18px;
   flex-wrap: wrap; align-items: center;
@@ -180,7 +171,6 @@ body {
   border-color: var(--accent-color);
 }
 .filter-row input { flex: 1; min-width: 180px; }
-
 .report-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -196,7 +186,6 @@ body {
 .report-card p    { color: var(--copyright-bg); font-size: 13px; margin: 0 0 12px; }
 .report-card .report-value { font-size: 28px; font-weight: 700; color: var(--accent-color); }
 .report-card .report-sub   { font-size: 12px; color: #888; margin-top: 4px; }
-
 .complaint-card {
   background: #f8f9fa; border-radius: 12px;
   padding: 18px 20px; margin-bottom: 14px;
@@ -211,7 +200,6 @@ body {
 .complaint-id   { font-weight: 700; color: var(--accent-color); font-size: 15px; }
 .complaint-body { color: #555; font-size: 14px; line-height: 1.6; }
 .complaint-meta { color: #999; font-size: 12px; margin-top: 6px; }
-
 .modal-overlay {
   display: none; position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
@@ -231,7 +219,6 @@ body {
 .btn-confirm-block   { background: #c0392b; color: white; }
 .btn-confirm-unblock { background: #27ae60; color: white; }
 .btn-cancel-modal    { background: #f0f0f0; color: #555; }
-
 .toast-container {
   position: fixed; bottom: 25px; right: 25px;
   z-index: 99999; display: flex; flex-direction: column; gap: 10px;
@@ -249,7 +236,6 @@ body {
   from { transform: translateX(60px); opacity: 0; }
   to   { transform: translateX(0); opacity: 1; }
 }
-
 @media (max-width: 768px) {
   .sidebar { transform: translateX(-100%); }
   .main-content { margin-left: 0; }
@@ -264,12 +250,10 @@ body {
     <h3>Stitchify</h3>
     <div class="admin-badge">ADMIN PANEL</div>
   </div>
-
   <div class="user-info">
     <h4>{{ auth()->user()->name }}</h4>
     <p><i class="fas fa-shield-alt" style="margin-right:5px;color:#e74c3c;"></i>Administrator</p>
   </div>
-
   <ul class="sidebar-menu">
     <li><a href="#overview"     data-section="overview">    <i class="fas fa-th-large"></i>    Dashboard</a></li>
     <li><a href="#manage-users" data-section="manage-users"><i class="fas fa-users"></i>        Manage Users</a></li>
@@ -277,7 +261,6 @@ body {
     <li><a href="#reports"      data-section="reports">     <i class="fas fa-chart-bar"></i>    Reports</a></li>
     <li><a href="#complaints"   data-section="complaints">  <i class="fas fa-comments"></i>     Complaints</a></li>
   </ul>
-
   <div class="logout-btn">
     <form method="POST" action="/logout" style="margin:0;">
       @csrf
@@ -295,72 +278,64 @@ body {
   </div>
 </div>
 
-
 <div class="main-content">
 
   {{-- Top Bar --}}
   <div class="top-bar" id="overview">
     <h2>
-        <i class="fas fa-shield-alt" style="color:#e74c3c;margin-right:10px;font-size:22px;"></i>
-        Admin Dashboard
+      <i class="fas fa-shield-alt" style="color:#e74c3c;margin-right:10px;font-size:22px;"></i>
+      Admin Dashboard
     </h2>
     <div style="display:flex; align-items:center; gap:20px;">
-        <span style="color:#777;font-size:14px;">
-            <i class="fas fa-calendar-alt" style="margin-right:5px;"></i>
-            {{ now()->format('D, d M Y') }}
-        </span>
-
-        {{-- BELL --}}
-        <div style="position:relative; display:inline-block;">
-            <button onclick="toggleNotif()"
-                    style="background:none; border:none; cursor:pointer;
-                           color:#1b2a4a; font-size:20px; padding:6px 10px;
-                           border-radius:8px; position:relative;">
-                <i class="fas fa-bell"></i>
-                <span id="bellBadge"
-                      style="position:absolute; top:0; right:0;
-                             background:#e53935; color:white; font-size:10px;
-                             font-weight:700; width:18px; height:18px;
-                             border-radius:50%; display:none;
-                             align-items:center; justify-content:center;
-                             border:2px solid white;">0</span>
-            </button>
-
-            <div id="notifDropdown"
-                 style="display:none; position:absolute; top:45px; right:0;
-                        width:320px; background:white; border-radius:12px;
-                        box-shadow:0 8px 25px rgba(0,0,0,0.15); z-index:9999;">
-                <div style="padding:12px 16px; background:#1b2a4a; color:white;
-                            font-weight:600; font-size:14px; border-radius:12px 12px 0 0;
-                            display:flex; justify-content:space-between; align-items:center;">
-                    <span><i class="fas fa-bell me-2"></i> Notifications</span>
-                    <a href="#" onclick="markAllRead(event)"
-                       style="color:rgba(255,255,255,0.8); font-size:12px; text-decoration:none;">
-                       Mark all read
-                    </a>
-                </div>
-                <div id="notifList">
-                    <div style="padding:25px; text-align:center; color:#aaa; font-size:13px;">
-                        <i class="fas fa-check-circle fa-2x mb-2 d-block" style="color:#ccc"></i>
-                        No new notifications
-                    </div>
-                </div>
-                <div style="padding:10px 16px; text-align:center; border-top:1px solid #f0f0f0;">
-                    <a href="/notifications" style="color:#1b2a4a; text-decoration:none; font-size:13px;">
-                        View All Notifications
-                    </a>
-                </div>
+      <span style="color:#777;font-size:14px;">
+        <i class="fas fa-calendar-alt" style="margin-right:5px;"></i>
+        {{ now()->format('D, d M Y') }}
+      </span>
+      {{-- BELL --}}
+      <div style="position:relative; display:inline-block;">
+        <button onclick="toggleNotif()"
+                style="background:none; border:none; cursor:pointer;
+                       color:#1b2a4a; font-size:20px; padding:6px 10px;
+                       border-radius:8px; position:relative;">
+          <i class="fas fa-bell"></i>
+          <span id="bellBadge"
+                style="position:absolute; top:0; right:0;
+                       background:#e53935; color:white; font-size:10px;
+                       font-weight:700; width:18px; height:18px;
+                       border-radius:50%; display:none;
+                       align-items:center; justify-content:center;
+                       border:2px solid white;">0</span>
+        </button>
+        <div id="notifDropdown"
+             style="display:none; position:absolute; top:45px; right:0;
+                    width:320px; background:white; border-radius:12px;
+                    box-shadow:0 8px 25px rgba(0,0,0,0.15); z-index:9999;">
+          <div style="padding:12px 16px; background:#1b2a4a; color:white;
+                      font-weight:600; font-size:14px; border-radius:12px 12px 0 0;
+                      display:flex; justify-content:space-between; align-items:center;">
+            <span><i class="fas fa-bell me-2"></i> Notifications</span>
+            <a href="#" onclick="markAllRead(event)"
+               style="color:rgba(255,255,255,0.8); font-size:12px; text-decoration:none;">
+               Mark all read
+            </a>
+          </div>
+          <div id="notifList">
+            <div style="padding:25px; text-align:center; color:#aaa; font-size:13px;">
+              <i class="fas fa-check-circle fa-2x mb-2 d-block" style="color:#ccc"></i>
+              No new notifications
             </div>
+          </div>
+          <div style="padding:10px 16px; text-align:center; border-top:1px solid #f0f0f0;">
+            <a href="/notifications" style="color:#1b2a4a; text-decoration:none; font-size:13px;">
+              View All Notifications
+            </a>
+          </div>
         </div>
+      </div>
     </div>
-</div>
-    <span style="color:#777;font-size:14px;">
-      <i class="fas fa-calendar-alt" style="margin-right:5px;"></i>
-      {{ now()->format('D, d M Y') }}
-    </span>
   </div>
 
-  {{-- ── STATS — Real Data ── --}}
+  {{-- STATS --}}
   <div class="stats-grid">
     <div class="stat-card">
       <div class="stat-icon blue"><i class="fas fa-users"></i></div>
@@ -394,10 +369,9 @@ body {
     </div>
   </div>
 
+  {{-- MANAGE USERS --}}
   <div class="content-section" id="manage-users">
     <h3 class="section-title">Manage Users</h3>
-
-    {{-- Search + Filter --}}
     <div class="filter-row">
       <input type="text" id="userSearch"
              placeholder="🔍 Search by name or email..."
@@ -413,7 +387,6 @@ body {
         <option value="0">Blocked</option>
       </select>
     </div>
-
     <div style="overflow-x:auto;">
       <table class="admin-table">
         <thead>
@@ -461,20 +434,17 @@ body {
               </span>
             </td>
             <td>
-              {{-- Block / Unblock --}}
               <form method="POST"
                     action="{{ route('admin.users.toggle', $user->id) }}"
                     style="display:inline;">
                 @csrf @method('PATCH')
                 @if($user->is_active)
-                  <button type="submit"
-                          class="btn-action btn-block"
+                  <button type="submit" class="btn-action btn-block"
                           onclick="return confirm('Block {{ $user->name }}?')">
                     <i class="fas fa-ban"></i> Block
                   </button>
                 @else
-                  <button type="submit"
-                          class="btn-action btn-unblock"
+                  <button type="submit" class="btn-action btn-unblock"
                           onclick="return confirm('Unblock {{ $user->name }}?')">
                     <i class="fas fa-check"></i> Unblock
                   </button>
@@ -484,24 +454,18 @@ body {
           </tr>
           @empty
           <tr>
-            <td colspan="8" class="text-center text-muted py-4">
-              Koi user nahi mila
-            </td>
+            <td colspan="8" class="text-center text-muted py-4">No users found</td>
           </tr>
           @endforelse
         </tbody>
       </table>
     </div>
-
-    {{-- Pagination --}}
-    <div class="mt-3">
-      {{ $users->links() }}
-    </div>
+    <div class="mt-3">{{ $users->links() }}</div>
   </div>
 
+  {{-- ALL ORDERS --}}
   <div class="content-section" id="all-orders">
     <h3 class="section-title">Monitor All Orders</h3>
-
     <div class="filter-row">
       <input type="text" id="orderSearch"
              placeholder="🔍 Search by order # or customer..."
@@ -516,7 +480,6 @@ body {
         <option value="cancelled">Cancelled</option>
       </select>
     </div>
-
     <div style="overflow-x:auto;">
       <table class="admin-table">
         <thead>
@@ -528,6 +491,7 @@ body {
             <th>Price</th>
             <th>Date</th>
             <th>Status</th>
+            <th>Delivery</th>
           </tr>
         </thead>
         <tbody id="ordersBody">
@@ -557,27 +521,54 @@ body {
                 {{ ucfirst(str_replace('_', ' ', $order->status)) }}
               </span>
             </td>
+            {{-- Delivery Status Update --}}
+            <td>
+              @if($order->delivery)
+                <div style="margin-top:4px;">
+                  <span style="font-size:11px;color:#666;display:block;margin-bottom:4px;">
+                    Current: <strong>{{ ucfirst(str_replace('_',' ',$order->delivery->status)) }}</strong>
+                  </span>
+                  <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                    <select id="deliveryStatus-{{ $order->id }}"
+                            style="border:1px solid #ddd;border-radius:6px;
+                                   padding:4px 8px;font-size:12px;">
+                      @foreach(['scheduled','picked_up_from_customer','delivered_to_tailor',
+                                'stitching_in_progress','picked_up_from_tailor',
+                                'out_for_delivery','delivered'] as $st)
+                        <option value="{{ $st }}"
+                          {{ $order->delivery->status === $st ? 'selected' : '' }}>
+                          {{ ucfirst(str_replace('_',' ',$st)) }}
+                        </option>
+                      @endforeach
+                    </select>
+                    <button type="button"
+                            onclick="updateDelivery({{ $order->delivery->id }}, '{{ $order->id }}')"
+                            style="background:#1B2A4A;color:white;border:none;
+                                   border-radius:6px;padding:4px 12px;
+                                   font-size:12px;cursor:pointer;">
+                      Update
+                    </button>
+                  </div>
+                </div>
+              @else
+                <span style="font-size:12px;color:#aaa;">No delivery</span>
+              @endif
+            </td>
           </tr>
           @empty
           <tr>
-            <td colspan="7" class="text-center text-muted py-4">
-              Koi order nahi hai abhi
-            </td>
+            <td colspan="8" class="text-center text-muted py-4">No orders found</td>
           </tr>
           @endforelse
         </tbody>
       </table>
     </div>
-
-    {{-- Pagination --}}
-    <div class="mt-3">
-      {{ $orders->links() }}
-    </div>
+    <div class="mt-3">{{ $orders->links() }}</div>
   </div>
 
+  {{-- REPORTS --}}
   <div class="content-section" id="reports">
     <h3 class="section-title">System Reports</h3>
-
     <div class="report-grid">
       <div class="report-card">
         <h5><i class="fas fa-shopping-bag" style="margin-right:7px;color:#1976d2;"></i>Total Orders</h5>
@@ -612,9 +603,9 @@ body {
     </div>
   </div>
 
+  {{-- COMPLAINTS --}}
   <div class="content-section" id="complaints">
     <h3 class="section-title">Complaints</h3>
-
     @forelse($complaints as $complaint)
     <div class="complaint-card {{ $complaint->status !== 'open' ? 'resolved' : '' }}">
       <div class="complaint-header">
@@ -633,16 +624,12 @@ body {
         <i class="fas fa-calendar-alt" style="margin-right:5px;"></i>
         {{ $complaint->created_at->format('d M Y') }}
       </div>
-
-      {{-- Admin response agar pehle se hai --}}
       @if($complaint->admin_response)
         <div style="background:#e8f5e9;border-radius:8px;padding:10px;margin-top:10px;font-size:13px;">
           <strong style="color:#388e3c;">Admin Response:</strong>
           {{ $complaint->admin_response }}
         </div>
       @endif
-
-      {{-- Respond form --}}
       @if($complaint->status === 'open')
       <form method="POST"
             action="{{ route('admin.complaints.respond', $complaint->id) }}"
@@ -674,7 +661,7 @@ body {
     @empty
     <div class="text-center text-muted py-4">
       <i class="fas fa-check-circle fa-3x mb-3 d-block" style="opacity:0.2;"></i>
-      <p>Koi complaint nahi hai abhi</p>
+      <p>No complaints found</p>
     </div>
     @endforelse
   </div>
@@ -683,7 +670,6 @@ body {
 
 <div class="toast-container" id="toastContainer"></div>
 
-{{-- Success message --}}
 @if(session('success'))
 <script>
   document.addEventListener('DOMContentLoaded', function() {
@@ -694,22 +680,16 @@ body {
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 <script>
+const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 function filterUsers() {
   const q      = document.getElementById('userSearch').value.toLowerCase();
   const role   = document.getElementById('roleFilter').value;
   const status = document.getElementById('statusFilter').value;
-
   document.querySelectorAll('.user-row').forEach(row => {
-    const name   = row.dataset.name;
-    const email  = row.dataset.email;
-    const rRole  = row.dataset.role;
-    const active = row.dataset.active;
-
-    const matchSearch = !q || name.includes(q) || email.includes(q);
-    const matchRole   = !role   || rRole  === role;
-    const matchStatus = !status || active === status;
-
+    const matchSearch = !q || row.dataset.name.includes(q) || row.dataset.email.includes(q);
+    const matchRole   = !role   || row.dataset.role   === role;
+    const matchStatus = !status || row.dataset.active === status;
     row.style.display = (matchSearch && matchRole && matchStatus) ? '' : 'none';
   });
 }
@@ -717,18 +697,40 @@ function filterUsers() {
 function filterOrders() {
   const q      = document.getElementById('orderSearch').value.toLowerCase();
   const status = document.getElementById('orderStatusFilter').value;
-
   document.querySelectorAll('.order-row').forEach(row => {
-    const num      = row.dataset.num;
-    const customer = row.dataset.customer;
-    const rStatus  = row.dataset.status;
-
-    const matchSearch = !q      || num.includes(q) || customer.includes(q);
-    const matchStatus = !status || rStatus === status;
-
+    const matchSearch = !q      || row.dataset.num.includes(q) || row.dataset.customer.includes(q);
+    const matchStatus = !status || row.dataset.status === status;
     row.style.display = (matchSearch && matchStatus) ? '' : 'none';
   });
 }
+
+// Delivery Status Update
+async function updateDelivery(deliveryId, orderId) {
+    const status = document.getElementById('deliveryStatus-' + orderId).value;
+    const csrf   = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    try {
+        const res = await fetch('/admin/delivery/' + deliveryId + '/status', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrf,
+            },
+            body: JSON.stringify({ status }),
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            showToast('Delivery status updated: ' + data.status, 'success');
+        } else {
+            showToast('Update failed. Please try again.', 'danger');
+        }
+    } catch (err) {
+        showToast('Server error. Please try again.', 'danger');
+    }
+}
+
 
 function showToast(msg, type = '') {
   const container = document.getElementById('toastContainer');
@@ -762,67 +764,65 @@ function updateActiveLink() {
 }
 window.addEventListener('scroll', updateActiveLink);
 updateActiveLink();
-// ── NOTIFICATION SYSTEM ──
-const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 function toggleNotif() {
-    const dd = document.getElementById('notifDropdown');
-    dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
-    if (dd.style.display === 'block') loadNotifications();
+  const dd = document.getElementById('notifDropdown');
+  dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
+  if (dd.style.display === 'block') loadNotifications();
 }
 
 document.addEventListener('click', function(e) {
-    const bell = document.querySelector('[onclick="toggleNotif()"]');
-    const dd = document.getElementById('notifDropdown');
-    if (bell && dd && !bell.contains(e.target) && !dd.contains(e.target)) {
-        dd.style.display = 'none';
-    }
+  const bell = document.querySelector('[onclick="toggleNotif()"]');
+  const dd = document.getElementById('notifDropdown');
+  if (bell && dd && !bell.contains(e.target) && !dd.contains(e.target)) {
+    dd.style.display = 'none';
+  }
 });
 
 function loadNotifications() {
-    fetch('/notifications/latest', {
-        headers: { 'X-CSRF-TOKEN': CSRF_TOKEN, 'Accept': 'application/json' }
-    })
-    .then(r => r.json())
-    .then(data => {
-        const list = document.getElementById('notifList');
-        if (data.notifications && data.notifications.length > 0) {
-            list.innerHTML = data.notifications.map(n => `
-                <div style="padding:12px 16px; border-bottom:1px solid #f0f0f0;
-                            font-size:13px; background:${n.is_read ? 'white' : '#e8f4fd'}">
-                    <div style="font-weight:600; color:#1b2a4a">${n.title}</div>
-                    <div style="color:#666; font-size:12px">${n.message}</div>
-                    <div style="color:#aaa; font-size:11px; margin-top:3px">${n.time}</div>
-                </div>
-            `).join('');
-        } else {
-            list.innerHTML = '<div style="padding:25px; text-align:center; color:#aaa;"><i class="fas fa-check-circle fa-2x mb-2 d-block" style="color:#ccc"></i>No new notifications</div>';
-        }
-    }).catch(() => {});
+  fetch('/notifications/latest', {
+    headers: { 'X-CSRF-TOKEN': CSRF_TOKEN, 'Accept': 'application/json' }
+  })
+  .then(r => r.json())
+  .then(data => {
+    const list = document.getElementById('notifList');
+    if (data.notifications && data.notifications.length > 0) {
+      list.innerHTML = data.notifications.map(n => `
+        <div style="padding:12px 16px; border-bottom:1px solid #f0f0f0;
+                    font-size:13px; background:${n.is_read ? 'white' : '#e8f4fd'}">
+          <div style="font-weight:600; color:#1b2a4a">${n.title}</div>
+          <div style="color:#666; font-size:12px">${n.message}</div>
+          <div style="color:#aaa; font-size:11px; margin-top:3px">${n.time}</div>
+        </div>
+      `).join('');
+    } else {
+      list.innerHTML = '<div style="padding:25px; text-align:center; color:#aaa;"><i class="fas fa-check-circle fa-2x mb-2 d-block" style="color:#ccc"></i>No new notifications</div>';
+    }
+  }).catch(() => {});
 }
 
 function markAllRead(e) {
-    e.preventDefault();
-    fetch('/notifications/read-all', {
-        method: 'PATCH',
-        headers: { 'X-CSRF-TOKEN': CSRF_TOKEN, 'Accept': 'application/json' }
-    }).then(() => { updateNotifBadge(); loadNotifications(); });
+  e.preventDefault();
+  fetch('/notifications/read-all', {
+    method: 'PATCH',
+    headers: { 'X-CSRF-TOKEN': CSRF_TOKEN, 'Accept': 'application/json' }
+  }).then(() => { updateNotifBadge(); loadNotifications(); });
 }
 
 function updateNotifBadge() {
-    fetch('/notifications/unread-count', {
-        headers: { 'Accept': 'application/json' }
-    })
-    .then(r => r.json())
-    .then(data => {
-        const badge = document.getElementById('bellBadge');
-        if (data.count > 0) {
-            badge.textContent = data.count > 9 ? '9+' : data.count;
-            badge.style.display = 'flex';
-        } else {
-            badge.style.display = 'none';
-        }
-    }).catch(() => {});
+  fetch('/notifications/unread-count', {
+    headers: { 'Accept': 'application/json' }
+  })
+  .then(r => r.json())
+  .then(data => {
+    const badge = document.getElementById('bellBadge');
+    if (data.count > 0) {
+      badge.textContent = data.count > 9 ? '9+' : data.count;
+      badge.style.display = 'flex';
+    } else {
+      badge.style.display = 'none';
+    }
+  }).catch(() => {});
 }
 
 updateNotifBadge();

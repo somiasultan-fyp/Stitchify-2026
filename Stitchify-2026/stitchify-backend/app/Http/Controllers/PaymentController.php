@@ -8,6 +8,7 @@ use App\Models\Payment;
 use App\Models\Notification;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
+use App\Http\Controllers\DeliveryController;
 
 class PaymentController extends Controller
 {
@@ -81,6 +82,15 @@ class PaymentController extends Controller
                     'advance_paid'   => $order->price,
                 ]);
 
+                // Auto-create delivery after payment
+                DeliveryController::createAfterPayment($order);
+
+                // Update Order
+                $order->update([
+                    'payment_status' => 'advance_paid',
+                    'advance_paid'   => $order->price,
+                ]);
+
                 // Tailor Notification
                 Notification::create([
                     'user_id'    => $order->tailor->user->id,
@@ -117,7 +127,7 @@ class PaymentController extends Controller
         }
     }
 
-    // ── Success Page ─────────────────────────
+    //Success Page 
     public function success(Order $order)
     {
         if ($order->customer->user_id !== auth()->id()) {

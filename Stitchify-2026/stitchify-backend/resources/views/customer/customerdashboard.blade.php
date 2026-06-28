@@ -374,15 +374,26 @@ body {
             @if($order->payment_status === 'unpaid')
               <p><span class="badge bg-danger">Payment Pending</span></p>
               <a href="{{ route('payment.show', $order->id) }}"
-              class="pay-btn"
-              style="text-decoration:none; display:inline-block;">
-              <i class="fas fa-credit-card me-1"></i> Pay Now
-             </a>
+                 class="pay-btn"
+                 style="text-decoration:none; display:inline-block;">
+                <i class="fas fa-credit-card me-1"></i> Pay Now
+              </a>
             @elseif($order->payment_status === 'advance_paid')
               <p><span class="badge bg-warning text-dark"><i class="fas fa-check me-1"></i> Advance Paid</span></p>
             @elseif($order->payment_status === 'fully_paid')
               <p><span class="badge bg-success"><i class="fas fa-check-double me-1"></i> Fully Paid</span></p>
             @endif
+
+            {{-- Track Order Button --}}
+            @if($order->delivery_type === 'home_delivery' && $order->tracking_id)
+              <a href="{{ route('delivery.track', $order->id) }}"
+                 style="display:inline-block; margin-top:8px; padding:7px 16px;
+                        background:#1976d2; color:white; border-radius:8px;
+                        font-size:13px; font-weight:600; text-decoration:none;">
+                <i class="fas fa-map-marker-alt me-1"></i> Track Order
+              </a>
+            @endif
+
           @endif
         </div>
       </div>
@@ -428,7 +439,6 @@ body {
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 <script>
-// ===== NOTIFICATION SYSTEM =====
 function toggleNotif() {
   const dd = document.getElementById('notifDropdown');
   dd.classList.toggle('show');
@@ -506,7 +516,6 @@ function updateNotifBadge() {
 updateNotifBadge();
 setInterval(updateNotifBadge, 30000);
 
-// ===== SMOOTH SCROLL =====
 document.querySelectorAll('.sidebar-menu a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function(e) {
     e.preventDefault();
@@ -515,7 +524,6 @@ document.querySelectorAll('.sidebar-menu a[href^="#"]').forEach(anchor => {
   });
 });
 
-// ===== SCROLL SPY =====
 const sections = document.querySelectorAll('.content-section, .top-bar');
 const navLinks = document.querySelectorAll('.sidebar-menu a[data-section]');
 

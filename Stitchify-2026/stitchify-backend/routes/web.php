@@ -10,6 +10,7 @@ use App\Http\Controllers\TailorController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\DeliveryController;
 
 Route::get('/', fn() => view('home'))->name('home');
 Route::get('/tailors',                   [TailorController::class, 'index'])->name('tailors.index');
@@ -59,7 +60,10 @@ Route::middleware(['auth','verified','role:customer'])->group(function () {
     Route::get('/payment/{order}', [PaymentController::class, 'show']) ->name('payment.show');
     Route::post('/payment/{order}/process',[PaymentController::class, 'process'])->name('payment.process');
     Route::get('/payment/{order}/success',[PaymentController::class, 'success'])->name('payment.success');
-
+ // Tracking page
+    Route::get('/customer/track/{order}',[DeliveryController::class, 'track'])->name('delivery.track');
+// AJAX status
+    Route::get('/customer/track/{order}/status',[DeliveryController::class, 'getStatus'])->name('delivery.status');
 });
 
 Route::middleware(['auth', 'verified', 'role:tailor'])->group(function () {
@@ -90,6 +94,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     return view('admin.admindashboard', compact('stats', 'users', 'orders', 'complaints'));})->name('admin.dashboard');
     Route::patch('/admin/users/{user}/toggle', [\App\Http\Controllers\Admin\AdminController::class, 'toggleUser'])->name('admin.users.toggle');
     Route::patch('/admin/complaints/{complaint}/respond', [\App\Http\Controllers\Admin\AdminController::class, 'respondComplaint'])->name('admin.complaints.respond');
+    Route::patch('/admin/delivery/{delivery}/status',[DeliveryController::class, 'updateStatus'])->name('delivery.update');
 });
 Route::post('/chatbot', [ChatbotController::class, 'reply'])
      ->name('chatbot.reply');

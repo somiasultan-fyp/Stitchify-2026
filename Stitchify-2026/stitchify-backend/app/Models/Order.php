@@ -68,4 +68,8 @@ class Order extends Model
     
     return 'ORD-' . $year . '-' . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
 }
+    public function delivery()
+{
+    return $this->hasOne(Delivery::class);
+}
 }
