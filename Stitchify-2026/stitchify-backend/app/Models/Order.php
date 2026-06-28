@@ -52,12 +52,20 @@ class Order extends Model
     }
 
 
-    // Unique order number generate karo
-    public static function generateOrderNumber(): string
-    {
-        $year = date('Y');
-        $count = self::whereYear('created_at', $year)->count() + 1;
-        return 'ORD-' . $year . '-' . str_pad($count, 4, '0', STR_PAD_LEFT);
-        // Result: ORD-2025-0001, ORD-2025-0002, etc.
+   public static function generateOrderNumber(): string
+{
+    $year = date('Y');
+    $last = self::whereYear('created_at', $year)
+                ->orderBy('id', 'desc')
+                ->first();
+    
+    if ($last) {
+        $lastNumber = (int) substr($last->order_number, -4);
+        $newNumber  = $lastNumber + 1;
+    } else {
+        $newNumber = 1;
     }
+    
+    return 'ORD-' . $year . '-' . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
+}
 }
