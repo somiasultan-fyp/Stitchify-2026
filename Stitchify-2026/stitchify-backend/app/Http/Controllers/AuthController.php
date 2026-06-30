@@ -11,7 +11,6 @@ use App\Models\Tailor;
 
 class AuthController extends Controller
 {
-    // Register form dikhao
     public function showRegister()
     {
         return view('auth.register');
@@ -52,7 +51,6 @@ class AuthController extends Controller
             'category'      => $request->role === 'tailor' ? $request->category : null,
             'slot_capacity' => $request->role === 'tailor' ? $request->slot_capacity : null,
             'is_active'     => true,
-            'email_verified_at' => now(), // Testing ke liye auto-verify
         ]);
 
         // Customer profile
@@ -72,17 +70,11 @@ class AuthController extends Controller
             ]);
         }
 
-        // Auto-login
         Auth::login($user);
-        // $redirect= $user->role === 'tailor' ? 'tailor.dashboard' : 'customer.dashboard';
         $request->session()->regenerate();
-
-        // Direct dashboard redirect (no verification step for testing)
-        return match($user->role) {
-            'tailor'   => redirect()->route('tailor.dashboard')->with('success', 'Welcome, Tailor!'),
-            'customer' => redirect()->route('customer.dashboard')->with('success', 'Welcome, Customer!'),
-            default    => redirect('/'),
-        };
+        $user->sendEmailVerificationNotification();
+         return redirect()->route('verification.notice')
+        ->with('info', 'Account created! Please check your email to verify.');
     }
 
     // Login process
@@ -95,7 +87,6 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        // User exist nahi karta
         if (!$user) {
             return response()->json([
                 'success' => false,
@@ -110,7 +101,6 @@ class AuthController extends Controller
             ], 403);
         }
 
-        // Credentials check karo
         if (Auth::attempt([
     'email'    => $request->email,
     'password' => $request->password,
@@ -135,8 +125,6 @@ return response()->json([
     'success' => false,
     'message' => 'Invalid credentials.',
 ], 401);
-
-        return back()->withErrors(['email' => 'Invalid credentials.'])->onlyInput('email');
     }
 
     // Logout

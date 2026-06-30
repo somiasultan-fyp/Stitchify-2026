@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 
 class NotificationController extends Controller
 {
-    // ── Sab notifications ────────────────────────
     public function index()
     {
         $notifications = auth()->user()
@@ -24,7 +23,6 @@ class NotificationController extends Controller
         return view('notifications.index', compact('notifications'));
     }
 
-    // ── Single notification read mark karo ───────
     public function markRead(Notification $notification)
     {
         if ($notification->user_id !== auth()->id()) {
@@ -40,7 +38,6 @@ class NotificationController extends Controller
         return back();
     }
 
-    // ── Sab read mark karo ───────────────────────
     public function markAllRead()
     {
         auth()->user()
@@ -48,10 +45,9 @@ class NotificationController extends Controller
             ->where('is_read', false)
             ->update(['is_read' => true]);
 
-        return back()->with('success', 'Sab notifications read ho gayi.');
+        return back()->with('success', 'All notifications marked as read.');
     }
 
-    // ── Unread count — AJAX ──────────────────────
     public function unreadCount()
     {
         $count = auth()->user()
@@ -62,7 +58,6 @@ class NotificationController extends Controller
         return response()->json(['count' => $count]);
     }
 
-    // ── Latest notifications — AJAX ──────────────
     public function latest()
     {
         $notifications = auth()->user()

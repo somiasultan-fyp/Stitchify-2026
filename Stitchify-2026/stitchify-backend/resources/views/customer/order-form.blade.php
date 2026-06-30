@@ -602,12 +602,12 @@ body {
     <div class="section-divider"><span>Payment</span></div>
 
     <div class="info-block mb-3">
-      <p><strong>Payment details</strong> will be available after order accepted. <strong>JazzCash / Easypaisa</strong> options are available for this.</p>
+      <p><strong>Payment details</strong> will be available after order accepted. <strong>Stripe</strong> is available for this.</p>
     </div>
 
     <div class="pay-locked-block">
       <div class="lock-icon"><i class="fas fa-lock"></i></div>
-      <p><strong>Payment Locked</strong><br>This section will be unlocked after tailor accepts the order.</p>
+      <p><strong>Payment Locked</strong><br>You can make the payment after the tailor accepts the order.</p>
     </div>
 
     <button class="btn-custom" id="submitBtn" type="button">
