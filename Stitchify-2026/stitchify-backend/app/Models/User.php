@@ -36,8 +36,6 @@ use Illuminate\Notifications\Notifiable;
         ];
     }
 
-    // ===== RELATIONSHIPS =====
-
     public function tailor()
     {
         return $this->hasOne(Tailor::class);
@@ -57,8 +55,6 @@ use Illuminate\Notifications\Notifiable;
     {
         return $this->hasMany(Complaint::class);
     }
-
-    // ===== HELPER FUNCTIONS =====
 
     public function isAdmin(): bool
     {

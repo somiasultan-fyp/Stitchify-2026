@@ -60,9 +60,7 @@ Route::middleware(['auth','verified','role:customer'])->group(function () {
     Route::get('/payment/{order}', [PaymentController::class, 'show']) ->name('payment.show');
     Route::post('/payment/{order}/process',[PaymentController::class, 'process'])->name('payment.process');
     Route::get('/payment/{order}/success',[PaymentController::class, 'success'])->name('payment.success');
- // Tracking page
     Route::get('/customer/track/{order}',[DeliveryController::class, 'track'])->name('delivery.track');
-// AJAX status
     Route::get('/customer/track/{order}/status',[DeliveryController::class, 'getStatus'])->name('delivery.status');
 });
 
@@ -98,24 +96,6 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
 });
 Route::post('/chatbot', [ChatbotController::class, 'reply'])
      ->name('chatbot.reply');
-// Customer aur Tailor dono ke liye — auth ke andar
-// Route::middleware(['auth', 'verified'])->group(function () {
-//     // Sab notifications dekho
-//     Route::get('/notifications',
-//         [NotificationController::class, 'index'])->name('notifications.index');
-
-//     // Ek notification read mark karo
-//     Route::patch('/notifications/{notification}/read',
-//         [NotificationController::class, 'markRead'])->name('notifications.read');
-
-//     // Sab read mark karo
-//     Route::patch('/notifications/read-all',
-//         [NotificationController::class, 'markAllRead'])->name('notifications.readAll');
-
-//     // Unread count — AJAX ke liye
-//     Route::get('/notifications/unread-count',
-//         [NotificationController::class, 'unreadCount'])->name('notifications.count');
-// });
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/notifications/latest', [App\Http\Controllers\NotificationController::class, 'latest'])->name('notifications.latest');

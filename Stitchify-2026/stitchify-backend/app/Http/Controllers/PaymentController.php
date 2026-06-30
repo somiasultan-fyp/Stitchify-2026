@@ -11,15 +11,13 @@ use Stripe\PaymentIntent;
 use App\Http\Controllers\DeliveryController;
 
 class PaymentController extends Controller
-{
-    // Show Payment Page  
+{ 
     public function show(Order $order)
     {
         if ($order->customer->user_id != auth()->id()) {
             abort(403);
         }
 
-        // // Only accepted orders can be paid
         if ($order->status !== 'accepted') {
             return redirect('/customer/dashboard')
                 ->with('error', 'Order has not been accepted yet.');
@@ -51,8 +49,6 @@ class PaymentController extends Controller
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
         try {
-            // PKR has no cents/paisa subdivision in Stripe
-            // Stripe requires amount in lowest denomination
             $amount = (int) ($order->price * 100);
 
             $paymentIntent = PaymentIntent::create([
@@ -64,9 +60,7 @@ class PaymentController extends Controller
                 'return_url'          => route('payment.success', $order->id),
             ]);
 
-            if ($paymentIntent->status === 'succeeded') {
-
-                // Save Payment 
+            if ($paymentIntent->status === 'succeeded') { 
                 Payment::create([
                     'order_id'          => $order->id,
                     'stripe_payment_id' => $paymentIntent->id,
@@ -76,26 +70,22 @@ class PaymentController extends Controller
                     'payment_type'      => 'advance',
                 ]);
 
-                // Update Order
                 $order->update([
                     'payment_status' => 'advance_paid',
                     'advance_paid'   => $order->price,
                 ]);
 
-                // Auto-create delivery after payment
                 DeliveryController::createAfterPayment($order);
 
-                // Update Order
                 $order->update([
                     'payment_status' => 'advance_paid',
                     'advance_paid'   => $order->price,
                 ]);
 
-                // Tailor Notification
                 Notification::create([
                     'user_id'    => $order->tailor->user->id,
                     'title'      => 'Payment Received!',
-                    'message'    => 'Customer ne order #' .
+                    'message'    => 'Customer order #' .
                                    $order->order_number .
                                    ' has been paid by the customer. Please start stitching.',
                     'type'       => 'payment',
@@ -126,8 +116,7 @@ class PaymentController extends Controller
             ], 500);
         }
     }
-
-    //Success Page 
+ 
     public function success(Order $order)
     {
         if ($order->customer->user_id !== auth()->id()) {

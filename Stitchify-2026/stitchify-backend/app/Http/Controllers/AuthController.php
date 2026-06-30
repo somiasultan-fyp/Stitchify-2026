@@ -21,7 +21,6 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    // Register Process
     public function register(Request $request)
     {
         $request->validate([
@@ -40,7 +39,6 @@ class AuthController extends Controller
             'slot_capacity.required_if' => 'Slot capacity is required for tailors.',
         ]);
 
-        // User createion
         $user = User::create([
             'name'          => $request->name,
             'email'         => $request->email,
@@ -53,12 +51,10 @@ class AuthController extends Controller
             'is_active'     => true,
         ]);
 
-        // Customer profile
         if ($user->role === 'customer') {
             Customer::create(['user_id' => $user->id]);
         }
 
-        // Tailor profile
         if ($user->role === 'tailor') {
             Tailor::create([
                 'user_id'         => $user->id,
@@ -77,7 +73,6 @@ class AuthController extends Controller
         ->with('info', 'Account created! Please check your email to verify.');
     }
 
-    // Login process
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -127,7 +122,6 @@ return response()->json([
 ], 401);
     }
 
-    // Logout
     public function logout(Request $request)
     {
         Auth::logout();

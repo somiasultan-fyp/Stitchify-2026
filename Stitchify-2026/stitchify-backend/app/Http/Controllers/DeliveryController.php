@@ -12,17 +12,14 @@ class DeliveryController extends Controller
     //Delivery auto-create after payment
     public static function createAfterPayment(Order $order): void
     {
-        // Only for home_delivery 
         if ($order->delivery_type !== 'home_delivery') {
             return;
         }
 
-        // Order exist?
         if ($order->delivery()->exists()) {
             return;
         }
 
-        //Make Delivery record
         $delivery = Delivery::create([
             'order_id'         => $order->id,
             'tracking_id'      => Delivery::generateTrackingId(),
@@ -34,10 +31,8 @@ class DeliveryController extends Controller
             'estimated_date'   => now()->addDays(2),
         ]);
 
-        //Save tracking ID in Order 
         $order->update(['tracking_id' => $delivery->tracking_id]);
 
-        //Notification to Customer
         Notification::create([
             'user_id'    => $order->customer->user->id,
             'title'      => 'Delivery Scheduled!',
@@ -48,7 +43,6 @@ class DeliveryController extends Controller
             'action_url' => '/customer/dashboard',
         ]);
 
-        // Notification to Tailor
         Notification::create([
             'user_id'    => $order->tailor->user->id,
             'title'      => 'Fabric Coming Your Way!',
@@ -60,10 +54,8 @@ class DeliveryController extends Controller
         ]);
     }
 
-    //Show Tracking page 
     public function track(Order $order)
     {
-        // Security check
         if ($order->customer->user_id !== auth()->id()) {
             abort(403, 'Unauthorized access.');
         }
@@ -78,7 +70,6 @@ class DeliveryController extends Controller
         return view('customer.tracking', compact('order', 'delivery'));
     }
 
-    // ── Admin/Tailor: Status update  ─────
     public function updateStatus(Request $request, Delivery $delivery)
     {
         $request->validate([
@@ -95,18 +86,15 @@ class DeliveryController extends Controller
 
         $order = $delivery->order;
 
-        // Update Order status
         if ($request->status === 'delivered') {
             $order->update([
                 'status'               => 'delivered',
                 'actual_delivery_date' => now(),
             ]);
 
-            // Increase Tailor's slots
             $order->tailor->incrementSlot();
         }
 
-        // Customer ko notification
         Notification::create([
             'user_id'    => $order->customer->user->id,
             'title'      => 'Delivery Update — ' . $delivery->tracking_id,
@@ -122,7 +110,6 @@ class DeliveryController extends Controller
         ]);
     }
 
-    // ── AJAX: Tracking status fetch ──────────
     public function getStatus(Order $order)
     {
         if ($order->customer->user_id !== auth()->id()) {

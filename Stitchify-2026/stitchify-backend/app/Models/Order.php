@@ -25,27 +25,21 @@ class Order extends Model
     'rejected_at' => 'datetime',
     ];
 
-    // ===== RELATIONSHIPS =====
-
-    // Order Customer ka hai
     public function customer()
     {
         return $this->belongsTo(Customer::class);
     }
 
-    // Order Tailor ka hai
     public function tailor()
     {
         return $this->belongsTo(Tailor::class);
     }
 
-    // Order ki measurements
     public function measurement()
     {
         return $this->hasOne(Measurement::class);
     }
 
-    // Order ke payments
     public function payments()
     {
         return $this->hasMany(Payment::class);

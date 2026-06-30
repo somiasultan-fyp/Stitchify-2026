@@ -12,30 +12,24 @@ return new class extends Migration
         Schema::create('tailors', function (Blueprint $table) {
             $table->id(); // auto increment primary key
             
-            // users table se link — tailor delete ho to yeh bhi delete ho
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             
-            // tailor ki basic info
-            $table->string('shop_name')->nullable();        // dukan ka naam
-            $table->text('bio')->nullable();                // apne baare mein
-            $table->string('city')->nullable();             // shehar
-            $table->string('address')->nullable();          // pura address
-            $table->integer('experience_years')->default(0); // kitne saal ka tajurba
+            $table->string('shop_name')->nullable();    
+            $table->text('bio')->nullable();              
+            $table->string('city')->nullable();          
+            $table->string('address')->nullable();     
+
+            $table->integer('experience_years')->default(0); 
+            $table->integer('max_slots')->default(5);      
+            $table->integer('available_slots')->default(5);
             
-            // slots — maximum kitne orders ek waqt mein le sakta hai
-            $table->integer('max_slots')->default(5);       // total capacity
-            $table->integer('available_slots')->default(5); // abhi kitne baaki hain
-            
-            // status — approved hai ya nahi (admin approve karega)
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+
+            $table->string('specialization')->nullable(); 
             
-            // specialization — kya karta hai
-            $table->string('specialization')->nullable(); // e.g., "Bridal, Casual"
+            $table->decimal('base_price', 8, 2)->nullable();
             
-            // pricing
-            $table->decimal('base_price', 8, 2)->nullable(); // minimum price
-            
-            $table->timestamps(); // created_at, updated_at automatic
+            $table->timestamps(); 
         });
     }
 

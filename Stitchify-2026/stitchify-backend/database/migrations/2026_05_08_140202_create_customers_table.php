@@ -12,13 +12,11 @@ return new class extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
             
-            // users table se link
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             
-            // customer ki extra info
-            $table->string('address')->nullable();           // delivery address
-            $table->string('city')->nullable();              // shehar
-            $table->date('date_of_birth')->nullable();       // date of birth
+            $table->string('address')->nullable();          
+            $table->string('city')->nullable();              
+            $table->date('date_of_birth')->nullable();       
             $table->enum('gender', ['male', 'female', 'other'])->nullable();
             
             $table->timestamps();

@@ -24,13 +24,11 @@ class Delivery extends Model
         'estimated_date' => 'date',
     ];
 
-    // Relation to Order
     public function order()
     {
         return $this->belongsTo(Order::class);
     }
-
-    // Generate unique tracking ID 
+ 
     public static function generateTrackingId(): string
     {
         do {
@@ -40,7 +38,6 @@ class Delivery extends Model
         return $id;
     }
 
-    // Status readable label
     public function getStatusLabelAttribute(): string
     {
         return match($this->status) {
@@ -55,7 +52,6 @@ class Delivery extends Model
         };
     }
 
-    // Progress percentage
     public function getProgressAttribute(): int
     {
         return match($this->status) {

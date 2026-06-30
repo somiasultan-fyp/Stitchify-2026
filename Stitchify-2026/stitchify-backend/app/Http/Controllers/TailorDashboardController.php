@@ -76,7 +76,6 @@ class TailorDashboardController extends Controller
 
         $tailor->decrement('available_slots');
 
-        // Create notification for customer
         Notification::create([
             'user_id' => $order->customer->user_id,
             'type' => 'order_accepted',
@@ -106,7 +105,6 @@ class TailorDashboardController extends Controller
             'rejected_at'      => now(),
         ]);
 
-        // Create notification for customer
         Notification::create([
             'user_id' => $order->customer->user_id,
             'type' => 'order_rejected',
@@ -136,7 +134,6 @@ class TailorDashboardController extends Controller
 
         $order->update(['status' => $nextStatus]);
 
-        // Return slot when order is dispatched
         if ($nextStatus === 'delivered') {
             auth()->user()->tailor->increment('available_slots');
             

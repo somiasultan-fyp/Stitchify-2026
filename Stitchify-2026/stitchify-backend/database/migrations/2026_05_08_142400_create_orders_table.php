@@ -12,49 +12,41 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             
-            // unique order number — customer ko dikhayenge
-            $table->string('order_number')->unique(); // e.g., ORD-2024-0001
+            $table->string('order_number')->unique(); 
             
-            // kaun ne order diya, kis tailor ko
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             $table->foreignId('tailor_id')->constrained('tailors')->onDelete('cascade');
             
-            // order ki details
-            $table->string('dress_type');                    // e.g., "Shalwar Kameez, Bridal"
-            $table->text('special_instructions')->nullable(); // koi khaas baat
-            $table->string('fabric_provided_by');            // 'customer' ya 'tailor'
-            $table->string('fabric_details')->nullable();    // fabric ka description
+            $table->string('dress_type');                    
+            $table->text('special_instructions')->nullable(); 
+            $table->string('fabric_provided_by');           
+            $table->string('fabric_details')->nullable();    
             
-            // pricing
-            $table->decimal('price', 8, 2)->nullable();      // tailor ne jo price di
-            $table->decimal('advance_paid', 8, 2)->default(0); // advance payment
+            $table->decimal('price', 8, 2)->nullable();     
+            $table->decimal('advance_paid', 8, 2)->default(0); 
             
             // dates
-            $table->date('expected_delivery_date')->nullable(); // expected delivery
-            $table->date('actual_delivery_date')->nullable();   // actual delivery
+            $table->date('expected_delivery_date')->nullable(); 
+            $table->date('actual_delivery_date')->nullable();  
             
-            // order status — yeh order kahan tak pahuncha
             $table->enum('status', [
-                'pending',      // order aaya, tailor ne abhi accept nahi kiya
-                'accepted',     // tailor ne accept kiya
-                'in_progress',  // stitching chal rahi hai
-                'ready',        // taiyar ho gaya
-                'dispatched',   // delivery ke liye bheja
-                'delivered',    // customer tak pahunch gaya
-                'cancelled'     // cancel ho gaya
+                'pending',      
+                'accepted',   
+                'in_progress',  
+                'ready',        
+                'dispatched', 
+                'delivered',    
+                'cancelled'    
             ])->default('pending');
             
-            // payment status
             $table->enum('payment_status', [
                 'unpaid',
                 'advance_paid',
                 'fully_paid'
             ])->default('unpaid');
             
-            // delivery type
             $table->enum('delivery_type', ['pickup', 'home_delivery'])->default('pickup');
-            
-            // tracking ID (Week 4 mein use hoga)
+          
             $table->string('tracking_id')->nullable();
             
             $table->timestamps();

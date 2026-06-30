@@ -833,10 +833,14 @@ body {
   delivery_type:        deliveryChoice === 'yes' ? 'home_delivery' : 'pickup',
   measurement_method:   'manual',
   chest:                measurements.chest || null,
-  waist:                measurements.waist || null,
+  waist:                measurements.waist || measurements.shalwar_waist || null,
+  hips:                 measurements.hip || measurements.shalwar_hip || null,
   shoulder:             measurements.shoulder || null,
   sleeve_length:        measurements.sleeve || measurements.sleeve_length || null,
-  shirt_length:         measurements.length || null,
+  shirt_length:         measurements.length || measurements.coat_length || null,
+  trouser_length:       measurements.shalwar_length || measurements.pant_length || null,
+  trouser_waist:        measurements.pant_waist || measurements.shalwar_waist || null,
+  neck:                 measurements.neck || null,
   measurements:         measurements,
 };
 
@@ -877,8 +881,8 @@ body {
           <p style="color:#575a5b;font-size:14px;margin-bottom:4px;"><strong>Order Number:</strong> ${result.order_number}</p>
           <p style="color:#575a5b;font-size:14px;margin-bottom:20px;">Your order has been sent to the tailor. Payment will be unlocked after acceptance.</p>
           <div style="background:#f8f9fa;border-radius:12px;padding:16px;text-align:left;border:2px solid #e0e0e0;margin-bottom:14px;">
-            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Name:</strong> ${data.cname}</p>
-            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Phone:</strong> ${data.cphone}</p>
+            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Name:</strong> ${document.getElementById('cname').value}</p>
+            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Phone:</strong> ${document.getElementById('cphone').value}</p>
             <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Garment:</strong> ${data.dress_type}</p>
             <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Fabric:</strong> ${data.fabric_name} &mdash; ${data.fabric_color}</p>
             ${deliveryLine}

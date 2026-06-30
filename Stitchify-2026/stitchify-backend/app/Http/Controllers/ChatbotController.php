@@ -16,16 +16,12 @@ class ChatbotController extends Controller
 
         $apiKey = env('GROQ_API_KEY');
 
-        // ─────────────────────────────────────────
-        // Logged-in user context + order data
-        // ─────────────────────────────────────────
         $userContext = '';
 
         if (auth()->check()) {
             $user = auth()->user();
             $userContext = "Current logged-in user: {$user->name}, Role: {$user->role}.\n";
 
-            // Customer ke orders fetch karo
             if ($user->role === 'customer' && $user->customer) {
                 $orders = $user->customer->orders()
                     ->with('tailor.user')
@@ -54,9 +50,6 @@ class ChatbotController extends Controller
             }
         }
 
-        // ─────────────────────────────────────────
-        // Available tailors fetch karo — sab ke liye
-        // ─────────────────────────────────────────
         $tailorsContext = '';
 
         $tailors = Tailor::where('available_slots', '>', 0)

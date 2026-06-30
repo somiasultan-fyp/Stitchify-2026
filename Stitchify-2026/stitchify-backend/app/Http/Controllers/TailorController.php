@@ -19,10 +19,8 @@ class TailorController extends Controller
 
     return view('tailors.index', compact('tailors'));
 }
-    // Single tailor profile
     public function show($id)
 {
-    // Tailor ID fetch
     $tailor = Tailor::where('id', $id)
                     ->with(['user', 'portfolios'])
                     ->firstOrFail();
@@ -55,7 +53,6 @@ class TailorController extends Controller
                                ->where('status', 'delivered')
                                ->count();
 
-        // Stats for dashboard cards
         $stats = [
             'pending'         => $pendingOrders->count(),
             'active'          => $activeOrders->count(),
@@ -93,7 +90,6 @@ class TailorController extends Controller
 
         $tailor->decrementSlot();
 
-        // notification to customer
         Notification::create([
             'user_id' => $order->customer->user->id,
             'title'   => 'Order Accepted!',
@@ -125,7 +121,6 @@ class TailorController extends Controller
                        ->with('customer.user')
                        ->firstOrFail();
  
-        // Order cancel
         $order->update([
             'status' => 'cancelled',
         ]);

@@ -12,14 +12,12 @@ return new class extends Migration
         Schema::create('portfolios', function (Blueprint $table) {
             $table->id();
             
-            // tailor se link
             $table->foreignId('tailor_id')->constrained('tailors')->onDelete('cascade');
             
-            // portfolio item ki info
-            $table->string('image_path');                    // image kahan save hai
-            $table->string('title')->nullable();             // e.g., "Bridal Dress"
-            $table->text('description')->nullable();         // kaam ka description
-            $table->string('category')->nullable();          // e.g., "Bridal, Casual, Formal"
+            $table->string('image_path');                    
+            $table->string('title')->nullable();             
+            $table->text('description')->nullable();         
+            $table->string('category')->nullable();        
             
             $table->timestamps();
         });
