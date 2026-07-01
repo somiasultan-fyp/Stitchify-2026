@@ -11,11 +11,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
     <style>
-        /* --- Color Variables based on your request --- */
         :root {
-            --primary-bg: #212529;       /* Dark Background */
-            --accent-color: #1B2A4A;     /* Buttons/Highlights */
-            --copyright-bg: #575a5b;     /* Copyright Footer */
+            --primary-bg: #212529;      
+            --accent-color: #1B2A4A;  
+            --copyright-bg: #575a5b;    
             --text-white: #ffffff;
         }
 
@@ -24,9 +23,6 @@
             background-color: #f8f9fa; /* Light body bg, sections will override */
         }
 
-        /* --- Reusable Custom Classes --- */
-        
-        /* Custom Button Style */
         .btn-stitchify {
             background-color: var(--accent-color);
             color: var(--text-white);
@@ -36,7 +32,7 @@
         }
         
         .btn-stitchify:hover {
-            background-color: #1a2c55; /* Slightly lighter for hover effect */
+            background-color: #1a2c55;
             color: var(--text-white);
         }
 
@@ -49,7 +45,6 @@
             color: var(--accent-color);
         }
 
-        /* --- Header / Navbar --- */
         .navbar {
             background-color: var(--primary-bg) !important;
         }
@@ -59,11 +54,9 @@
             color: var(--text-white) !important;
         }
 
-        /* --- Hero Section --- */
         .hero-section 
         {
             background-color: var(--primary-bg);
-            /* Overlay color + Background Image */
             background: linear-gradient(rgba(33, 37, 41, 0.4), rgba(33, 37, 41, 0.4)), url({{ asset('images/background.png') }});
             background-size: cover;
             background-position: center;
@@ -72,7 +65,6 @@
             text-align: center;
         }
 
-        /* --- How It Works (Circles) --- */
         .step-circle {
             width: 150px;
             height: 150px;
@@ -89,7 +81,6 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
-        /* --- Reviews Section --- */
         .review-card {
             background-color: var(--primary-bg);
             color: var(--text-white);
@@ -100,9 +91,6 @@
         .carousel-indicators [data-bs-target] {
             background-color: var(--accent-color);
         }
-        /* --- Review Slider Customization --- */
-
-        /* 1. The Left/Right Arrow Backgrounds */
          .carousel-control-prev-icon,
          .carousel-control-next-icon {
             background-color: var(--primary-bgr);  /* Uses #0e1830 from root */
@@ -111,23 +99,18 @@
             height: 3rem;
             background-size: 50%;
         }
-
-         /* 2. The Bottom Indicators (Dots) */
          .carousel-indicators [data-bs-target] {
             background-color: var(--primary-bg) !important;
             opacity: 0.8;
         }
-
-         /* Active Dot */
          .carousel-indicators .active {
            background-color: var(--accent-color) !important;
             opacity: 1;
         }
         .stars i {
-            color: var(--text-white); /* Review stars color */
+            color: var(--text-white); 
         }
 
-        /* --- Featured Tailors --- */
         .tailor-card {
             background-color: var(--primary-bg);
             color: var(--text-white);
@@ -136,7 +119,6 @@
             overflow: hidden;
         }
 
-        /* --- Services --- */
         .service-img {
             height: 250px;
             object-fit: cover;
@@ -144,7 +126,6 @@
             border-radius: 8px;
         }
 
-        /* --- FAQs Customization --- */
         .accordion-item {
             border: none;
             margin-bottom: 10px;
@@ -154,11 +135,9 @@
             color: var(--text-white) !important;
             font-weight: bold;
         }
-        /* Remove default blue outline on focus */
         .accordion-button:focus {
             box-shadow: none;
         }
-        /* The arrow icon color filter (making it white) */
         .accordion-button::after {
             filter: invert(1); 
         }
@@ -169,7 +148,6 @@
             color: var(--text-white);
         }
 
-        /* --- Footer --- */
         footer {
             background-color: var(--primary-bg);
             color: var(--text-white);
@@ -188,7 +166,6 @@
             color: var(--text-white);
         }
 
-        /* --- Chatbot --- */
         .chatbot-container {
             position: fixed;
             bottom: 30px;
@@ -241,7 +218,17 @@
                     <li class="nav-item"><a class="nav-link" href="aboutus.html">About Us</a></li>
                     <li class="nav-item"><a class="nav-link" href="contactus.html">Contact Us</a></li>
                     <li class="nav-item ms-lg-3">
-                       <a href="{{ route('login.form') }}" class="btn btn-stitchify">Login</a>
+                @auth
+                @if(auth()->user()->role === 'customer')
+                 <a href="/customer/dashboard" class="btn-stitchify">Dashboard</a>
+                @elseif(auth()->user()->role === 'tailor')
+                 <a href="/tailor/dashboard" class="btn-stitchify">Dashboard</a>
+                @elseif(auth()->user()->role === 'admin')
+                 <a href="/admin/dashboard" class="btn-stitchify">Dashboard</a>
+                @endif
+                @else
+                 <a href="/login" class="btn-stitchify">Login</a>
+                @endauth
                     </li>
                 </ul>
             </div>
@@ -554,7 +541,6 @@
         </div>
     </footer>
 
-    <!-- Chatbot Toggle Button -->
 <button id="chatToggle"
     style="position:fixed; bottom:24px; right:24px; z-index:9999;
            width:56px; height:56px; border-radius:50%; border:none;
@@ -564,7 +550,6 @@
   <i class="fas fa-robot" id="chatIcon"></i>
 </button>
 
-<!-- Chatbot Window -->
 <div id="chatWindow"
      style="display:none; position:fixed; bottom:90px; right:24px;
             z-index:9998; width:340px; height:480px;
@@ -692,6 +677,6 @@ async function sendMessage() {
 }
 </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
