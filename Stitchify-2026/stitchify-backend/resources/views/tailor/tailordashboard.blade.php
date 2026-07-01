@@ -208,7 +208,6 @@ body {
 .btn-complete { background-color: #1976d2; color: var(--text-white); }
 .btn-complete:hover { background-color: #1565c0; }
 
-/* Modal */
 .modal-header { background: linear-gradient(135deg, var(--accent-color), var(--primary-bg)); color: white; }
 .modal-header .btn-close { filter: invert(1); }
 
@@ -218,7 +217,6 @@ body {
 }
 .empty-state i { font-size: 48px; margin-bottom: 15px; display: block; opacity: 0.4; }
 
-/* Toast notification */
 .toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; }
 
 .performance-stat {
@@ -246,8 +244,10 @@ body {
 <body>
 <div class="sidebar">
   <div class="sidebar-logo">
-    <img src="{{ asset('images/logo.png') }}" alt="Logo">
-    <h3>Stitchify</h3>
+    <a href="/" style="text-decoration:none;">
+        <img src="{{ asset('images/logo.png') }}" alt="Stitchify Logo">
+        <h3 style="color:white;">Stitchify</h3>
+    </a>
   </div>
 
   <div class="user-info">
@@ -288,7 +288,6 @@ body {
   <div class="top-bar" id="overview" style="display:flex; justify-content:space-between; align-items:center;">
     <h2>Welcome, {{ auth()->user()->name }}!</h2>
 
-    {{-- BELL NOTIFICATION --}}
     <div class="bell-wrapper" style="position:relative; display:inline-block;">
         <button class="bell-btn" onclick="toggleNotif()"
                 style="background:none; border:none; cursor:pointer;
@@ -512,7 +511,6 @@ body {
     @endforelse
   </div>
 
-  {{-- Performance --}}
   <div class="content-section" id="performance">
     <h3 class="section-title">Performance Metrics</h3>
     <div class="performance-stat">
@@ -625,11 +623,9 @@ body {
 <script>
 const CSRF = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-// Current order IDs for modals
 let currentAcceptId = null;
 let currentRejectId = null;
 
-// ── Toast helper ──────────────────────────
 function showToast(msg, type = 'success') {
   const toast    = document.getElementById('mainToast');
   const toastMsg = document.getElementById('toastMsg');
@@ -638,7 +634,6 @@ function showToast(msg, type = 'success') {
   new bootstrap.Toast(toast, { delay: 3000 }).show();
 }
 
-// ── Open Accept Modal ─────────────────────
 function openAcceptModal(orderId, orderNum) {
   currentAcceptId = orderId;
   document.getElementById('acceptOrderNum').textContent = '#' + orderNum;
@@ -647,7 +642,6 @@ function openAcceptModal(orderId, orderNum) {
   new bootstrap.Modal(document.getElementById('acceptModal')).show();
 }
 
-// ── Confirm Accept ────────────────────────
 async function confirmAccept() {
   const price = document.getElementById('acceptPrice').value;
   const days  = document.getElementById('acceptDays').value;
@@ -681,18 +675,15 @@ async function confirmAccept() {
     const data = await res.json();
 
     if (data.success) {
-      // Modal band karo
       bootstrap.Modal.getInstance(
         document.getElementById('acceptModal')
       ).hide();
 
-      // Card remove karo — page reload ki zaroorat nahi
       const card = document.getElementById(`pending-card-${currentAcceptId}`);
       if (card) card.remove();
 
       showToast('Order accepted! Notification sent to customer.', 'success');
 
-      // Stats update karo
       setTimeout(() => location.reload(), 1500);
     } else {
       showToast(data.message || 'something went wrong.', 'danger');
@@ -705,7 +696,6 @@ async function confirmAccept() {
   }
 }
 
-// ── Open Reject Modal ─────────────────────
 function openRejectModal(orderId, orderNum) {
   currentRejectId = orderId;
   document.getElementById('rejectOrderNum').textContent = '#' + orderNum;
@@ -713,7 +703,6 @@ function openRejectModal(orderId, orderNum) {
   new bootstrap.Modal(document.getElementById('rejectModal')).show();
 }
 
-// ── Confirm Reject ────────────────────────
 async function confirmReject() {
   const reason = document.getElementById('rejectReason').value.trim();
 
@@ -740,7 +729,6 @@ async function confirmReject() {
         document.getElementById('rejectModal')
       ).hide();
 
-      // Card remove karo
       const card = document.getElementById(`pending-card-${currentRejectId}`);
       if (card) card.remove();
 
@@ -754,7 +742,6 @@ async function confirmReject() {
   }
 }
 
-// ── Status Update ─────────────────────────
 async function updateStatus(orderId, newStatus, btn) {
   const labels = {
     'in_progress' : 'Stitching started!',
@@ -790,7 +777,6 @@ async function updateStatus(orderId, newStatus, btn) {
   }
 }
 
-// ── View Detail Modal ─────────────────────
 async function viewDetail(orderId) {
   document.getElementById('detailBody').innerHTML = `
     <div class="text-center py-4">
@@ -850,7 +836,6 @@ async function viewDetail(orderId) {
   }
 }
 
-// ── Sidebar Scroll Spy ────────────────────
 document.querySelectorAll('.sidebar-menu a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function(e) {
     e.preventDefault();
@@ -874,7 +859,6 @@ function updateActiveLink() {
 }
 window.addEventListener('scroll', updateActiveLink);
 updateActiveLink();
-// ── NOTIFICATION SYSTEM ──
 function toggleNotif() {
     const dd = document.getElementById('notifDropdown');
     dd.style.display = dd.style.display === 'block' ? 'none' : 'block';

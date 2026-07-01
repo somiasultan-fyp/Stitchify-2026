@@ -261,8 +261,10 @@ body {
 
 <div class="sidebar">
   <div class="sidebar-logo">
-    <img src="{{ asset('images/logo.png') }}" alt="Stitchify Logo">
-    <h3>Stitchify</h3>
+   <a href="/" style="text-decoration:none;">
+        <img src="{{ asset('images/logo.png') }}" alt="Stitchify Logo">
+        <h3 style="color:white;">Stitchify</h3>
+    </a>
   </div>
   <div class="user-info">
     <h4>{{ auth()->user()->name }}</h4>
@@ -286,11 +288,9 @@ body {
 
 <div class="main-content">
 
-  {{-- TOP BAR --}}
   <div class="top-bar" id="overview">
     <h2>Welcome, {{ auth()->user()->name }}!</h2>
 
-    {{-- BELL NOTIFICATION --}}
     <div class="bell-wrapper">
       <button class="bell-btn" onclick="toggleNotif()" id="bellBtn">
         <i class="fas fa-bell"></i>
@@ -315,7 +315,6 @@ body {
     </div>
   </div>
 
-  {{-- STATS --}}
   <div class="stats-grid">
     <div class="stat-card">
       <div class="stat-icon blue"><i class="fas fa-shopping-bag"></i></div>
@@ -339,7 +338,6 @@ body {
     </div>
   </div>
 
-  {{-- MY ORDERS --}}
   <div class="content-section" id="my-orders">
     <h3 class="section-title">My Orders</h3>
     @php
@@ -384,7 +382,6 @@ body {
               <p><span class="badge bg-success"><i class="fas fa-check-double me-1"></i> Fully Paid</span></p>
             @endif
 
-            {{-- Track Order Button --}}
             @if($order->delivery_type === 'home_delivery' && $order->tracking_id)
               <a href="{{ route('delivery.track', $order->id) }}"
                  style="display:inline-block; margin-top:8px; padding:7px 16px;
@@ -408,7 +405,6 @@ body {
     @endforelse
   </div>
 
-  {{-- ORDER HISTORY --}}
   <div class="content-section" id="order-history">
     <h3 class="section-title">Order History</h3>
     @php $historyOrders = $orders->whereIn('status',['delivered','cancelled']); @endphp

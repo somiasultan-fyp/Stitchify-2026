@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -7,10 +6,10 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Order;
 use App\Models\Measurement;
 use App\Models\Tailor;
+use App\Models\Notification;
 
 class OrderController extends Controller
 {
-  
     public function create()
     {
         return view('customer.order-form');
@@ -19,7 +18,7 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-      
+
         if (!$user) {
             return response()->json([
                 'success' => false,
@@ -28,7 +27,6 @@ class OrderController extends Controller
         }
 
         $customer = $user->customer;
-
         if (!$customer) {
             return response()->json([
                 'success' => false,
@@ -36,12 +34,18 @@ class OrderController extends Controller
             ], 400);
         }
 
-        $tailor = Tailor::first();
-
+        $tailor = Tailor::find($request->tailor_id);
         if (!$tailor) {
             return response()->json([
                 'success' => false,
-                'message' => 'No tailor found in the database. Please create a tailor record first.'
+                'message' => 'Selected tailor not found.'
+            ], 400);
+        }
+
+        if (!$tailor->hasAvailableSlot()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'This tailor has no available slots right now.'
             ], 400);
         }
 
@@ -55,27 +59,45 @@ class OrderController extends Controller
             'special_instructions' => $request->special_instructions ?? null,
             'fabric_provided_by'   => 'customer',
             'fabric_details'       => ($request->fabric_name ?? 'N/A') . ' - ' . ($request->fabric_color ?? 'N/A'),
-            'delivery_type'        => 'home_delivery',
+            'delivery_type'        => $request->delivery_type ?? 'pickup',
             'status'               => 'pending',
             'payment_status'       => 'unpaid',
         ]);
 
         if ($request->measurement_method === 'manual') {
             Measurement::create([
-                'order_id'      => $order->id,
-                'chest'         => $request->chest    ?? null,
-                'waist'         => $request->waist    ?? null,
-                'shirt_length'  => $request->length   ?? null,
-                'shoulder'      => $request->shoulder ?? null,
-                'sleeve_length' => $request->sleeve   ?? null,
-                'neck'          => $request->neck     ?? null,
+                'order_id'         => $order->id,
+                'chest'            => $request->chest          ?? null,
+                'waist'            => $request->waist          ?? null,
+                'hips'             => $request->hips           ?? null,
+                'shoulder'         => $request->shoulder       ?? null,
+                'sleeve_length'    => $request->sleeve_length  ?? null,
+                'shirt_length'     => $request->shirt_length   ?? null,
+                'trouser_length'   => $request->trouser_length ?? null,
+                'trouser_waist'    => $request->trouser_waist  ?? null,
+                'neck'             => $request->neck           ?? null,
+                'additional_notes' => $request->additional_notes ?? null,
             ]);
         } else {
             Measurement::create([
                 'order_id'         => $order->id,
-                'additional_notes' => 'Appointment: ' . ($request->appointment_date ?? '') . ' at ' . ($request->appointment_time ?? ''),
+                'additional_notes' => 'Appointment: ' .
+                    ($request->appointment_date ?? '') .
+                    ' at ' .
+                    ($request->appointment_time ?? ''),
             ]);
         }
+
+        $tailor->decrementSlot();
+
+        Notification::create([
+            'user_id'    => $tailor->user->id,
+            'title'      => 'New Order Received!',
+            'message'    => $user->name . ' has placed order #' . $orderNumber .
+                           ' for ' . ($request->dress_type ?? 'garment') . '.',
+            'type'       => 'order',
+            'action_url' => '/tailor/dashboard',
+        ]);
 
         return response()->json([
             'success'      => true,
@@ -87,18 +109,19 @@ class OrderController extends Controller
     public function myOrders()
     {
         $user = Auth::user();
-        
+
         if (!$user) {
             return redirect('/login');
         }
 
         $customer = $user->customer;
-
         if (!$customer) {
-            return redirect('/login')->with('error', 'Customer profile nahi mili.');
+            return redirect('/login')
+                ->with('error', 'Customer profile not found.');
         }
 
         $orders = Order::where('customer_id', $customer->id)
+                       ->with(['tailor.user', 'measurement'])
                        ->latest()
                        ->get();
 

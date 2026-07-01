@@ -246,8 +246,10 @@ body {
 
 <div class="sidebar">
   <div class="sidebar-logo">
-    <img src="{{ asset('images/logo.png') }}" alt="Logo">
-    <h3>Stitchify</h3>
+     <a href="/" style="text-decoration:none;">
+        <img src="{{ asset('images/logo.png') }}" alt="Stitchify Logo">
+        <h3 style="color:white;">Stitchify</h3>
+    </a>
     <div class="admin-badge">ADMIN PANEL</div>
   </div>
   <div class="user-info">
@@ -280,7 +282,6 @@ body {
 
 <div class="main-content">
 
-  {{-- Top Bar --}}
   <div class="top-bar" id="overview">
     <h2>
       <i class="fas fa-shield-alt" style="color:#e74c3c;margin-right:10px;font-size:22px;"></i>
@@ -291,7 +292,6 @@ body {
         <i class="fas fa-calendar-alt" style="margin-right:5px;"></i>
         {{ now()->format('D, d M Y') }}
       </span>
-      {{-- BELL --}}
       <div style="position:relative; display:inline-block;">
         <button onclick="toggleNotif()"
                 style="background:none; border:none; cursor:pointer;
@@ -335,7 +335,6 @@ body {
     </div>
   </div>
 
-  {{-- STATS --}}
   <div class="stats-grid">
     <div class="stat-card">
       <div class="stat-icon blue"><i class="fas fa-users"></i></div>
@@ -369,7 +368,6 @@ body {
     </div>
   </div>
 
-  {{-- MANAGE USERS --}}
   <div class="content-section" id="manage-users">
     <h3 class="section-title">Manage Users</h3>
     <div class="filter-row">
@@ -463,7 +461,6 @@ body {
     <div class="mt-3">{{ $users->links() }}</div>
   </div>
 
-  {{-- ALL ORDERS --}}
   <div class="content-section" id="all-orders">
     <h3 class="section-title">Monitor All Orders</h3>
     <div class="filter-row">
@@ -521,7 +518,6 @@ body {
                 {{ ucfirst(str_replace('_', ' ', $order->status)) }}
               </span>
             </td>
-            {{-- Delivery Status Update --}}
             <td>
               @if($order->delivery)
                 <div style="margin-top:4px;">
@@ -566,7 +562,6 @@ body {
     <div class="mt-3">{{ $orders->links() }}</div>
   </div>
 
-  {{-- REPORTS --}}
   <div class="content-section" id="reports">
     <h3 class="section-title">System Reports</h3>
     <div class="report-grid">
@@ -603,7 +598,6 @@ body {
     </div>
   </div>
 
-  {{-- COMPLAINTS --}}
   <div class="content-section" id="complaints">
     <h3 class="section-title">Complaints</h3>
     @forelse($complaints as $complaint)
@@ -704,7 +698,6 @@ function filterOrders() {
   });
 }
 
-// Delivery Status Update
 async function updateDelivery(deliveryId, orderId) {
     const status = document.getElementById('deliveryStatus-' + orderId).value;
     const csrf   = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
