@@ -20,7 +20,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa; /* Light body bg, sections will override */
+            background-color: #f8f9fa; 
         }
 
         .btn-stitchify {
@@ -93,7 +93,7 @@
         }
          .carousel-control-prev-icon,
          .carousel-control-next-icon {
-            background-color: var(--primary-bgr);  /* Uses #0e1830 from root */
+            background-color: var(--primary-bgr); 
             border-radius: 50%;
             width: 3rem;
             height: 3rem;
@@ -207,7 +207,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="home.blade.php">
+             <a class="navbar-brand" href="/">
         <img src="{{ asset('images/logo.png') }}" alt="Stitchify Logo" height="55">
              </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -218,17 +218,17 @@
                     <li class="nav-item"><a class="nav-link" href="aboutus.html">About Us</a></li>
                     <li class="nav-item"><a class="nav-link" href="contactus.html">Contact Us</a></li>
                     <li class="nav-item ms-lg-3">
-                @auth
-                @if(auth()->user()->role === 'customer')
-                 <a href="/customer/dashboard" class="btn-stitchify">Dashboard</a>
-                @elseif(auth()->user()->role === 'tailor')
-                 <a href="/tailor/dashboard" class="btn-stitchify">Dashboard</a>
-                @elseif(auth()->user()->role === 'admin')
-                 <a href="/admin/dashboard" class="btn-stitchify">Dashboard</a>
-                @endif
-                @else
-                 <a href="/login" class="btn-stitchify">Login</a>
-                @endauth
+                        @auth
+                            @if(auth()->user()->role === 'customer')
+                                <a href="/customer/dashboard" class="btn-stitchify">Dashboard</a>
+                            @elseif(auth()->user()->role === 'tailor')
+                                <a href="/tailor/dashboard" class="btn-stitchify">Dashboard</a>
+                            @elseif(auth()->user()->role === 'admin')
+                                <a href="/admin/dashboard" class="btn-stitchify">Dashboard</a>
+                            @endif
+                        @else
+                            <a href="/login" class="btn-stitchify">Login</a>
+                        @endauth
                     </li>
                 </ul>
             </div>
