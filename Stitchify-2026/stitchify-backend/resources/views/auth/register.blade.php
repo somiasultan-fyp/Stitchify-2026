@@ -9,47 +9,147 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <style>
 :root {
-   --primary-bg: #212529; --accent-color: #1B2A4A; --copyright-bg: #575a5b; --text-white: #ffffff; }
+  --primary-bg: #212529;
+  --accent-color: #1B2A4A;
+  --copyright-bg: #575a5b;
+  --text-white: #ffffff;
+}
 body {
-   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background-color: #f8f9fa; }
-.registration-wrapper { 
-  width: 500px; max-width: 95%; background-color: var(--text-white); border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); overflow: hidden; }
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: #f8f9fa;
+}
+.registration-wrapper {
+  width: 500px;
+  max-width: 95%;
+  background-color: var(--text-white);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  overflow: hidden;
+}
 .logo-container {
-   background: linear-gradient(135deg, var(--accent-color), var(--primary-bg)); padding: 30px; text-align: center; border-bottom: 3px solid var(--copyright-bg); }
+  background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
+  padding: 30px;
+  text-align: center;
+  border-bottom: 3px solid var(--copyright-bg);
+}
 .logo-image {
-   width: 120px; height: 120px; margin: 0 auto; display: block; object-fit: contain; border-radius: 50%; padding: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+  width: 120px;
+  height: 120px;
+  margin: 0 auto;
+  display: block;
+  object-fit: contain;
+  border-radius: 50%;
+  padding: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
 .form-step {
-   padding: 40px; }
+  padding: 40px;
+}
 .registration-header {
-   text-align: center; margin-bottom: 30px; }
+  text-align: center;
+  margin-bottom: 30px;
+}
 .registration-header h2 {
-   color: var(--accent-color); font-weight: 700; font-size: 28px; margin-bottom: 8px; }
-.registration-header p { 
-  color: var(--copyright-bg); font-size: 14px; }
+  color: var(--accent-color);
+  font-weight: 700;
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+.registration-header p {
+  color: var(--copyright-bg);
+  font-size: 14px;
+}
 .form-label {
-   color: var(--primary-bg); font-weight: 600; margin-bottom: 8px; font-size: 14px; }
-.form-control, .form-select { 
-  border: 2px solid #e0e0e0; border-radius: 10px; padding: 12px 15px; color: var(--primary-bg); background-color: #f8f9fa; font-size: 15px; }
-.form-control:focus, .form-select:focus { 
-  border-color: var(--accent-color); box-shadow: 0 0 0 0.25rem rgba(14,24,48,0.15); background-color: var(--text-white); }
-.btn-custom { 
-  background: linear-gradient(135deg, var(--accent-color), var(--primary-bg)); color: var(--text-white); border: none; border-radius: 10px; padding: 14px; font-weight: 600; font-size: 16px; width: 100%; margin-top: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
-.btn-custom:hover { 
-  opacity: 0.9; color: var(--text-white); }
-.login-link { 
-  text-align: center; margin-top: 20px; color: var(--copyright-bg); font-size: 14px; }
-.login-link a { 
-  color: var(--accent-color); text-decoration: none; font-weight: 600; }
-.password-toggle { 
-  position: relative; }
-.toggle-icon { 
-  position: absolute; right: 15px; top: 70%; transform: translateY(-50%); cursor: pointer; color: var(--copyright-bg); opacity: 0.6; }
-.step-indicator { 
-  display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
-.step-dot { 
-  width: 12px; height: 12px; border-radius: 50%; background-color: #e0e0e0; transition: all 0.3s; }
-.step-dot.active { 
-  background-color: var(--accent-color); width: 30px; border-radius: 6px; }
+  color: var(--primary-bg);
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+.form-control, .form-select {
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 12px 15px;
+  color: var(--primary-bg);
+  background-color: #f8f9fa;
+  font-size: 15px;
+}
+.form-control:focus, .form-select:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 0.25rem rgba(14,24,48,0.15);
+  background-color: var(--text-white);
+}
+.form-control.is-invalid, .form-select.is-invalid {
+  border-color: #dc3545;
+}
+.btn-custom {
+  background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
+  color: var(--text-white);
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-weight: 600;
+  font-size: 16px;
+  width: 100%;
+  margin-top: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.btn-custom:hover {
+  opacity: 0.9;
+  color: var(--text-white);
+}
+.login-link {
+  text-align: center;
+  margin-top: 20px;
+  color: var(--copyright-bg);
+  font-size: 14px;
+}
+.login-link a {
+  color: var(--accent-color);
+  text-decoration: none;
+  font-weight: 600;
+}
+.password-toggle {
+  position: relative;
+}
+.toggle-icon {
+  position: absolute;
+  right: 15px;
+  top: 70%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: var(--copyright-bg);
+  opacity: 0.6;
+}
+.step-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.step-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  transition: all 0.3s;
+}
+.step-dot.active {
+  background-color: var(--accent-color);
+  width: 30px;
+  border-radius: 6px;
+}
+.error-text {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 5px;
+  display: block;
+}
 </style>
 </head>
 <body>
@@ -58,7 +158,6 @@ body {
     <img src="{{ asset('images/logo.png') }}" class="logo-image" alt="Stitchify">
   </div>
 
-  {{-- Step 1 --}}
   <div class="form-step" id="step1Div">
     <div class="step-indicator">
       <div class="step-dot active"></div>
@@ -76,21 +175,23 @@ body {
     <div class="mb-3">
       <label class="form-label">Full Name *</label>
       <input id="s1_name" class="form-control" placeholder="Enter your full name" type="text" value="{{ old('name') }}">
+      <span id="nameError" class="error-text"></span>
     </div>
     <div class="mb-3">
       <label class="form-label">Email Address *</label>
       <input id="s1_email" class="form-control" placeholder="example@gmail.com" type="email" value="{{ old('email') }}">
-      <span id="passwordError" class="text-danger small"></span>
+      <span id="emailError" class="error-text"></span>
     </div>
     <div class="mb-3">
       <label class="form-label">Phone Number *</label>
       <input id="s1_phone" class="form-control" placeholder="+92 300 1234567" type="tel" value="{{ old('phone') }}">
+      <span id="phoneError" class="error-text"></span>
     </div>
     <div class="mb-3 password-toggle">
       <label class="form-label">Password *</label>
       <input id="s1_password" class="form-control" placeholder="Min 8 chars with letters, numbers & special chars" type="password">
       <i id="togglePassword" class="fas fa-eye toggle-icon"></i>
-      <span id="pwError" class="text-danger small"></span>
+      <span id="pwError" class="error-text"></span>
     </div>
 
     <button class="btn btn-custom" type="button" onclick="goToStep2()">
@@ -102,7 +203,6 @@ body {
     </div>
   </div>
 
-  {{-- Step 2 --}}
   <div class="form-step" id="step2Div" style="display:none;">
     <div class="step-indicator">
       <div class="step-dot"></div>
@@ -127,33 +227,37 @@ body {
           <option value="customer" {{ old('role') == 'customer' ? 'selected' : '' }}>Customer</option>
           <option value="tailor" {{ old('role') == 'tailor' ? 'selected' : '' }}>Tailor</option>
         </select>
+        <span id="roleError" class="error-text"></span>
       </div>
 
       <div id="tailorFields" style="display:none;">
         <div class="mb-3">
           <label class="form-label">Shop Address *</label>
-          <textarea name="address" class="form-control" rows="2" placeholder="Enter your shop address">{{ old('address') }}</textarea>
+          <textarea name="address" id="s2_address" class="form-control" rows="2" placeholder="Enter your shop address">{{ old('address') }}</textarea>
+          <span id="addressError" class="error-text"></span>
         </div>
         <div class="mb-3">
           <label class="form-label">Specialization *</label>
-          <select name="category" class="form-select">
+          <select name="category" id="s2_category" class="form-select">
             <option value="">Select specialization</option>
             <option value="men" {{ old('category') == 'men' ? 'selected' : '' }}>Men's Clothing</option>
             <option value="women" {{ old('category') == 'women' ? 'selected' : '' }}>Women's Clothing</option>
             <option value="child" {{ old('category') == 'child' ? 'selected' : '' }}>Children's Clothing</option>
             <option value="all" {{ old('category') == 'all' ? 'selected' : '' }}>All Categories</option>
           </select>
+          <span id="categoryError" class="error-text"></span>
         </div>
         <div class="mb-3">
           <label class="form-label">Slot Capacity *</label>
-          <input name="slot_capacity" class="form-control" type="number" min="1" max="100" placeholder="e.g. 10" value="{{ old('slot_capacity') }}">
+          <input name="slot_capacity" id="s2_slot" class="form-control" type="number" min="1" max="100" placeholder="e.g. 10" value="{{ old('slot_capacity') }}">
+          <span id="slotError" class="error-text"></span>
         </div>
       </div>
 
       <button type="button" class="btn btn-link text-secondary mb-2" onclick="goToStep1()">
         <i class="fas fa-arrow-left"></i> Back
       </button>
-      <button type="submit" class="btn btn-custom">
+      <button type="submit" class="btn btn-custom" id="registerSubmitBtn">
         <i class="fas fa-user-check"></i> Register
       </button>
     </form>
@@ -164,20 +268,61 @@ body {
 <script>
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}:"<>?~]).{8,}$/;
 
-function goToStep2() {
-  const name     = document.getElementById('s1_name').value.trim();
-  const email    = document.getElementById('s1_email').value.trim();
-  const phone    = document.getElementById('s1_phone').value.trim();
-  const password = document.getElementById('s1_password').value;
+function clearStep1Errors() {
+  document.getElementById('nameError').textContent = '';
+  document.getElementById('emailError').textContent = '';
+  document.getElementById('phoneError').textContent = '';
+  document.getElementById('pwError').textContent = '';
+  document.getElementById('s1_name').classList.remove('is-invalid');
+  document.getElementById('s1_email').classList.remove('is-invalid');
+  document.getElementById('s1_phone').classList.remove('is-invalid');
+  document.getElementById('s1_password').classList.remove('is-invalid');
+}
 
-  if (!name)  { alert('Name is required.'); return; }
-  if (!email || !email.includes('@')) { alert('Valid email is required.'); return; }
-  if (!phone) { alert('Phone is required.'); return; }
+function goToStep2() {
+  clearStep1Errors();
+
+  const nameField     = document.getElementById('s1_name');
+  const emailField    = document.getElementById('s1_email');
+  const phoneField    = document.getElementById('s1_phone');
+  const passwordField = document.getElementById('s1_password');
+
+  const name     = nameField.value.trim();
+  const email    = emailField.value.trim();
+  const phone    = phoneField.value.trim();
+  const password = passwordField.value;
+
+  let isValid = true;
+
+  if (!name) {
+    document.getElementById('nameError').textContent = 'Full name is required.';
+    nameField.classList.add('is-invalid');
+    isValid = false;
+  }
+
+  if (!email || !email.includes('@') || !email.includes('.')) {
+    document.getElementById('emailError').textContent = 'A valid email address is required.';
+    emailField.classList.add('is-invalid');
+    isValid = false;
+  }
+
+  if (!phone) {
+    document.getElementById('phoneError').textContent = 'Phone number is required.';
+    phoneField.classList.add('is-invalid');
+    isValid = false;
+  }
+
   if (!passwordRegex.test(password)) {
-    document.getElementById('pwError').textContent = 'Password must be at least 8 characters with letters, numbers & special chars (!@#$%^&*)';
+    document.getElementById('pwError').textContent = 'Password must be at least 8 characters with letters, numbers & special characters (!@#$%^&*)';
+    passwordField.classList.add('is-invalid');
+    isValid = false;
+  }
+
+  if (!isValid) {
+    const firstInvalid = document.querySelector('#step1Div .is-invalid');
+    if (firstInvalid) firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
     return;
   }
-  document.getElementById('pwError').textContent = '';
 
   document.getElementById('f_name').value     = name;
   document.getElementById('f_email').value    = email;
@@ -198,11 +343,61 @@ function toggleTailorFields() {
   document.getElementById('tailorFields').style.display = role === 'tailor' ? 'block' : 'none';
 }
 
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+  document.getElementById('roleError').textContent = '';
+  document.getElementById('addressError').textContent = '';
+  document.getElementById('categoryError').textContent = '';
+  document.getElementById('slotError').textContent = '';
+  document.getElementById('role').classList.remove('is-invalid');
+
+  const role = document.getElementById('role').value;
+  let isValid = true;
+
+  if (!role) {
+    document.getElementById('roleError').textContent = 'Please select your role.';
+    document.getElementById('role').classList.add('is-invalid');
+    isValid = false;
+  }
+
+  if (role === 'tailor') {
+    const address  = document.getElementById('s2_address');
+    const category = document.getElementById('s2_category');
+    const slot     = document.getElementById('s2_slot');
+
+    if (!address.value.trim()) {
+      document.getElementById('addressError').textContent = 'Shop address is required.';
+      address.classList.add('is-invalid');
+      isValid = false;
+    }
+    if (!category.value) {
+      document.getElementById('categoryError').textContent = 'Please select a specialization.';
+      category.classList.add('is-invalid');
+      isValid = false;
+    }
+    if (!slot.value || slot.value < 1) {
+      document.getElementById('slotError').textContent = 'Slot capacity is required.';
+      slot.classList.add('is-invalid');
+      isValid = false;
+    }
+  }
+
+  if (!isValid) {
+    e.preventDefault();
+    const firstInvalid = document.querySelector('#step2Div .is-invalid');
+    if (firstInvalid) firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+});
+
 const toggle = document.getElementById('togglePassword');
 const pwd    = document.getElementById('s1_password');
 toggle.addEventListener('click', () => {
-  if (pwd.type === 'password') { pwd.type = 'text'; toggle.classList.replace('fa-eye','fa-eye-slash'); }
-  else { pwd.type = 'password'; toggle.classList.replace('fa-eye-slash','fa-eye'); }
+  if (pwd.type === 'password') {
+    pwd.type = 'text';
+    toggle.classList.replace('fa-eye', 'fa-eye-slash');
+  } else {
+    pwd.type = 'password';
+    toggle.classList.replace('fa-eye-slash', 'fa-eye');
+  }
 });
 </script>
 </body>

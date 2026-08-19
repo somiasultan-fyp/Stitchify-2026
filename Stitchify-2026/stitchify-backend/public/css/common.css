@@ -1,0 +1,129 @@
+:root {
+  --primary-bg: #212529;
+  --accent-color: #1B2A4A;
+  --copyright-bg: #575a5b;
+  --text-white: #ffffff;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.auth-wrapper {
+  max-width: 95%;
+  background-color: var(--text-white);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.logo-container {
+  background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
+  padding: 40px;
+  text-align: center;
+  border-bottom: 3px solid var(--copyright-bg);
+}
+
+.logo-image {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
+  display: block;
+  object-fit: contain;
+  border-radius: 50%;
+  padding: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.form-label {
+  color: var(--primary-bg);
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.form-control,
+.form-select {
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 12px 15px;
+  color: var(--primary-bg);
+  background-color: #f8f9fa;
+  transition: all 0.3s ease;
+  font-size: 15px;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 0.25rem rgba(14, 24, 48, 0.15);
+  background-color: var(--text-white);
+}
+
+.form-control.is-invalid,
+.form-select.is-invalid {
+  border-color: #dc3545;
+}
+
+.error-text {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 5px;
+  display: block;
+}
+
+.password-toggle {
+  position: relative;
+}
+
+.password-toggle .toggle-icon {
+  position: absolute;
+  right: 15px;
+  top: 70%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: var(--copyright-bg);
+  opacity: 0.6;
+  font-size: 1.1rem;
+  transition: opacity 0.3s ease;
+}
+
+.password-toggle .toggle-icon:hover {
+  opacity: 1;
+}
+
+.btn-primary-custom {
+  background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
+  color: var(--text-white);
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-weight: 600;
+  font-size: 16px;
+  width: 100%;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary-custom:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(14, 24, 48, 0.4);
+  color: var(--text-white);
+}
+
+.success-banner {
+  background-color: #d1e7dd;
+  color: #0a3622;
+  border: 1px solid #a3cfbb;
+  border-radius: 10px;
+  padding: 12px 15px;
+  font-size: 14px;
+  margin-bottom: 20px;
+}

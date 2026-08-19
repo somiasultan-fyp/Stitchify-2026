@@ -11,10 +11,11 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\DeliveryController;
+use App\Http\Controllers\PasswordResetController;
 
 Route::get('/', fn() => view('home'))->name('home');
-Route::get('/tailors',                   [TailorController::class, 'index'])->name('tailors.index');
-Route::get('/tailors/{id}',              [TailorController::class, 'show'])->name('tailors.show');
+Route::get('/tailors', [TailorController::class, 'index'])->name('tailors.index');
+Route::get('/tailors/{id}',[TailorController::class, 'show'])->name('tailors.show');
 
 Route::get('/register',  [AuthController::class, 'showRegister'])->name('register.form');
 Route::get('/login',     [AuthController::class, 'showLogin'])->name('login.form');
@@ -96,6 +97,10 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
 });
 Route::post('/chatbot', [ChatbotController::class, 'reply'])
      ->name('chatbot.reply');
+
+Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink'])->name('password.email');
+Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [PasswordResetController::class, 'reset'])->name('password.update');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/notifications/latest', [App\Http\Controllers\NotificationController::class, 'latest'])->name('notifications.latest');
