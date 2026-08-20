@@ -1,0 +1,62 @@
+.registration-wrapper {
+  width: 500px;
+}
+
+.form-step {
+  padding: 40px;
+}
+
+.registration-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.registration-header h2 {
+  color: var(--accent-color);
+  font-weight: 700;
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.registration-header p {
+  color: var(--copyright-bg);
+  font-size: 14px;
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 20px;
+  color: var(--copyright-bg);
+  font-size: 14px;
+}
+
+.login-link a {
+  color: var(--accent-color);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.password-toggle .toggle-icon {
+  display: block;
+}
+
+.step-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.step-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  transition: all 0.3s;
+}
+
+.step-dot.active {
+  background-color: var(--accent-color);
+  width: 30px;
+  border-radius: 6px;
+}
