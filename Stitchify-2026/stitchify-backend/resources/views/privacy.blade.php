@@ -12,10 +12,11 @@
 <body>
   <header class="header">
     <div class="container">
-      <div class="logo-section">
-        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="logo-img">
-        <h1 class="site-title">Stitchify</h1>
-      </div>
+        <div class="logo-section">
+         <a href="{{ route('home') }}" class="logo-link">
+          <img src="{{ asset('images/logo.png') }}" alt="Logo" class="logo-img">
+         </a>
+        </div>
       <nav>
         <ul class="nav-menu">
           <li><a href="{{ route('home') }}">Home</a></li>

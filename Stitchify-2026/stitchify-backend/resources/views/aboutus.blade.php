@@ -13,8 +13,9 @@
   <header class="header">
     <div class="container">
       <div class="logo-section">
-        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="logo-img">
-        <h1 class="site-title">Stitchify</h1>
+         <a href="{{ route('home') }}" class="logo-link">
+          <img src="{{ asset('images/logo.png') }}" alt="Logo" class="logo-img">
+         </a>
       </div>
       <nav>
         <ul class="nav-menu">
