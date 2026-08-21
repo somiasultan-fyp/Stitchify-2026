@@ -3,236 +3,30 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>About Us - Tailoring Services</title>
+<title>About Us - Stitchify</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-<style>
-:root {
-  --primary-bg: #212529;
-  --accent-color: #1B2A4A;
-  --copyright-bg: #575a5b;
-  --text-white: #ffffff;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  /* background: linear-gradient(135deg, var(--primary-bg) 0%, var(--accent-color) 100%); */
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  min-height: 100vh;
-  color: var(--primary-bg);
-}
-
-/* Header */
-.header {
-  background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
-  padding: 20px 0;
-  border-bottom: 3px solid var(--copyright-bg);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-.header .container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.logo-section {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.logo-img {
-  width: 80px;
-  height: 55px;
-  object-fit: contain;
-  border-radius: 50%;
-}
-
-.site-title {
-  color: var(--text-white);
-  font-size: 24px;
-  font-weight: 700;
-  margin: 0;
-}
-
-.nav-menu {
-  display: flex;
-  gap: 25px;
-  list-style: none;
-  margin: 0;
-}
-
-.nav-menu a {
-  color: var(--text-white);
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s ease;
-  font-size: 16px;
-}
-
-.nav-menu a:hover,
-.nav-menu a.active {
-  color: #a8d5ff;
-}
-
-/* Main Content */
-.main-content {
-  max-width: 1000px;
-  margin: 40px auto;
-  padding: 0 20px;
-}
-
-.content-card {
-  background-color: var(--text-white);
-  border-radius: 20px;
-  padding: 50px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-  margin-bottom: 30px;
-}
-
-.page-title {
-  color: var(--accent-color);
-  font-size: 42px;
-  font-weight: 700;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.page-subtitle {
-  color: var(--copyright-bg);
-  font-size: 18px;
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.section-title {
-  color: var(--accent-color);
-  font-size: 28px;
-  font-weight: 600;
-  margin-top: 30px;
-  margin-bottom: 15px;
-  border-left: 4px solid var(--accent-color);
-  padding-left: 15px;
-}
-
-.content-text {
-  color: var(--primary-bg);
-  font-size: 16px;
-  line-height: 1.8;
-  margin-bottom: 20px;
-}
-
-.feature-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 25px;
-  margin: 30px 0;
-}
-
-.feature-box {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  padding: 30px;
-  border-radius: 15px;
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 2px solid transparent;
-}
-
-.feature-box:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(14, 24, 48, 0.2);
-  border-color: var(--accent-color);
-}
-
-.feature-icon {
-  font-size: 48px;
-  color: var(--accent-color);
-  margin-bottom: 15px;
-}
-
-.feature-title {
-  color: var(--accent-color);
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 10px;
-}
-
-.feature-description {
-  color: var(--copyright-bg);
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-/* Footer */
-.footer {
-  background-color: var(--copyright-bg);
-  color: var(--text-white);
-  text-align: center;
-  padding: 20px;
-  margin-top: 50px;
-}
-
-.footer p {
-  margin: 0;
-  font-size: 14px;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .header .container {
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .nav-menu {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-  }
-
-  .content-card {
-    padding: 30px 20px;
-  }
-
-  .page-title {
-    font-size: 32px;
-  }
-
-  .section-title {
-    font-size: 24px;
-  }
-}
-</style>
+<link rel="stylesheet" href="{{ asset('css/common.css') }}">
+<link rel="stylesheet" href="{{ asset('css/info-pages.css') }}">
 </head>
 <body>
-  <!-- Header -->
   <header class="header">
     <div class="container">
       <div class="logo-section">
-        <img src="logo.png" alt="Logo" class="logo-img">
+        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="logo-img">
         <h1 class="site-title">Stitchify</h1>
       </div>
       <nav>
         <ul class="nav-menu">
-          <li><a href="home.html">Home</a></li>
-          <li><a href="aboutus.html" class="active">About Us</a></li>
-          <li><a href="contactus.html">Contact</a></li>
-          <li><a href="login.html">Login</a></li>
+          <li><a href="{{ route('home') }}">Home</a></li>
+          <li><a href="{{ route('about') }}" class="active">About Us</a></li>
+          <li><a href="{{ route('contact') }}">Contact</a></li>
+          <li><a href="{{ route('login.form') }}">Login</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
-  <!-- Main Content -->
   <main class="main-content">
     <div class="content-card">
       <h1 class="page-title">About Us</h1>
@@ -307,12 +101,11 @@ body {
     </div>
   </main>
 
-  <!-- Footer -->
   <footer class="footer">
-    <p>&copy; 2026 Tailoring Services. All rights reserved.</p>
-    <p style="margin-top: 10px;">
-      <a href="privacy.html" style="color: var(--text-white); margin: 0 10px;">Privacy Policy</a> | 
-      <a href="terms.html" style="color: var(--text-white); margin: 0 10px;">Terms & Conditions</a>
+    <p>&copy; 2026 Stitchify. All rights reserved.</p>
+    <p class="footer-links" style="margin-top: 10px;">
+      <a href="{{ route('privacy') }}">Privacy Policy</a> |
+      <a href="{{ route('terms') }}">Terms & Conditions</a>
     </p>
   </footer>
 

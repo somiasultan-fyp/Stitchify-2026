@@ -22,6 +22,10 @@ Route::get('/login',     [AuthController::class, 'showLogin'])->name('login.form
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/aboutus', fn() => view('aboutus'))->name('about');
+Route::get('/contactus', fn() => view('contactus'))->name('contact');
+Route::get('/terms', fn() => view('terms'))->name('terms');
+Route::get('/privacy', fn() => view('privacy'))->name('privacy');
 
 
 Route::get('/email/verify', function () {

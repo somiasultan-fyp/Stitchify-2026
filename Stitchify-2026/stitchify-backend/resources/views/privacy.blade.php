@@ -3,204 +3,25 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Privacy Policy - Tailoring Services</title>
+<title>Privacy Policy - Stitchify</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-<style>
-:root {
-  --primary-bg: #212529;
-  --accent-color: #1B2A4A;
-  --copyright-bg: #575a5b;
-  --text-white: #ffffff;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  /* background: linear-gradient(135deg, var(--primary-bg) 0%, var(--accent-color) 100%); */
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  min-height: 100vh;
-  color: var(--primary-bg);
-}
-
-.header {
-  background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
-  padding: 20px 0;
-  border-bottom: 3px solid var(--copyright-bg);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-.header .container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.logo-section {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.logo-img {
-  width: 80px;
-  height: 55px;
-  object-fit: contain;
-  border-radius: 50%;
-}
-
-.site-title {
-  color: var(--text-white);
-  font-size: 24px;
-  font-weight: 700;
-  margin: 0;
-}
-
-.nav-menu {
-  display: flex;
-  gap: 25px;
-  list-style: none;
-  margin: 0;
-}
-
-.nav-menu a {
-  color: var(--text-white);
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s ease;
-  font-size: 16px;
-}
-
-.nav-menu a:hover,
-.nav-menu a.active {
-  color: #a8d5ff;
-}
-
-.main-content {
-  max-width: 1000px;
-  margin: 40px auto;
-  padding: 0 20px;
-}
-
-.content-card {
-  background-color: var(--text-white);
-  border-radius: 20px;
-  padding: 50px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-}
-
-.page-title {
-  color: var(--accent-color);
-  font-size: 42px;
-  font-weight: 700;
-  margin-bottom: 10px;
-  text-align: center;
-}
-
-.last-updated {
-  color: var(--copyright-bg);
-  font-size: 14px;
-  text-align: center;
-  margin-bottom: 40px;
-  font-style: italic;
-}
-
-.section-title {
-  color: var(--accent-color);
-  font-size: 24px;
-  font-weight: 600;
-  margin-top: 30px;
-  margin-bottom: 15px;
-  border-left: 4px solid var(--accent-color);
-  padding-left: 15px;
-}
-
-.content-text {
-  color: var(--primary-bg);
-  font-size: 16px;
-  line-height: 1.8;
-  margin-bottom: 15px;
-}
-
-.content-list {
-  color: var(--primary-bg);
-  font-size: 16px;
-  line-height: 1.8;
-  margin-bottom: 15px;
-  padding-left: 25px;
-}
-
-.content-list li {
-  margin-bottom: 8px;
-}
-
-.highlight-box {
-  background-color: #f8f9fa;
-  border-left: 4px solid var(--accent-color);
-  padding: 20px;
-  margin: 20px 0;
-  border-radius: 8px;
-}
-
-.footer {
-  background-color: var(--copyright-bg);
-  color: var(--text-white);
-  text-align: center;
-  padding: 20px;
-  margin-top: 50px;
-}
-
-.footer p {
-  margin: 0;
-  font-size: 14px;
-}
-
-@media (max-width: 768px) {
-  .header .container {
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .nav-menu {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-  }
-
-  .content-card {
-    padding: 30px 20px;
-  }
-
-  .page-title {
-    font-size: 32px;
-  }
-
-  .section-title {
-    font-size: 20px;
-  }
-}
-</style>
+<link rel="stylesheet" href="{{ asset('css/common.css') }}">
+<link rel="stylesheet" href="{{ asset('css/info-pages.css') }}">
 </head>
 <body>
   <header class="header">
     <div class="container">
       <div class="logo-section">
-        <img src="logo.png" alt="Logo" class="logo-img">
+        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="logo-img">
         <h1 class="site-title">Stitchify</h1>
       </div>
       <nav>
         <ul class="nav-menu">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="about.html">About Us</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="login.html">Login</a></li>
+          <li><a href="{{ route('home') }}">Home</a></li>
+          <li><a href="{{ route('about') }}">About Us</a></li>
+          <li><a href="{{ route('contact') }}">Contact</a></li>
+          <li><a href="{{ route('login.form') }}">Login</a></li>
         </ul>
       </nav>
     </div>
@@ -212,7 +33,7 @@ body {
       <p class="last-updated">Last Updated: January 18, 2026</p>
 
       <p class="content-text">
-        At Tailoring Services, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform.
+        At Stitchify, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform.
       </p>
 
       <h2 class="section-title">1. Information We Collect</h2>
@@ -253,7 +74,6 @@ body {
       <ul class="content-list">
         <li><strong>With Tailors:</strong> To fulfill your orders, we share necessary information with tailors</li>
         <li><strong>With Delivery Partners:</strong> To facilitate order delivery</li>
-        <li><strong>Service Providers:</strong> Third-party companies that help us operate our platform</li>
         <li><strong>Legal Requirements:</strong> When required by law or to protect our rights</li>
         <li><strong>Business Transfers:</strong> In connection with mergers, acquisitions, or asset sales</li>
       </ul>
@@ -294,19 +114,19 @@ body {
           If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact us at:
         </p>
         <p class="content-text" style="margin-top: 15px; margin-bottom: 0;">
-          <strong>Email:</strong> privacy@tailoring.com<br>
-          <strong>Phone:</strong> +92 300 1234567<br>
-          <strong>Address:</strong> 123 Fashion Street, Gujranwala, Punjab, Pakistan
+          <strong>Email:</strong> stitchify2026@gmail.com<br>
+          <strong>Phone:</strong> +92 3249788408<br>
+          <strong>Address:</strong> Gujranwala, Punjab, Pakistan
         </p>
       </div>
     </div>
   </main>
 
   <footer class="footer">
-    <p>&copy; 2026 Tailoring Services. All rights reserved.</p>
-    <p style="margin-top: 10px;">
-      <a href="privacy.html" style="color: var(--text-white); margin: 0 10px;">Privacy Policy</a> | 
-      <a href="terms.html" style="color: var(--text-white); margin: 0 10px;">Terms & Conditions</a>
+    <p>&copy; 2026 Stitchify. All rights reserved.</p>
+    <p class="footer-links" style="margin-top: 10px;">
+      <a href="{{ route('privacy') }}">Privacy Policy</a> |
+      <a href="{{ route('terms') }}">Terms & Conditions</a>
     </p>
   </footer>
 
