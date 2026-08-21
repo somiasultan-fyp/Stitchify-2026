@@ -215,8 +215,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item"><a class="nav-link" href="aboutus.html">About Us</a></li>
-                    <li class="nav-item"><a class="nav-link" href="contactus.html">Contact Us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('about') }}">About Us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('contact') }}">Contact Us</a></li>
                     <li class="nav-item ms-lg-3">
                         @auth
                             @if(auth()->user()->role === 'customer')
@@ -521,16 +521,16 @@
                 <div class="col-md-4 mb-4">
                     <h5 class="text-white mb-3">Quick Links</h5>
                     <ul class="list-unstyled">
-                        <li><a href="aboutus.html">About Us</a></li>
-                        <li><a href="contactus.html">Contact Us</a></li>
-                        <li><a href="privacypolicy.html">Privacy Policy</a></li>
-                        <li><a href="termsandconditions.html">Terms & Conditions</a></li>
+                        <li><a href="{{ route('about') }}">About Us</a></li>
+                        <li><a href="{{ route('contact') }}">Contact Us</a></li>
+                        <li><a href="{{ route('privacy') }}">Privacy Policy</a></li>
+                        <li><a href="{{ route('terms') }}">Terms & Conditions</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 mb-4">
                     <h5 class="text-white mb-3">Contact Info</h5>
-                    <p class="text-white-50"><i class="fas fa-envelope me-2"></i> support@stitchify.com</p>
-                    <p class="text-white-50"><i class="fas fa-phone me-2"></i> +123 456 7890</p>
+                    <p class="text-white-50"><i class="fas fa-envelope me-2"></i> stitchify2026@gmail.com</p>
+                    <p class="text-white-50"><i class="fas fa-phone me-2"></i> +92 3249788408</p>
                 </div>
             </div>
         </div>
