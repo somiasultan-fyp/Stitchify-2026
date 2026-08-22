@@ -53,7 +53,7 @@ Instructions:
                         ]
                     ],
                     'generationConfig' => [
-                        'maxOutputTokens' => 300,
+                        'maxOutputTokens' => 800,
                         'temperature'     => 0.7,
                     ]
                 ]
