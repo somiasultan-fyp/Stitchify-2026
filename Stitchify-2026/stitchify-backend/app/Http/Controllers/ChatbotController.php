@@ -43,7 +43,7 @@ Instructions:
 
         try {
             $response = Http::timeout(30)->post(
-                "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key={$apiKey}",
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$apiKey}",
                 [
                     'contents' => [
                         [
@@ -59,10 +59,16 @@ Instructions:
                 ]
             );
 
-            $reply = $response->json('candidates.0.content.parts.0.text')
-                     ?? 'Sorry, I could not process your request. Please try again.';
+            if ($response->successful()) {
+                $reply = $response->json('candidates.0.content.parts.0.text')
+                         ?? 'Sorry, I could not process your request. Please try again.';
+            } else {
+                \Log::info('Gemini Response: ' . $response->body());
+                $reply = 'Sorry, I could not process your request. Please try again.';
+            }
 
         } catch (\Exception $e) {
+            \Log::error('Gemini Error: ' . $e->getMessage());
             $reply = 'Sorry, I am unable to respond right now. Please try again later.';
         }
 
