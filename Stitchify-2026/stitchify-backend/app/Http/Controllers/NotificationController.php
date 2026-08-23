@@ -19,7 +19,7 @@ class NotificationController extends Controller
             ->where('is_read', false)
             ->update(['is_read' => true]);
 
-        return view('notifications.index', compact('notifications'));
+        return view('notifications.notificationindex', compact('notifications'));
     }
 
     public function markRead(Notification $notification)

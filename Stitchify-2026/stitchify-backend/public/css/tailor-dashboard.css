@@ -6,6 +6,8 @@ body {
   background-color: #f5f6fa;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   min-height: 100vh;
+  display: block;
+  padding: 0;
 }
 
 .sidebar {
