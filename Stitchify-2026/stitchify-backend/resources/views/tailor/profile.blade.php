@@ -88,16 +88,23 @@
         <div class="col-md-4">
             <div class="avatar-card">
                 <div class="avatar-img-wrap">
-                    <img src="{{ $user->profile_image
-                                ? Storage::url($user->profile_image)
-                                : asset('images/default-avatar.png') }}"
-                         alt="{{ $user->name }}"
-                         class="avatar-img"
-                         id="avatarPreview">
-                    <label for="profileImageInput" class="avatar-upload-btn">
-                        <i class="fas fa-camera"></i>
-                    </label>
+                     <img src="{{ $user->profile_image
+                               ? Storage::url($user->profile_image)
+                               : asset('images/default-avatar.png') }}"
+                          data-default="{{ asset('images/default-avatar.png') }}"
+                          alt="{{ $user->name }}"
+                          class="avatar-img"
+                          id="avatarPreview">
+                     <label for="profileImageInput" class="avatar-upload-btn">
+                         <i class="fas fa-camera"></i>
+                     </label>
+                     @if($user->profile_image)
+                         <button type="button" class="avatar-remove-btn" id="removePhotoBtn">
+                            <i class="fas fa-trash"></i>
+                         </button>
+                    @endif
                 </div>
+                <input type="hidden" name="remove_photo" id="removePhotoFlag" value="0">
                 <div class="avatar-name">{{ $user->name }}</div>
                 <div class="avatar-role">
                     {{ $tailor->specialization ?? 'Professional Tailor' }}

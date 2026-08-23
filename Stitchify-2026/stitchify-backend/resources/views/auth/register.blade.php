@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="{{ asset('css/common.css') }}">
 <link rel="stylesheet" href="{{ asset('css/register.css') }}">
 </head>
-<body>
+<body class="auth-page">
 <div class="registration-wrapper auth-wrapper">
   <div class="logo-container">
     <img src="{{ asset('images/logo.png') }}" class="logo-image" alt="Stitchify">

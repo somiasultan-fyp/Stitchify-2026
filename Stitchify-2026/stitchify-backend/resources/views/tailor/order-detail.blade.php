@@ -7,121 +7,7 @@
     <title>Order Details - Stitchify</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: #f0f2f5;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 20px;
-        }
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        .back-btn {
-            display: inline-block;
-            margin-bottom: 20px;
-            padding: 10px 20px;
-            background: #1a1a2e;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-        }
-        .back-btn:hover {
-            background: #16213e;
-            color: white;
-        }
-        .card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-        .card-header {
-            background: #1a1a2e;
-            color: white;
-            padding: 15px 20px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-        .card-body {
-            padding: 20px;
-        }
-        .info-row {
-            display: flex;
-            padding: 10px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        .info-label {
-            width: 150px;
-            font-weight: bold;
-            color: #555;
-        }
-        .info-value {
-            flex: 1;
-            color: #333;
-        }
-        .status-badge {
-            display: inline-block;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        .status-pending { background: #fff3e0; color: #f57c00; }
-        .status-progress { background: #e3f2fd; color: #1976d2; }
-        .status-delivered { background: #e8f5e9; color: #388e3c; }
-        .measurement-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-        .measurement-item {
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .timeline {
-            padding-left: 20px;
-        }
-        .timeline-item {
-            position: relative;
-            padding-bottom: 20px;
-            margin-left: 20px;
-            border-left: 2px solid #ddd;
-            padding-left: 20px;
-        }
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -7px;
-            top: 0;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #1a1a2e;
-        }
-        .timeline-date {
-            font-size: 12px;
-            color: #888;
-            margin-bottom: 5px;
-        }
-        .timeline-title {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        @media (max-width: 768px) {
-            .info-row {
-                flex-direction: column;
-            }
-            .info-label {
-                width: 100%;
-                margin-bottom: 5px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/order-details.css') }}">
 </head>
 <body>
     <div class="container">
@@ -129,7 +15,6 @@
             <i class="fas fa-arrow-left"></i> Back to Dashboard
         </a>
 
-        <!-- Order Details Card -->
         <div class="card">
             <div class="card-header">
                 <i class="fas fa-shopping-bag me-2"></i> Order #{{ $order->id }}
@@ -138,7 +23,7 @@
                 <div class="info-row">
                     <div class="info-label">Status:</div>
                     <div class="info-value">
-                        <span class="status-badge 
+                        <span class="status-badge
                             @if($order->status == 'pending') status-pending
                             @elseif($order->status == 'in_progress') status-progress
                             @else status-delivered @endif">
@@ -195,7 +80,6 @@
             </div>
         </div>
 
-        <!-- Measurements Card -->
         @if($order->measurement)
         <div class="card">
             <div class="card-header">
@@ -221,7 +105,6 @@
         </div>
         @endif
 
-        <!-- Timeline Card -->
         <div class="card">
             <div class="card-header">
                 <i class="fas fa-history me-2"></i> Order Timeline

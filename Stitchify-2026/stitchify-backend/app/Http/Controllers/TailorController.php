@@ -108,7 +108,6 @@ class TailorController extends Controller
             'message' => 'Order accepted successfully!',
         ]);
     }
-    // Order Rejection
     public function rejectOrder(Request $request, $orderId)
     {
         $request->validate([
@@ -218,55 +217,57 @@ class TailorController extends Controller
             ]
         ]);
     }
-    public function profile()
-    {
-    $user   = Auth::user();
-    $tailor = $user->tailor;
+         public function profile()
+         {
+        $user   = Auth::user();
+        $tailor = $user->tailor;
+        return view('tailor.profile', compact('user', 'tailor'));
+         }
+         public function updateProfile(Request $request)
+         {
+        $user = Auth::user();
+        $tailor = $user->tailor;
 
-    return view('tailor.profile', compact('user', 'tailor'));
-    }
-    public function updateProfile(Request $request)
-    {
-    $user   = Auth::user();
-    $tailor = $user->tailor;
-
-    $request->validate([
-        'name'             => 'required|string|max:255',
-        'phone'            => 'nullable|string|max:20',
-        'profile_image'    => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        'shop_name'        => 'nullable|string|max:255',
-        'bio'              => 'nullable|string|max:1000',
-        'city'             => 'nullable|string|max:100',
-        'address'          => 'nullable|string|max:500',
+        $request->validate([
+        'name' => 'required|string|max:255',
+        'phone' => 'nullable|string|max:20',
+        'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'remove_photo' => 'nullable|boolean',
+        'shop_name' => 'nullable|string|max:255',
+        'bio' => 'nullable|string|max:1000',
+        'city' => 'nullable|string|max:100',
+        'address' => 'nullable|string|max:500',
         'experience_years' => 'nullable|integer|min:0',
-        'specialization'   => 'nullable|string|max:255',
-        'base_price'       => 'nullable|numeric|min:0',
-        'max_slots'        => 'nullable|integer|min:1|max:50',
-    ]);
+        'specialization' => 'nullable|string|max:255',
+        'base_price' => 'nullable|numeric|min:0',
+        'max_slots' => 'nullable|integer|min:1|max:50',
+       ]);
 
-    $userData = [
-        'name'  => $request->name,
+        $userData = [
+        'name' => $request->name,
         'phone' => $request->phone,
-    ];
+        ];
 
-    if ($request->hasFile('profile_image')) {
+        if ($request->hasFile('profile_image')) {
         if ($user->profile_image) {
             Storage::disk('public')->delete($user->profile_image);
         }
         $userData['profile_image'] = $request->file('profile_image')->store('profile_images', 'public');
-    }
+        } elseif ($request->boolean('remove_photo') && $user->profile_image) {
+        Storage::disk('public')->delete($user->profile_image);
+        $userData['profile_image'] = null;
+        }
 
-    $user->update($userData);
-
-    $tailor->update([
-        'shop_name'        => $request->shop_name,
-        'bio'              => $request->bio,
-        'city'             => $request->city,
-        'address'          => $request->address,
+        $user->update($userData);
+        $tailor->update([
+        'shop_name' => $request->shop_name,
+        'bio' => $request->bio,
+        'city' => $request->city,
+        'address' => $request->address,
         'experience_years' => $request->experience_years,
-        'specialization'   => $request->specialization,
-        'base_price'       => $request->base_price,
-        'max_slots'        => $request->max_slots,
+        'specialization' => $request->specialization,
+        'base_price' => $request->base_price,
+        'max_slots' => $request->max_slots,
     ]);
 
     return redirect()->route('tailor.profile')->with('success', 'Profile updated successfully!');

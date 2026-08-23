@@ -121,7 +121,7 @@ body {
 }
 </style>
 </head>
-<body>
+<body class="auth-page">
 <div class="reset-wrapper">
   <div class="logo-container">
     <img src="{{ asset('images/logo.png') }}" alt="Stitchify" class="logo-image">

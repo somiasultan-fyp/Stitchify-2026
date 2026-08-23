@@ -79,7 +79,7 @@ Route::middleware(['auth', 'verified', 'role:tailor'])->group(function () {
     Route::post('/tailor/profile/update',    [TailorController::class, 'updateProfile'])->name('tailor.profile.update');
 });
 
-Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
+Route::middleware(['auth', 'role:admin'])->group(function () {
    Route::get('/admin/dashboard', function() {
     $stats = [
         'total_users'      => \App\Models\User::count(),

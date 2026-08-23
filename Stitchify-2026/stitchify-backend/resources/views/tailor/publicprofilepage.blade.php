@@ -9,265 +9,8 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-
-    <style>
-        :root {
-            --primary-bg: #212529;
-            --accent-color: #1B2A4A;
-            --copyright-bg: #575a5b;
-            --text-white: #ffffff;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
-        }
-
-        .navbar {
-            background-color: var(--primary-bg) !important;
-        }
-        .navbar-brand {
-            font-weight: bold;
-            font-size: 1.5rem;
-            color: var(--text-white) !important;
-        }
-        .btn-stitchify {
-            background-color: var(--accent-color);
-            color: var(--text-white);
-            border: none;
-            padding: 10px 25px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .btn-stitchify:hover {
-            background-color: #142038;
-            color: var(--text-white);
-            transform: translateY(-1px);
-        }
-
-        .back-link {
-            color: var(--accent-color);
-            text-decoration: none;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            margin: 20px 0 10px;
-            transition: color 0.2s;
-        }
-        .back-link:hover { color: var(--primary-bg); }
-
-        .profile-hero {
-            background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
-            border-radius: 16px;
-            padding: 30px;
-            color: white;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 24px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-        }
-        .profile-avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid rgba(255,255,255,0.4);
-            flex-shrink: 0;
-        }
-        .profile-hero-info h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin: 0 0 6px;
-        }
-        .profile-hero-info .badge-category {
-            background: rgba(255,255,255,0.2);
-            color: white;
-            padding: 4px 14px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            display: inline-block;
-            margin-bottom: 10px;
-        }
-        .profile-hero-stats {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        .hero-stat {
-            text-align: center;
-        }
-        .hero-stat .num {
-            font-size: 1.3rem;
-            font-weight: 700;
-            display: block;
-        }
-        .hero-stat .lbl {
-            font-size: 0.75rem;
-            opacity: 0.8;
-        }
-
-        .slot-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-top: 8px;
-        }
-        .slot-available {
-            background: rgba(56,142,60,0.2);
-            color: #4caf50;
-            border: 1px solid rgba(56,142,60,0.3);
-        }
-        .slot-full {
-            background: rgba(220,53,69,0.2);
-            color: #ef5350;
-            border: 1px solid rgba(220,53,69,0.3);
-        }
-
-        .info-card {
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-        }
-        .card-title-custom {
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--accent-color);
-            margin-bottom: 18px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-
-        .detail-row {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 12px 0;
-            border-bottom: 1px solid #f5f5f5;
-        }
-        .detail-row:last-child { border-bottom: none; }
-        .detail-icon {
-            width: 38px;
-            height: 38px;
-            background: #f0f3f8;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent-color);
-            flex-shrink: 0;
-        }
-        .detail-label { font-size: 0.78rem; color: #999; margin-bottom: 2px; }
-        .detail-value { font-size: 0.95rem; color: #333; font-weight: 500; }
-
-        .portfolio-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-        @media (max-width: 576px) {
-            .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        .portfolio-item {
-            aspect-ratio: 1;
-            border-radius: 10px;
-            overflow: hidden;
-            background: #f0f3f8;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: transform 0.2s;
-            border: 2px solid transparent;
-        }
-        .portfolio-item:hover {
-            transform: scale(1.03);
-            border-color: var(--accent-color);
-        }
-        .portfolio-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .portfolio-item i {
-            font-size: 2rem;
-            color: var(--accent-color);
-            opacity: 0.3;
-        }
-        .portfolio-caption {
-            font-size: 0.75rem;
-            color: #666;
-            text-align: center;
-            margin-top: 4px;
-        }
-
-        .order-card {
-            background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
-            border-radius: 16px;
-            padding: 30px;
-            text-align: center;
-            margin-bottom: 40px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-        }
-        .order-card h5 {
-            color: white;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-        .order-card p {
-            color: rgba(255,255,255,0.7);
-            font-size: 0.9rem;
-            margin-bottom: 20px;
-        }
-        .btn-order {
-            background: white;
-            color: var(--accent-color);
-            border: none;
-            padding: 12px 40px;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 700;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s;
-        }
-        .btn-order:hover {
-            background: #f0f3f8;
-            color: var(--accent-color);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        .btn-order-disabled {
-            background: rgba(255,255,255,0.2);
-            color: rgba(255,255,255,0.6);
-            border: none;
-            padding: 12px 40px;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: not-allowed;
-        }
-
-        footer {
-            background: var(--primary-bg);
-            color: white;
-            padding: 20px 0;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/common.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/tailor-public-profile.css') }}">
 </head>
 <body>
 
@@ -286,7 +29,6 @@
                 <li class="nav-item"><a class="nav-link" href="/contactus">Contact Us</a></li>
                 <li class="nav-item ms-lg-3">
                     @auth
-                        {{-- Role ke hisaab se dashboard --}}
                         @if(auth()->user()->role === 'customer')
                             <a href="/customer/dashboard" class="btn-stitchify">Dashboard</a>
                         @elseif(auth()->user()->role === 'tailor')
@@ -439,7 +181,7 @@
                 @foreach($portfolios as $item)
                 <div>
                     <div class="portfolio-item"
-                         onclick="window.open('{{ Storage::url($item->image_path) }}', '_blank')">
+                         data-image-url="{{ Storage::url($item->image_path) }}">
                         <img src="{{ Storage::url($item->image_path) }}"
                              alt="{{ $item->title ?? 'Portfolio' }}">
                     </div>
@@ -464,7 +206,6 @@
         @auth
             @if(auth()->user()->role === 'customer')
                 @if($tailor->available_slots > 0)
-                    {{-- Tailor ID pass karo order form mein --}}
                     <a href="/customer/order-form?tailor_id={{ $tailor->id }}"
                        class="btn-order">
                         <i class="fas fa-shopping-bag"></i> Place Order Now
@@ -507,5 +248,6 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ asset('js/tailor-public-profile.js') }}"></script>
 </body>
 </html>
