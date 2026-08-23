@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Order;
 use App\Models\Tailor;
 use App\Models\User; 
@@ -217,38 +218,48 @@ class TailorController extends Controller
             ]
         ]);
     }
-public function profile()
-{
+    public function profile()
+    {
     $user   = Auth::user();
     $tailor = $user->tailor;
 
     return view('tailor.profile', compact('user', 'tailor'));
-}
-public function updateProfile(Request $request)
-{
+    }
+    public function updateProfile(Request $request)
+    {
     $user   = Auth::user();
     $tailor = $user->tailor;
 
     $request->validate([
-        'name'           => 'required|string|max:255',
-        'phone'          => 'required|string|max:20',
-        'address'        => 'required|string|max:500',
-        'bio'            => 'nullable|string|max:1000',
-        'city'         => 'nullable|string|max:100',
-        'address'      => 'nullable|string|max:500',
+        'name'             => 'required|string|max:255',
+        'phone'            => 'nullable|string|max:20',
+        'profile_image'    => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'shop_name'        => 'nullable|string|max:255',
+        'bio'              => 'nullable|string|max:1000',
+        'city'             => 'nullable|string|max:100',
+        'address'          => 'nullable|string|max:500',
         'experience_years' => 'nullable|integer|min:0',
         'specialization'   => 'nullable|string|max:255',
         'base_price'       => 'nullable|numeric|min:0',
-        'max_slots'        => 'nullable|integer|min:0',
+        'max_slots'        => 'nullable|integer|min:1|max:50',
     ]);
 
-    $user->update([
+    $userData = [
         'name'  => $request->name,
         'phone' => $request->phone,
-    ]);
+    ];
+
+    if ($request->hasFile('profile_image')) {
+        if ($user->profile_image) {
+            Storage::disk('public')->delete($user->profile_image);
+        }
+        $userData['profile_image'] = $request->file('profile_image')->store('profile_images', 'public');
+    }
+
+    $user->update($userData);
 
     $tailor->update([
-        'address'         => $request->address,
+        'shop_name'        => $request->shop_name,
         'bio'              => $request->bio,
         'city'             => $request->city,
         'address'          => $request->address,

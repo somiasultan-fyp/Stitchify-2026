@@ -1,5 +1,4 @@
 <?php
-// app/Http/Controllers/NotificationController.php
 
 namespace App\Http\Controllers;
 
@@ -68,7 +67,7 @@ class NotificationController extends Controller
             ->map(function($n) {
                 return [
                     'id'      => $n->id,
-                    'title'   => $n->type ?? 'Notification',
+                    'title'   => $n->title,
                     'message' => $n->message,
                     'is_read' => $n->is_read,
                     'time'    => $n->created_at->diffForHumans(),

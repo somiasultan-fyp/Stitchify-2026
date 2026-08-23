@@ -6,232 +6,20 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <title>My Profile - Stitchify</title>
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-
-    <style>
-        :root {
-            --primary-bg: #212529;
-            --accent-color: #1B2A4A;
-            --copyright-bg: #575a5b;
-            --text-white: #ffffff;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-
-        body {
-            background-color: #f5f6fa;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
-        }
-
-        .sidebar {
-            position: fixed;
-            top: 0; left: 0;
-            height: 100vh; width: 260px;
-            background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
-            padding: 20px 0;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-            overflow-y: auto;
-            z-index: 1000;
-        }
-        .sidebar-logo {
-            text-align: center;
-            padding: 0 20px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            margin-bottom: 20px;
-        }
-        .sidebar-logo img {
-            width: 80px; height: 50px;
-            border-radius: 50%; margin-bottom: 10px;
-        }
-        .sidebar-logo h3 {
-            color: var(--text-white);
-            font-size: 18px; font-weight: 600; margin: 0;
-        }
-        .user-info {
-            padding: 15px 20px;
-            background-color: rgba(255,255,255,0.1);
-            margin: 0 15px 20px;
-            border-radius: 10px;
-        }
-        .user-info h4 { color: var(--text-white); font-size: 16px; margin: 0 0 5px; }
-        .user-info p  { color: rgba(255,255,255,0.7); font-size: 13px; margin: 0; }
-
-        .sidebar-menu { list-style: none; padding: 0 15px; }
-        .sidebar-menu li { margin-bottom: 5px; }
-        .sidebar-menu a {
-            display: flex; align-items: center;
-            padding: 12px 15px;
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            font-size: 15px;
-            position: relative;
-        }
-        .sidebar-menu a::before {
-            content: ''; position: absolute; left: 0; top: 50%;
-            transform: translateY(-50%);
-            width: 0; height: 70%;
-            background-color: var(--text-white);
-            border-radius: 0 4px 4px 0;
-            transition: width 0.3s ease;
-        }
-        .sidebar-menu a.active::before { width: 4px; }
-        .sidebar-menu a:hover,
-        .sidebar-menu a.active {
-            background-color: rgba(255,255,255,0.15);
-            color: var(--text-white);
-            padding-left: 20px;
-        }
-        .sidebar-menu a i { margin-right: 12px; width: 20px; text-align: center; }
-
-        .logout-btn { margin-top: 20px; padding: 0 15px; }
-
-        /* ── Main Content ── */
-        .main-content {
-            margin-left: 260px;
-            padding: 20px;
-            min-height: 100vh;
-        }
-
-        .top-bar {
-            background-color: var(--text-white);
-            padding: 20px 30px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .top-bar h2 {
-            color: var(--accent-color);
-            font-size: 26px; font-weight: 700; margin: 0;
-        }
-
-        .avatar-card {
-            background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
-            border-radius: 16px;
-            padding: 30px;
-            text-align: center;
-            color: white;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-        }
-        .avatar-img {
-            width: 100px; height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid rgba(255,255,255,0.4);
-            margin-bottom: 15px;
-        }
-        .avatar-name {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-        .avatar-role {
-            font-size: 0.85rem;
-            opacity: 0.8;
-            margin-bottom: 15px;
-        }
-        .avatar-stats {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-        }
-        .avatar-stat .num {
-            font-size: 1.2rem;
-            font-weight: 700;
-            display: block;
-        }
-        .avatar-stat .lbl {
-            font-size: 0.75rem;
-            opacity: 0.75;
-        }
-
-        .form-card {
-            background: white;
-            border-radius: 16px;
-            padding: 28px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-        }
-        .form-card-title {
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--accent-color);
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid #f0f0f0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .form-label {
-            font-weight: 600;
-            font-size: 14px;
-            color: var(--primary-bg);
-            margin-bottom: 6px;
-        }
-        .form-control, .form-select {
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            padding: 10px 14px;
-            font-size: 14px;
-            transition: border-color 0.3s;
-        }
-        .form-control:focus, .form-select:focus {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 0.2rem rgba(27,42,74,0.1);
-        }
-        textarea.form-control { resize: vertical; min-height: 100px; }
-
-        .btn-save {
-            background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
-            color: white;
-            border: none;
-            padding: 12px 35px;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .btn-save:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(27,42,74,0.3);
-        }
-
-        .alert-success-custom {
-            background: #d1e7dd;
-            border: 1px solid #a3cfbb;
-            color: #0a3622;
-            border-radius: 10px;
-            padding: 14px 18px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); }
-            .main-content { margin-left: 0; }
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/common.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/tailor-dashboard.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
 </head>
 <body>
 
 <div class="sidebar">
     <div class="sidebar-logo">
-        <img src="{{ asset('images/logo.png') }}" alt="Logo">
-        <h3>Stitchify</h3>
+        <a href="/" style="text-decoration:none;">
+            <img src="{{ asset('images/logo.png') }}" alt="Logo">
+            <h3 style="color:white;">Stitchify</h3>
+        </a>
     </div>
 
     <div class="user-info">
@@ -290,8 +78,7 @@
     </div>
 
     @if(session('success'))
-        <div class="alert-success-custom">
-            <i class="fas fa-check-circle"></i>
+        <div class="success-banner">
             {{ session('success') }}
         </div>
     @endif
@@ -300,11 +87,17 @@
 
         <div class="col-md-4">
             <div class="avatar-card">
-                <img src="{{ $user->profile_image
-                            ? Storage::url($user->profile_image)
-                            : asset('images/default-avatar.png') }}"
-                     alt="{{ $user->name }}"
-                     class="avatar-img">
+                <div class="avatar-img-wrap">
+                    <img src="{{ $user->profile_image
+                                ? Storage::url($user->profile_image)
+                                : asset('images/default-avatar.png') }}"
+                         alt="{{ $user->name }}"
+                         class="avatar-img"
+                         id="avatarPreview">
+                    <label for="profileImageInput" class="avatar-upload-btn">
+                        <i class="fas fa-camera"></i>
+                    </label>
+                </div>
                 <div class="avatar-name">{{ $user->name }}</div>
                 <div class="avatar-role">
                     {{ $tailor->specialization ?? 'Professional Tailor' }}
@@ -312,7 +105,7 @@
                 <div class="avatar-stats">
                     <div class="avatar-stat">
                         <span class="num">
-                            {{ $tailor->orders()->where('status','delivered')->count() }}
+                            {{ $tailor->orders()->where('status', 'delivered')->count() }}
                         </span>
                         <span class="lbl">Completed</span>
                     </div>
@@ -359,6 +152,12 @@
                   action="{{ route('tailor.profile.update') }}"
                   enctype="multipart/form-data">
                 @csrf
+
+                <input type="file"
+                       name="profile_image"
+                       id="profileImageInput"
+                       accept="image/*"
+                       style="display:none;">
 
                 <div class="form-card">
                     <div class="form-card-title">
@@ -461,5 +260,6 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ asset('js/profile.js') }}"></script>
 </body>
 </html>
