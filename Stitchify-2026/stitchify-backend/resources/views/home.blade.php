@@ -284,38 +284,45 @@
     </section>
 
     <section id="categories" class="py-5" style="background-color: #f0f0f0;">
-        <div class="container text-center">
-            <h2 class="mb-5" style="color: var(--primary-bg);">Browse Categories</h2>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">Men's Wear</h5>
-                            <a href="#" class="btn btn-stitchify">View Collection</a>
-                        </div>
+    <div class="container text-center">
+        <h2 class="mb-5" style="color: var(--primary-bg);">Browse Categories</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Men's Wear</h5>
+                        <a href="{{ route('tailors.category', 'men') }}" class="btn btn-stitchify">
+                            View Category
+                        </a>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">Women's Wear</h5>
-                            <a href="#" class="btn btn-stitchify">View Collection</a>
-                        </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Women's Wear</h5>
+                        <a href="{{ route('tailors.category', 'women') }}" class="btn btn-stitchify">
+                            View Category
+                        </a>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">Kids' Wear</h5>
-                            <a href="#" class="btn btn-stitchify">View Collection</a>
-                        </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Kids' Wear</h5>
+                        <a href="{{ route('tailors.category', 'kids') }}" class="btn btn-stitchify">
+                            View Category
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+           
 
-    <section class="py-5">
+<section class="py-5">
     <div class="container">
         <div class="row align-items-center">
             

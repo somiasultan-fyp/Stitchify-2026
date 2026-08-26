@@ -16,6 +16,7 @@ use App\Http\Controllers\PasswordResetController;
 Route::get('/', fn() => view('home'))->name('home');
 Route::get('/tailors', [TailorController::class, 'index'])->name('tailors.index');
 Route::get('/tailors/{id}',[TailorController::class, 'show'])->name('tailors.show');
+Route::get('/tailors/category/{category}', [TailorController::class, 'byCategory'])->name('tailors.category');
 
 Route::get('/register',  [AuthController::class, 'showRegister'])->name('register.form');
 Route::get('/login',     [AuthController::class, 'showLogin'])->name('login.form');

@@ -272,4 +272,16 @@ class TailorController extends Controller
 
     return redirect()->route('tailor.profile')->with('success', 'Profile updated successfully!');
 }
+public function byCategory($category)
+{
+    $tailors = Tailor::with('user')
+        ->where('status', 'approved')
+        ->where(function($q) use ($category) {
+            $q->where('category', $category)
+              ->orWhere('category', 'all');
+        })
+        ->get();
+
+    return view('tailors.category', compact('tailors', 'category'));
+}
 }
