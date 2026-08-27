@@ -78,7 +78,7 @@
                             @endif
                         </span>
                         <br>
-                        <a href="{{ route('customer.orders.create', ['tailor_id' => $tailor->id]) }}"
+                        <a href="{{ route('customer.order.form', ['tailor_id' => $tailor->id]) }}"
                            class="btn btn-stitchify btn-sm mt-2">
                             <i class="fas fa-plus me-1"></i> Place Order
                         </a>
