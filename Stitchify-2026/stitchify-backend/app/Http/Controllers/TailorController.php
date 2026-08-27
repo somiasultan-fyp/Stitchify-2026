@@ -30,7 +30,7 @@ class TailorController extends Controller
 
 }
     public function dashboard()
-    {
+{
         $user   = Auth::user();
         $tailor = $user->tailor;
 
@@ -69,10 +69,10 @@ class TailorController extends Controller
             'completedCount',
             'stats'
         ));
-    }
+}
 
     public function acceptOrder(Request $request, $orderId)
-    {
+{
         $request->validate([
             'price'         => 'required|numeric|min:1',
             'delivery_days' => 'required|integer|min:1|max:60',
@@ -107,9 +107,9 @@ class TailorController extends Controller
             'success' => true,
             'message' => 'Order accepted successfully!',
         ]);
-    }
+}
     public function rejectOrder(Request $request, $orderId)
-    {
+{
         $request->validate([
             'rejection_reason' => 'required|string|max:500',
         ]);
@@ -138,10 +138,10 @@ class TailorController extends Controller
             'success' => true,
             'message' => 'Order rejected.',
         ]);
-    }
+}
 
     public function updateStatus(Request $request, $orderId)
-    {
+{
         $request->validate([
             'status' => 'required|in:in_progress,ready,dispatched,delivered,cancelled'
         ]);
@@ -186,10 +186,10 @@ class TailorController extends Controller
             'success' => true,
             'message' => 'Order status updated!',
         ]);
-    }
+}
 
     public function orderDetail($orderId)
-    {
+{
         $tailor = Auth::user()->tailor;
         $order  = Order::where('id', $orderId)
                        ->where('tailor_id', $tailor->id)
@@ -213,22 +213,34 @@ class TailorController extends Controller
                 ? \Carbon\Carbon::parse($order->expected_delivery_date)->format('M d, Y')
                 : null,
                 'created_at'           => $order->created_at->format('M d, Y'),
-                'measurement'          => $order->measurement,
+                'measurement'          => $order->measurement ? [
+                    'chest'            => $order->measurement->chest,
+                    'waist'            => $order->measurement->waist,
+                    'hips'             => $order->measurement->hips,
+                    'shoulder'         => $order->measurement->shoulder,
+                    'sleeve_length'    => $order->measurement->sleeve_length,
+                    'shirt_length'     => $order->measurement->shirt_length,
+                    'trouser_length'   => $order->measurement->trouser_length,
+                    'trouser_waist'    => $order->measurement->trouser_waist,
+                    'neck'             => $order->measurement->neck,
+                    'additional_notes' => $order->measurement->additional_notes,
+                    'details'          => $order->measurement->details, 
+                ] : null
             ]
         ]);
     }
-         public function profile()
-         {
-        $user   = Auth::user();
-        $tailor = $user->tailor;
-        return view('tailor.profile', compact('user', 'tailor'));
-         }
-         public function updateProfile(Request $request)
-         {
-        $user = Auth::user();
-        $tailor = $user->tailor;
+    public function profile()
+{
+    $user   = Auth::user();
+    $tailor = $user->tailor;
+    return view('tailor.profile', compact('user', 'tailor'));
+}
 
-        $request->validate([
+    public function updateProfile(Request $request)
+{
+    $user = Auth::user();
+    $tailor = $user->tailor;
+    $request->validate([
         'name' => 'required|string|max:255',
         'phone' => 'nullable|string|max:20',
         'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
@@ -243,42 +255,41 @@ class TailorController extends Controller
         'max_slots' => 'nullable|integer|min:1|max:50',
        ]);
 
-        $userData = [
+    $userData = [
         'name' => $request->name,
         'phone' => $request->phone,
         ];
 
-        if ($request->hasFile('profile_image')) {
-        if ($user->profile_image) {
-            Storage::disk('public')->delete($user->profile_image);
+    if ($request->hasFile('profile_image')) {
+    if ($user->profile_image) {
+        Storage::disk('public')->delete($user->profile_image);
         }
         $userData['profile_image'] = $request->file('profile_image')->store('profile_images', 'public');
         } elseif ($request->boolean('remove_photo') && $user->profile_image) {
         Storage::disk('public')->delete($user->profile_image);
         $userData['profile_image'] = null;
         }
-
         $user->update($userData);
         $tailor->update([
-        'shop_name' => $request->shop_name,
-        'bio' => $request->bio,
-        'city' => $request->city,
-        'address' => $request->address,
-        'experience_years' => $request->experience_years,
-        'specialization' => $request->specialization,
-        'base_price' => $request->base_price,
-        'max_slots' => $request->max_slots,
+         'shop_name' => $request->shop_name,
+         'bio' => $request->bio,
+         'city' => $request->city,
+         'address' => $request->address,
+         'experience_years' => $request->experience_years,
+         'specialization' => $request->specialization,
+         'base_price' => $request->base_price,
+         'max_slots' => $request->max_slots,
     ]);
 
     return redirect()->route('tailor.profile')->with('success', 'Profile updated successfully!');
 }
-public function byCategory($category)
+    public function byCategory($category)
 {
     $tailors = Tailor::with('user')
         ->where('status', 'approved')
         ->where(function($q) use ($category) {
-            $q->where('category', $category)
-              ->orWhere('category', 'all');
+            $q->where('specialization', $category)  
+              ->orWhere('specialization', 'all');     
         })
         ->get();
 

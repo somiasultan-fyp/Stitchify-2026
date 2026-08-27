@@ -47,6 +47,7 @@ class CustomerOrderController extends Controller
             'shoulder' => 'nullable|numeric|min:1|max:100',
             'sleeve_length' => 'nullable|numeric|min:1|max:100',
             'shirt_length' => 'nullable|numeric|min:1|max:100',
+            'measurements' => 'nullable|array',
         ]);
 
         $tailor = Tailor::with('user')->findOrFail($request->tailor_id);
@@ -96,6 +97,7 @@ class CustomerOrderController extends Controller
                         'trouser_waist' => $request->trouser_waist ?? null,
                         'neck' => $request->neck ?? null,
                         'additional_notes' => $request->special_instructions,
+                        'details' => $request->measurements,
                     ]);
                 } 
 

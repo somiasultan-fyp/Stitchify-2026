@@ -6,53 +6,14 @@
 <title>{{ ucfirst($category) }}'s Wear Tailors - Stitchify</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-<style>
-:root {
-    --primary-bg: #212529;
-    --accent-color: #1B2A4A;
-    --text-white: #ffffff;
-}
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; }
-.navbar { background-color: var(--primary-bg) !important; }
-.btn-stitchify {
-    background-color: var(--accent-color); color: var(--text-white);
-    border: none; padding: 10px 25px; transition: all 0.3s ease;
-}
-.btn-stitchify:hover { background-color: #1a2c55; color: var(--text-white); }
-.page-header {
-    background-color: var(--primary-bg);
-    color: white; padding: 60px 0; text-align: center;
-}
-.tailor-card {
-    background: white; border-radius: 12px;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
-    padding: 25px; text-align: center;
-    transition: all 0.3s ease;
-}
-.tailor-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
-.tailor-avatar {
-    width: 80px; height: 80px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
-    color: white; display: flex; align-items: center;
-    justify-content: center; font-size: 32px;
-    margin: 0 auto 15px;
-}
-.tailor-name { color: var(--accent-color); font-size: 18px; font-weight: 700; margin-bottom: 5px; }
-.tailor-specialty { color: #777; font-size: 14px; margin-bottom: 10px; }
-.category-badge {
-    display: inline-block; padding: 4px 12px;
-    border-radius: 20px; font-size: 12px; font-weight: 600;
-    background-color: #e3f2fd; color: #1565c0; margin-bottom: 15px;
-}
-.footer-copyright { background-color: #575a5b; padding: 15px 0; text-align: center; }
-</style>
+<link href="{{ asset('css/common.css') }}" rel="stylesheet">
+<link href="{{ asset('css/tailors-category.css') }}" rel="stylesheet">
 </head>
 <body>
 
-{{-- Navbar --}}
 <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
     <div class="container">
-        <a class="navbar-brand" href="/">
+        <a class="navbar-brand" href="{{ route('home') }}">
             <img src="{{ asset('images/logo.png') }}" alt="Stitchify Logo" height="55">
         </a>
         <div class="collapse navbar-collapse">
@@ -63,7 +24,7 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-
                     @auth
                         <a href="/{{ auth()->user()->role }}/dashboard" class="btn btn-stitchify">Dashboard</a>
                     @else
-                        <a href="/login" class="btn btn-stitchify">Login</a>
+                        <a href="{{ route('login') }}" class="btn btn-stitchify">Login</a>
                     @endauth
                 </li>
             </ul>
@@ -71,7 +32,6 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-
     </div>
 </nav>
 
-{{-- Page Header --}}
 <div class="page-header">
     <div class="container">
         <h1 class="fw-bold">{{ ucfirst($category) }}'s Wear Tailors</h1>
@@ -92,7 +52,6 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-
     </div>
 </div>
 
-{{-- Tailors List --}}
 <section class="py-5">
     <div class="container">
         @if($tailors->count() > 0)
@@ -131,7 +90,7 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-
             <div class="text-center py-5">
                 <i class="fas fa-cut fa-4x text-muted mb-4 d-block"></i>
                 <h4 class="text-muted">No tailors available for {{ ucfirst($category) }}'s Wear</h4>
-                <a href="/" class="btn btn-stitchify mt-3">
+                <a href="{{ route('home') }}" class="btn btn-stitchify mt-3">
                     <i class="fas fa-home me-1"></i> Go Back Home
                 </a>
             </div>
