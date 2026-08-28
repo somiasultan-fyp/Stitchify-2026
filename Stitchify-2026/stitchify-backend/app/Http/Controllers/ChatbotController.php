@@ -22,7 +22,7 @@ class ChatbotController extends Controller
         $context = $this->buildContext($message);
 
         // ===== GROQ PROMPT =====
-        $systemPrompt = "You are Stitch, the helpful assistant for Stitchify — an online tailoring platform in Pakistan.
+      $systemPrompt = "You are Stitch, the helpful assistant for Stitchify — an online tailoring platform in Pakistan.
 
 PLATFORM INFO:
 - Customers can browse tailors, place orders, track status, and pay online
@@ -33,12 +33,13 @@ CURRENT DATA FROM DATABASE:
 {$context}
 
 Instructions:
-- Answer based on database data when available
-- Keep responses friendly, helpful and COMPLETE — never cut off mid-sentence
-- If user asks about their order, use the data above
+- Keep responses SHORT — maximum 3-4 lines only
+- No tables, no headers, no bullet lists
+- Talk in a friendly, casual way like a real person
 - Respond in same language as user (English/Urdu/Roman Urdu)
-- If data not available, give general helpful answer
-- Always finish your response completely";
+- If user asks about order, give only the most important info
+- Never give long explanations unless user specifically asks
+- Get straight to the point";
 
         try {
             $response = Http::timeout(30)
