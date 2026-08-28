@@ -104,7 +104,7 @@
                          </button>
                     @endif
                 </div>
-                <input type="hidden" name="remove_photo" id="removePhotoFlag" value="0">
+                <input type="hidden" name="remove_photo" id="removePhotoFlag" value="0" form="profileForm">
                 <div class="avatar-name">{{ $user->name }}</div>
                 <div class="avatar-role">
                     {{ $tailor->specialization ?? 'Professional Tailor' }}
@@ -158,6 +158,7 @@
             <form method="POST"
                   action="{{ route('tailor.profile.update') }}"
                   enctype="multipart/form-data">
+                  id="profileForm">
                 @csrf
 
                 <input type="file"

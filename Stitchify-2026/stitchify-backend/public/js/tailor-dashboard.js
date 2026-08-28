@@ -199,6 +199,9 @@ async function viewDetail(orderId) {
               <tr><th>Trouser Waist</th><td>${m.trouser_waist || '—'}"</td></tr>
               <tr><th>Neck</th><td>${m.neck || '—'}"</td></tr>
               ${m.additional_notes ? `<tr><th>Notes</th><td>${m.additional_notes}</td></tr>` : ''}
+              ${m.details ? Object.entries(m.details).map(([key, value]) => `
+                <tr><th>${key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</th><td>${value || '—'}</td></tr>
+              `).join('') : ''}
             </table>` : '<p class="text-muted">Measurements are not available.</p>'}
           </div>
         </div>`;
