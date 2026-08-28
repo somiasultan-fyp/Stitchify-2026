@@ -39,12 +39,11 @@ Instructions:
 - Keep responses short, friendly, helpful
 - If user asks about their order, use the data above
 - Respond in same language as user (English/Urdu/Roman Urdu)
-- If data not available, give general helpful answer
-- IMPORTANT: Always complete your sentences. Never leave a response incomplete or mid-sentence.";
+- If data not available, give general helpful answer";
 
         try {
             $response = Http::timeout(30)->post(
-                "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key={$apiKey}",
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$apiKey}",
                 [
                     'contents' => [
                         [
@@ -54,7 +53,7 @@ Instructions:
                         ]
                     ],
                     'generationConfig' => [
-                        'maxOutputTokens' => 1500,
+                        'maxOutputTokens' => 300,
                         'temperature'     => 0.7,
                     ]
                 ]
