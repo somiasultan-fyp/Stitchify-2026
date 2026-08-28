@@ -864,6 +864,9 @@ body {
       const result = await response.json();
 
       if (response.ok && result.success) {
+        const customerName  = document.getElementById('cname').value;
+        const customerPhone = document.getElementById('cphone').value;
+
         const deliveryLine = deliveryChoice === 'yes'
           ? `<p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Delivery:</strong> Delivery service requested</p>`
           : `<p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Delivery:</strong> Self pickup / drop-off</p>`;
@@ -881,8 +884,8 @@ body {
           <p style="color:#575a5b;font-size:14px;margin-bottom:4px;"><strong>Order Number:</strong> ${result.order_number}</p>
           <p style="color:#575a5b;font-size:14px;margin-bottom:20px;">Your order has been sent to the tailor. Payment will be unlocked after acceptance.</p>
           <div style="background:#f8f9fa;border-radius:12px;padding:16px;text-align:left;border:2px solid #e0e0e0;margin-bottom:14px;">
-            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Name:</strong> ${document.getElementById('cname').value}</p>
-            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Phone:</strong> ${document.getElementById('cphone').value}</p>
+            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Name:</strong> ${customerName}</p>
+            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Phone:</strong> ${customerPhone}</p>
             <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Garment:</strong> ${data.dress_type}</p>
             <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Fabric:</strong> ${data.fabric_name} &mdash; ${data.fabric_color}</p>
             ${deliveryLine}
@@ -897,14 +900,14 @@ body {
         formBody.appendChild(success);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        alert('Error: ' + (result.message || 'Order save nahi ho saka.'));
+        alert('Error: ' + (result.message || 'Order submission failed.'));
         submitBtn.disabled = false;
         submitBtn.innerHTML = `<i class="fas fa-check"></i> &nbsp;Submit Order`;
       }
 
     } catch (error) {
       console.error('Submission Error:', error);
-      alert('Backend server se connection fail ho gaya. Logs check karein.');
+      alert('Connection is failed.');
       submitBtn.disabled = false;
       submitBtn.innerHTML = `<i class="fas fa-check"></i> &nbsp;Submit Order`;
     }
