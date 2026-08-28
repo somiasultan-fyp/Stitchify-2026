@@ -16,13 +16,13 @@ class ChatbotController extends Controller
         ]);
 
         $message = $request->message;
-        $apiKey  = env('GEMINI_API_KEY');
+        $apiKey  = env('GROQ_API_KEY');
 
         // ===== DATABASE CONTEXT =====
         $context = $this->buildContext($message);
 
-        // ===== GEMINI PROMPT =====
-        $prompt = "You are Stitch, the helpful assistant for Stitchify — an online tailoring platform in Pakistan.
+        // ===== GROQ PROMPT =====
+        $systemPrompt = "You are Stitch, the helpful assistant for Stitchify — an online tailoring platform in Pakistan.
 
 PLATFORM INFO:
 - Customers can browse tailors, place orders, track status, and pay online
@@ -32,43 +32,40 @@ PLATFORM INFO:
 CURRENT DATA FROM DATABASE:
 {$context}
 
-USER MESSAGE: {$message}
-
 Instructions:
 - Answer based on database data when available
-- Keep responses short, friendly, helpful
+- Keep responses friendly, helpful and COMPLETE — never cut off mid-sentence
 - If user asks about their order, use the data above
 - Respond in same language as user (English/Urdu/Roman Urdu)
-- If data not available, give general helpful answer";
+- If data not available, give general helpful answer
+- Always finish your response completely";
 
         try {
-            $response = Http::timeout(30)->post(
-                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$apiKey}",
-                [
-                    'contents' => [
-                        [
-                            'parts' => [
-                                ['text' => $prompt]
-                            ]
-                        ]
+            $response = Http::timeout(30)
+                ->withHeaders([
+                    'Authorization' => 'Bearer ' . $apiKey,
+                    'Content-Type'  => 'application/json',
+                ])
+                ->post('https://api.groq.com/openai/v1/chat/completions', [
+                    'model'       => 'llama-3.3-70b-versatile',
+                    'messages'    => [
+                        ['role' => 'system', 'content' => $systemPrompt],
+                        ['role' => 'user',   'content' => $message],
                     ],
-                    'generationConfig' => [
-                        'maxOutputTokens' => 300,
-                        'temperature'     => 0.7,
-                    ]
-                ]
-            );
+                    'max_tokens'  => 1024,
+                    'temperature' => 0.7,
+                ]);
 
             if ($response->successful()) {
-                $reply = $response->json('candidates.0.content.parts.0.text')
+                $reply = $response->json('choices.0.message.content')
                          ?? 'Sorry, I could not process your request. Please try again.';
             } else {
-                \Log::info('Gemini Response: ' . $response->body());
+                \Log::info('Groq Response: ' . $response->body());
                 $reply = 'Sorry, I could not process your request. Please try again.';
             }
 
         } catch (\Exception $e) {
-            \Log::error('Gemini Error: ' . $e->getMessage());
+            \Log::error('Groq Error: ' . $e->getMessage());
             $reply = 'Sorry, I am unable to respond right now. Please try again later.';
         }
 
@@ -131,7 +128,7 @@ Instructions:
             }
         }
 
-        // General tailor stats (agar message mein tailor mention ho)
+        // General tailor stats
         if (str_contains($msg, 'tailor') || str_contains($msg, 'available')) {
             $availableTailors = Tailor::where('available_slots', '>', 0)
                 ->where('status', 'approved')
