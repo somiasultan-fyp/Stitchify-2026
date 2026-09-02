@@ -220,14 +220,14 @@
                     <li class="nav-item ms-lg-3">
                         @auth
                             @if(auth()->user()->role === 'customer')
-                                <a href="/customer/dashboard" class="btn-stitchify">Dashboard</a>
+                                <a href="/customer/dashboard" class="btn btn-stitchify">Dashboard</a>
                             @elseif(auth()->user()->role === 'tailor')
-                                <a href="/tailor/dashboard" class="btn-stitchify">Dashboard</a>
+                                <a href="/tailor/dashboard" class="btn btn-stitchify">Dashboard</a>
                             @elseif(auth()->user()->role === 'admin')
-                                <a href="/admin/dashboard" class="btn-stitchify">Dashboard</a>
+                                <a href="/admin/dashboard" class="btn btn-stitchify">Dashboard</a>
                             @endif
                         @else
-                            <a href="/login" class="btn-stitchify">Login</a>
+                            <a href="/login" class="btn btn-stitchify">Login</a>
                         @endauth
                     </li>
                 </ul>
@@ -357,47 +357,43 @@
 </div>
 
     <section class="py-5 bg-light">
-        <div class="container">
-            <h2 class="text-center mb-5" style="color: var(--primary-bg);">Featured Tailors</h2>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card tailor-card h-100 p-3">
-                        <div class="text-center">
-                             <i class="fa-solid fa-user-tie fa-4x mb-3 text-white"></i>
-                        </div>
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Ahmed</h5>
-                            <p class="card-text">Specialist in Men's Suiting</p>
-                            <a href="#" class="btn btn-stitchify">Contact</a>
-                        </div>
+    <div class="container">
+        <h2 class="text-center mb-5" style="color: var(--primary-bg);">Professional Tailors</h2>
+        <div class="row g-4">
+            @forelse($topTailors as $tailor)
+            <div class="col-md-4">
+                <div class="card tailor-card h-100 p-3">
+                    <div class="text-center">
+                        @if($tailor->user->profile_image)
+                            <img src="{{ Storage::url($tailor->user->profile_image) }}"
+                                 alt="{{ $tailor->user->name }}"
+                                 style="width:100px;height:100px;object-fit:cover;border-radius:50%;margin-bottom:15px;">
+                        @else
+                            <i class="fa-solid fa-user-tie fa-4x mb-3 text-white"></i>
+                        @endif
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card tailor-card h-100 p-3">
-                        <div class="text-center">
-                             <i class="fa-solid fa-user-circle fa-4x mb-3 text-white"></i>
-                        </div>
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Sara</h5>
-                            <p class="card-text">Expert in Bridal Wear</p>
-                            <a href="#" class="btn btn-stitchify">Contact</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card tailor-card h-100 p-3">
-                        <div class="text-center">
-                             <i class="fa-solid fa-user-tie fa-4x mb-3 text-white"></i>
-                        </div>
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Rizwan Ahmed</h5>
-                            <p class="card-text">Alteration Master</p>
-                            <a href="#" class="btn btn-stitchify">Contact</a>
-                        </div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ $tailor->user->name }}</h5>
+                        <p class="card-text">{{ $tailor->specialization ?? 'General Tailoring' }}</p>
+                        <p class="card-text small">
+                            <i class="fas fa-star me-1"></i>{{ $tailor->experience_years ?? 0 }} yrs experience
+                            &nbsp;|&nbsp;
+                            <i class="fas fa-check-circle me-1"></i>{{ $tailor->orders()->where('status','delivered')->count() }} completed
+                        </p>
+                        @if($tailor->city)
+                            <p class="card-text small"><i class="fas fa-map-marker-alt me-1"></i>{{ $tailor->city }}</p>
+                        @endif
+                        <a href="{{ route('tailors.show', $tailor->id) }}" class="btn btn-stitchify">View Profile</a>
                     </div>
                 </div>
             </div>
+            @empty
+            <div class="col-12 text-center text-muted">
+                <p>No tailors available right now.</p>
+            </div>
+            @endforelse
         </div>
+    </div>
     </section>
 
     <section class="py-5">
@@ -433,32 +429,27 @@
     </section>
 
     <section class="py-5 bg-white">
-        <div class="container">
-            <h2 class="text-center mb-5" style="color: var(--primary-bg);">Customer Reviews</h2>
+      <div class="container">
+        <h2 class="text-center mb-5" style="color: var(--primary-bg);">Customer Reviews</h2>
+
+        @if($reviews->count() > 0)
             <div id="reviewsCarousel" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <div class="d-flex justify-content-center">
-                            <div class="review-card col-md-8 text-center">
-                                <div class="stars mb-3">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    @foreach($reviews as $index => $review)
+                        <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                            <div class="d-flex justify-content-center">
+                                <div class="review-card col-md-8 text-center">
+                                    <div class="stars mb-3">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <i class="fas fa-star{{ $i <= $review->rating ? '' : '-o' }}"></i>
+                                        @endfor
+                                    </div>
+                                    <p>"{{ $review->comment }}"</p>
+                                    <h6 class="mt-3">- {{ $review->user->name }}</h6>
                                 </div>
-                                <p>"Amazing service! Stitchify made it so easy to get my suit stitched without leaving home."</p>
-                                <h6 class="mt-3">- Ali Hassan</h6>
                             </div>
                         </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="d-flex justify-content-center">
-                            <div class="review-card col-md-8 text-center">
-                                <div class="stars mb-3">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-                                </div>
-                                <p>"The fabric pickup and delivery were on time. Great craftsmanship."</p>
-                                <h6 class="mt-3">- Iqra</h6>
-                            </div>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#reviewsCarousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon bg-dark rounded-circle" aria-hidden="true"></span>
@@ -467,6 +458,12 @@
                     <span class="carousel-control-next-icon bg-dark rounded-circle" aria-hidden="true"></span>
                 </button>
             </div>
+        @else
+            <div class="text-center text-muted py-4">
+                <i class="fas fa-comment-slash fa-3x mb-3 d-block" style="opacity:0.3;"></i>
+                <p>No reviews yet. Be the first to share your experience!</p>
+            </div>
+        @endif
         </div>
     </section>
 
@@ -685,5 +682,17 @@ async function sendMessage() {
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  const videoModal = document.getElementById('videoModal');
+  const measurementVideo = videoModal.querySelector('video');
+
+  videoModal.addEventListener('hidden.bs.modal', function () {
+    measurementVideo.pause();
+    measurementVideo.currentTime = 0;
+  });
+
+</script>
+
 </body>
 </html>

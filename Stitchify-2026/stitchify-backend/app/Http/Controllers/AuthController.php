@@ -106,7 +106,7 @@ class AuthController extends Controller
     $redirect = match($user->role) {
         'admin'    => route('admin.dashboard'),
         'tailor'   => route('tailor.dashboard'),
-        'customer' => route('customer.dashboard'),
+        'customer' => $request->session()->pull('url.intended', route('customer.dashboard')),
         default    => '/',
     };
 

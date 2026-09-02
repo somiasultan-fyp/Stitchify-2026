@@ -86,12 +86,14 @@
     <div class="row g-4">
 
         <div class="col-md-4">
+        @php
+          $defaultAvatarSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#1B2A4A"/><circle cx="50" cy="38" r="18" fill="#ffffff"/><path d="M50 60c-22 0-34 12-34 26v14h68V86c0-14-12-26-34-26z" fill="#ffffff"/></svg>';
+          $defaultAvatarUri = 'data:image/svg+xml;base64,' . base64_encode($defaultAvatarSvg);
+        @endphp
             <div class="avatar-card">
                 <div class="avatar-img-wrap">
-                     <img src="{{ $user->profile_image
-                               ? Storage::url($user->profile_image)
-                               : asset('images/default-avatar.png') }}"
-                          data-default="{{ asset('images/default-avatar.png') }}"
+                     <img src="{{ $user->profile_image ? Storage::url($user->profile_image) : $defaultAvatarUri }}"
+                          data-default="{{ $defaultAvatarUri }}"
                           alt="{{ $user->name }}"
                           class="avatar-img"
                           id="avatarPreview">
@@ -157,7 +159,7 @@
         <div class="col-md-8">
             <form method="POST"
                   action="{{ route('tailor.profile.update') }}"
-                  enctype="multipart/form-data">
+                  enctype="multipart/form-data"
                   id="profileForm">
                 @csrf
 

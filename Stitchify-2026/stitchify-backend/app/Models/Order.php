@@ -1,5 +1,5 @@
 <?php
-// app/Models/Order.php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -63,7 +63,12 @@ class Order extends Model
     return 'ORD-' . $year . '-' . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
 }
     public function delivery()
-{
+    {
     return $this->hasOne(Delivery::class);
-}
+    }
+
+    public function review()
+    {
+    return $this->hasOne(Review::class);
+    }
 }

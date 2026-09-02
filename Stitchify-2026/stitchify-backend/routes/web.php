@@ -13,7 +13,17 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\PasswordResetController;
 
-Route::get('/', fn() => view('home'))->name('home');
+Route::get('/', function () {
+    $topTailors = \App\Models\Tailor::with('user')
+        ->where('status', 'approved')
+        ->orderByDesc('experience_years')
+        ->take(3)
+        ->get();
+        $reviews = \App\Models\Review::with('customer.user')->latest()->take(5)->get();
+
+    return view('home', compact('topTailors', 'reviews'));
+    //$reviews = collect();
+})->name('home');
 Route::get('/tailors', [TailorController::class, 'index'])->name('tailors.index');
 Route::get('/tailors/{id}',[TailorController::class, 'show'])->name('tailors.show');
 Route::get('/tailors/category/{category}', [TailorController::class, 'byCategory'])->name('tailors.category');
@@ -99,6 +109,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::patch('/admin/users/{user}/toggle', [\App\Http\Controllers\Admin\AdminController::class, 'toggleUser'])->name('admin.users.toggle');
     Route::patch('/admin/complaints/{complaint}/respond', [\App\Http\Controllers\Admin\AdminController::class, 'respondComplaint'])->name('admin.complaints.respond');
     Route::patch('/admin/delivery/{delivery}/status',[DeliveryController::class, 'updateStatus'])->name('delivery.update');
+    Route::patch('/admin/tailors/{user}/approve', [\App\Http\Controllers\Admin\AdminController::class, 'approveTailor'])->name('admin.tailors.approve');
 });
 Route::post('/chatbot', [ChatbotController::class, 'reply'])
      ->name('chatbot.reply');

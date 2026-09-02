@@ -164,6 +164,7 @@
             <th>Phone</th>
             <th>Role</th>
             <th>Verified</th>
+            <th>Approval</th>
             <th>Status</th>
             <th>Action</th>
           </tr>
@@ -187,12 +188,23 @@
             <td>
               @if($user->email_verified_at)
                 <span style="color:#388e3c;font-size:13px;">
-                  <i class="fas fa-check-circle"></i> Verified
+                <i class="fas fa-check-circle"></i> Verified
                 </span>
-              @else
+               @else
                 <span style="color:#f57c00;font-size:13px;">
-                  <i class="fas fa-clock"></i> Pending
+                <i class="fas fa-clock"></i> Pending
                 </span>
+               @endif
+            </td>
+            <td>
+              @if($user->role === 'tailor' && $user->tailor)
+              @if($user->tailor->status === 'approved')
+                <span class="badge-status badge-active">Approved</span>
+              @else
+                <span class="badge-status badge-pending">Pending</span>
+              @endif
+              @else
+                <span class="text-muted">—</span>
               @endif
             </td>
             <td>
@@ -200,7 +212,19 @@
                 {{ $user->is_active ? 'Active' : 'Blocked' }}
               </span>
             </td>
+            
             <td>
+              @if($user->role === 'tailor' && $user->tailor && $user->tailor->status === 'pending')
+                <form method="POST"
+                      action="{{ route('admin.tailors.approve', $user->id) }}"
+                      style="display:inline;">
+                  @csrf @method('PATCH')
+                  <button type="submit" class="btn-action btn-approve"
+                          onclick="return confirm('Approve {{ $user->name }} as a tailor?')">
+                    <i class="fas fa-check"></i> Approve
+                  </button>
+                </form>
+              @endif
               <form method="POST"
                     action="{{ route('admin.users.toggle', $user->id) }}"
                     style="display:inline;">
@@ -217,7 +241,7 @@
                   </button>
                 @endif
               </form>
-            </td>
+           </td>
           </tr>
           @empty
           <tr>

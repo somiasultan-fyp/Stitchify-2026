@@ -205,6 +205,7 @@ class TailorController extends Controller
                 'customer_phone'       => $order->customer->user->phone,
                 'dress_type'           => $order->dress_type,
                 'fabric_details'       => $order->fabric_details,
+                'design_image'         => $order->design_image ? Storage::url($order->design_image) : null,
                 'special_instructions' => $order->special_instructions,
                 'delivery_type'        => $order->delivery_type,
                 'price'                => $order->price,

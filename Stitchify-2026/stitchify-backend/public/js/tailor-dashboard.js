@@ -177,6 +177,12 @@ async function viewDetail(orderId) {
               <tr><th>Phone</th><td>${o.customer_phone || '—'}</td></tr>
               <tr><th>Dress Type</th><td>${o.dress_type}</td></tr>
               <tr><th>Fabric Detail</th><td>${o.fabric_details || '—'}</td></tr>
+              ${o.design_image ? `
+              <tr>
+              <th>Design Reference</th>
+              <td><img src="${o.design_image}" style="max-width:120px; max-height:120px; border-radius:8px; cursor:pointer;" onclick="window.open('${o.design_image}', '_blank')"></td>
+              </tr>
+              ` : ''}
               <tr><th>Delivery Type</th><td>${o.delivery_type}</td></tr>
               <tr><th>Special Note</th><td>${o.special_instructions || 'None'}</td></tr>
               <tr><th>Status</th><td><span class="badge bg-warning text-dark">${o.status}</span></td></tr>

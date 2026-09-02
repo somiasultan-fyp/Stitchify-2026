@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    // ── Dashboard ─────────────────────────────────
     public function dashboard()
     {
         $stats = [
@@ -28,7 +27,7 @@ class AdminController extends Controller
             'blocked_users'   => User::where('is_active', false)->count(),
         ];
 
-        $users = User::where('role', '!=', 'admin')->latest()->paginate(15);
+        $users = User::where('role', '!=', 'admin')->with('tailor')->latest()->paginate(15);
         $orders = Order::with(['customer.user', 'tailor.user'])->latest()->paginate(15);
         $complaints = Complaint::with('user')->latest()->get();
 
@@ -46,10 +45,8 @@ class AdminController extends Controller
             compact('stats','users', 'orders', 'complaints' , 'recentOrders' , 'recentUsers'));
     }
 
-    // ── All Users ────────────────────────────────
     public function users()
     {
-        // Filter by role
         $role = request('role', 'all');
 
         $query = User::where('role', '!=', 'admin');
@@ -58,7 +55,6 @@ class AdminController extends Controller
             $query->where('role', $role);
         }
 
-        // Search by name or email
         if (request('search')) {
             $search = request('search');
             $query->where(function($q) use ($search) {
@@ -72,24 +68,20 @@ class AdminController extends Controller
         return view('admin.adminusers', compact('users', 'role'));
     }
 
-    // ── Block / Unblock User ─────────────────────
     public function toggleUser(User $user)
     {
-        // Admin ko block nahi kar sakte
         if ($user->role === 'admin') {
-            return back()->with('error', 'Admin ko block nahi kar sakte.');
+            return back()->with('error', 'Admin accounts cannot be blocked.');
         }
 
-        // Toggle — agar active hai toh inactive, warna active
         $user->update(['is_active' => !$user->is_active]);
 
         $action = $user->is_active ? 'unblocked' : 'blocked';
 
         return back()->with('success',
-            "User successfully $action ho gaya.");
+            "User successfully $action.");
     }
 
-    // ── All Orders ───────────────────────────────
     public function orders()
     {
         $status = request('status', 'all');
@@ -105,7 +97,6 @@ class AdminController extends Controller
         return view('admin.orders', compact('orders', 'status'));
     }
 
-    // ── Complaints ───────────────────────────────
     public function complaints()
     {
         $complaints = Complaint::with('user')
@@ -115,7 +106,6 @@ class AdminController extends Controller
         return view('admin.complaints', compact('complaints'));
     }
 
-    // ── Complaint Response ───────────────────────
     public function respondComplaint(Complaint $complaint, \Illuminate\Http\Request $request)
     {
         $request->validate([
@@ -128,6 +118,16 @@ class AdminController extends Controller
             'status'         => $request->status,
         ]);
 
-        return back()->with('success', 'Response save ho gaya.');
+        return back()->with('success', 'Response is submitted successfully.');
+    }
+    public function approveTailor(User $user)
+    {
+    if ($user->role !== 'tailor' || !$user->tailor) {
+        return back()->with('error', 'This user is not a tailor.');
+    }
+
+    $user->tailor->update(['status' => 'approved']);
+
+    return back()->with('success', "{$user->name} has been approved and can now receive orders.");
     }
 }

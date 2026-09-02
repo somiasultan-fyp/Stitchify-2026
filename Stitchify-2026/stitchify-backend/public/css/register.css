@@ -36,8 +36,14 @@
   font-weight: 600;
 }
 
+.password-toggle .form-control.is-invalid {
+  background-image: none !important;
+  padding-right: 45px;
+}
+
 .password-toggle .toggle-icon {
   display: block;
+  z-index: 2;
 }
 
 .step-indicator {

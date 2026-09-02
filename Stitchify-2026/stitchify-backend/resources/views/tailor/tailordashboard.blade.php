@@ -16,6 +16,10 @@
 </head>
 <body>
 <div class="sidebar">
+  @php
+    $defaultAvatarSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#1B2A4A"/><circle cx="50" cy="38" r="18" fill="#ffffff"/><path d="M50 60c-22 0-34 12-34 26v14h68V86c0-14-12-26-34-26z" fill="#ffffff"/></svg>';
+    $defaultAvatarUri = 'data:image/svg+xml;base64,' . base64_encode($defaultAvatarSvg);
+  @endphp
   <div class="sidebar-logo">
     <a href="/" style="text-decoration:none;">
       <img src="{{ asset('images/logo.png') }}" alt="Stitchify Logo">
@@ -24,9 +28,7 @@
   </div>
 
   <div class="user-info">
-    <img src="{{ auth()->user()->profile_image
-                ? Storage::url(auth()->user()->profile_image)
-                : asset('images/default-avatar.png') }}"
+    <img src="{{ auth()->user()->profile_image ? Storage::url(auth()->user()->profile_image) : $defaultAvatarUri }}"
          alt="{{ auth()->user()->name }}"
          class="user-info-photo">
     <div>
