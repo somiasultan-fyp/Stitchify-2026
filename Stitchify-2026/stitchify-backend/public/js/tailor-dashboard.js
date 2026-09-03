@@ -173,8 +173,10 @@ async function viewDetail(orderId) {
             <h6 class="fw-bold mb-3" style="color:var(--accent-color)">Order Info</h6>
             <table class="table table-borderless table-sm">
               <tr><th>Order #</th><td>${o.order_number}</td></tr>
-              <tr><th>Customer</th><td>${o.customer_name}</td></tr>
-              <tr><th>Phone</th><td>${o.customer_phone || '—'}</td></tr>
+              <tr><th>Customer</th><td>${o.recipient_name || o.customer_name || '—'}</td></tr>
+              <tr><th>Phone</th><td>${o.recipient_phone || o.customer_phone || '—'}</td></tr> ${o.recipient_address || o.recipient_city ? `
+              <tr><th>Address</th><td>${o.recipient_address || ''}, ${o.recipient_city || ''}</td></tr>
+              ` : ''}
               <tr><th>Dress Type</th><td>${o.dress_type}</td></tr>
               <tr><th>Fabric Detail</th><td>${o.fabric_details || '—'}</td></tr>
               ${o.design_image ? `

@@ -180,8 +180,11 @@
         <span class="order-status status-pending">New Order</span>
       </div>
       <div class="order-details">
-        <p><strong>Customer:</strong> {{ $order->customer->user->name }}</p>
-        <p><strong>Phone:</strong> {{ $order->customer->user->phone ?? '—' }}</p>
+        <p><strong>Customer:</strong> {{ $order->recipient_name ?? $order->customer->user->name }}</p>
+        <p><strong>Phone:</strong> {{ $order->recipient_phone ?? '—' }}</p>
+        @if($order->recipient_address || $order->recipient_city)
+        <p><strong>Address:</strong> {{ $order->recipient_address }}, {{ $order->recipient_city }}</p>
+        @endif
         <p><strong>Item:</strong> {{ $order->dress_type }}</p>
         @if($order->special_instructions)
           <p><strong>Note:</strong> {{ $order->special_instructions }}</p>
@@ -226,7 +229,11 @@
         </span>
       </div>
       <div class="order-details">
-        <p><strong>Customer:</strong> {{ $order->customer->user->name }}</p>
+        <p><strong>Customer:</strong> {{ $order->recipient_name ?? $order->customer->user->name }}</p>
+        <p><strong>Phone:</strong> {{ $order->recipient_phone ?? '—' }}</p>
+        @if($order->recipient_address || $order->recipient_city)
+        <p><strong>Address:</strong> {{ $order->recipient_address }}, {{ $order->recipient_city }}</p>
+        @endif
         <p><strong>Item:</strong> {{ $order->dress_type }}</p>
         <p><strong>Price:</strong> Rs. {{ number_format($order->price) }}</p>
         @if($order->expected_delivery_date)

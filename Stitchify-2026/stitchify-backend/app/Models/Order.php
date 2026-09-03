@@ -10,12 +10,30 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-        'order_number', 'customer_id', 'tailor_id', 'dress_type',
-        'special_instructions', 'fabric_provided_by', 'fabric_details',
-        'price', 'advance_paid', 'expected_delivery_date',
-        'actual_delivery_date', 'status', 'payment_status',
-        'delivery_type', 'tracking_id', 'delivery_days', 'rejection_reason',
-        'design_image', 'accepted_at', 'rejected_at',
+        'order_number',
+        'customer_id',
+        'tailor_id', 
+        'recipient_name',
+        'recipient_phone',
+        'recipient_address',
+        'recipient_city',
+        'dress_type',
+        'special_instructions',
+        'fabric_provided_by',
+        'fabric_details',
+        'price',
+        'advance_paid',
+        'expected_delivery_date',
+        'actual_delivery_date',
+        'status',
+        'payment_status',
+        'delivery_type',
+        'tracking_id',
+        'delivery_days',
+        'rejection_reason',
+        'design_image',
+        'accepted_at',
+        'rejected_at',
     ];
 
     protected $casts = [

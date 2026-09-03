@@ -44,11 +44,13 @@
       <input id="s1_phone" class="form-control" placeholder="+92 300 1234567" type="tel" value="{{ old('phone') }}">
       <span id="phoneError" class="error-text"></span>
     </div>
-    <div class="mb-3 password-toggle">
-      <label class="form-label">Password *</label>
-      <input id="s1_password" class="form-control" placeholder="Min 8 chars with letters, numbers & special chars" type="password">
-      <i id="togglePassword" class="fas fa-eye toggle-icon"></i>
-      <span id="pwError" class="error-text"></span>
+    <div class="mb-3">
+       <label class="form-label">Password *</label>
+      <div class="password-toggle">
+        <input id="s1_password" class="form-control" placeholder="Min 8 chars with letters, numbers & special chars" type="password">
+        <i id="togglePassword" class="fas fa-eye toggle-icon"></i>
+      </div>
+        <span id="pwError" class="error-text"></span>
     </div>
 
     <button class="btn btn-primary-custom" type="button" onclick="goToStep2()">

@@ -347,7 +347,7 @@
             <div class="modal-body p-0">
                 <div class="ratio ratio-16x9">
                     <video controls>
-                        <source src="{{ asset('measurements.mp4') }}" type="video/mp4">
+                        <source src="{{ asset('measurement-video.mp4') }}" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
                 </div>

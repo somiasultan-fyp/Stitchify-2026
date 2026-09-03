@@ -51,10 +51,16 @@ class OrderController extends Controller
 
         $orderNumber = Order::generateOrderNumber();
 
+        $formName = $request->customer_name ?? $user->name;
+
         $order = Order::create([
             'order_number'         => $orderNumber,
             'customer_id'          => $customer->id,
             'tailor_id'            => $tailor->id,
+            'recipient_name'       => $formName,
+            'recipient_phone'      => $request->customer_phone ?? null,
+            'recipient_address'    => $request->customer_address ?? null,
+            'recipient_city'       => $request->customer_city ?? null,
             'dress_type'           => $request->dress_type ?? 'Not specified',
             'special_instructions' => $request->special_instructions ?? null,
             'fabric_provided_by'   => 'customer',
@@ -63,6 +69,29 @@ class OrderController extends Controller
             'status'               => 'pending',
             'payment_status'       => 'unpaid',
         ]);
+
+        if ($request->has('design_images') && is_array($request->design_images)) {
+        $imagePaths = [];
+        
+        foreach ($request->design_images as $index => $imageData) {
+            if (preg_match('/^data:image\/(\w+);base64,/', $imageData, $type)) {
+                $imageData = substr($imageData, strpos($imageData, ',') + 1);
+                $imageData = base64_decode($imageData);
+                
+                $filename = 'order_' . $orderNumber . '_' . $index . '_' . time() . '.png';
+                $path = 'designs/' . $filename;
+                
+                \Storage::disk('public')->put($path, $imageData);
+                $imagePaths[] = $path;
+            }
+        }
+        
+        if (!empty($imagePaths)) {
+            $order->update([
+                'design_image' => $imagePaths[0]
+            ]);
+        }
+    }
 
         if ($request->measurement_method === 'manual') {
             Measurement::create([
@@ -93,7 +122,7 @@ class OrderController extends Controller
         Notification::create([
             'user_id'    => $tailor->user->id,
             'title'      => 'New Order Received!',
-            'message'    => $user->name . ' has placed order #' . $orderNumber .
+            'message'    => $formName . ' has placed order #' . $orderNumber .
                            ' for ' . ($request->dress_type ?? 'garment') . '.',
             'type'       => 'order',
             'action_url' => '/tailor/dashboard',

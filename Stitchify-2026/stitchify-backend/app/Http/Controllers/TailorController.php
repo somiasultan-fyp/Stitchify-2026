@@ -214,18 +214,22 @@ class TailorController extends Controller
                 ? \Carbon\Carbon::parse($order->expected_delivery_date)->format('M d, Y')
                 : null,
                 'created_at'           => $order->created_at->format('M d, Y'),
+                'recipient_name'    => $order->recipient_name ?? $order->customer->user->name,
+                'recipient_phone'   => $order->recipient_phone ?? $order->customer->user->phone,
+                'recipient_address' => $order->recipient_address,
+                'recipient_city'    => $order->recipient_city,
                 'measurement'          => $order->measurement ? [
-                    'chest'            => $order->measurement->chest,
-                    'waist'            => $order->measurement->waist,
-                    'hips'             => $order->measurement->hips,
-                    'shoulder'         => $order->measurement->shoulder,
-                    'sleeve_length'    => $order->measurement->sleeve_length,
-                    'shirt_length'     => $order->measurement->shirt_length,
-                    'trouser_length'   => $order->measurement->trouser_length,
-                    'trouser_waist'    => $order->measurement->trouser_waist,
-                    'neck'             => $order->measurement->neck,
-                    'additional_notes' => $order->measurement->additional_notes,
-                    'details'          => $order->measurement->details, 
+                'chest'            => $order->measurement->chest,
+                'waist'            => $order->measurement->waist,
+                'hips'             => $order->measurement->hips,
+                'shoulder'         => $order->measurement->shoulder,
+                'sleeve_length'    => $order->measurement->sleeve_length,
+                'shirt_length'     => $order->measurement->shirt_length,
+                'trouser_length'   => $order->measurement->trouser_length,
+                'trouser_waist'    => $order->measurement->trouser_waist,
+                'neck'             => $order->measurement->neck,
+                'additional_notes' => $order->measurement->additional_notes,
+                'details'          => $order->measurement->details, 
                 ] : null
             ]
         ]);

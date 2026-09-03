@@ -199,15 +199,14 @@
         @endif
     </div>
 
-    <div class="order-card">
+        <div class="order-card">
         <h5><i class="fas fa-scissors me-2"></i>Ready to Order?</h5>
         <p>Place your order with <strong>{{ $tailor->user->name }}</strong></p>
 
         @auth
             @if(auth()->user()->role === 'customer')
                 @if($tailor->available_slots > 0)
-                    <a href="/customer/order-form?tailor_id={{ $tailor->id }}"
-                       class="btn-order">
+                    <a href="{{ route('customer.order.form') }}?tailor_id={{ $tailor->id }}" class="btn-order">
                         <i class="fas fa-shopping-bag"></i> Place Order Now
                     </a>
                 @else
@@ -216,28 +215,21 @@
                         Tailor is Currently Full
                     </button>
                     <p class="mt-3 mb-0" style="color:rgba(255,255,255,0.6);font-size:0.85rem">
-                        This tailor has no available slots right now.
-                        Please check back later.
+                        This tailor has no available slots right now. Please check back later.
                     </p>
                 @endif
             @elseif(auth()->user()->role === 'tailor')
-                <p style="color:rgba(255,255,255,0.7)">
-                    Tailors cannot place orders.
-                </p>
+                <p style="color:rgba(255,255,255,0.7)">Tailors cannot place orders.</p>
             @endif
         @else
-            <a href="/login?redirect=/tailors/{{ $tailor->id }}"
-               class="btn-order">
+            <a href="{{ route('customer.order.form') }}?tailor_id={{ $tailor->id }}" class="btn-order">
                 <i class="fas fa-sign-in-alt"></i> Login to Place Order
             </a>
             <p class="mt-3 mb-0" style="color:rgba(255,255,255,0.6);font-size:0.85rem">
-                <i class="fas fa-lock me-1"></i>
-                Login or register to place an order
+                <i class="fas fa-lock me-1"></i> Login or register to place an order
             </p>
         @endauth
     </div>
-
-</div>
 
 <footer>
     <div class="container text-center">

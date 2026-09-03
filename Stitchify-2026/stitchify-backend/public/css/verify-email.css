@@ -1,0 +1,149 @@
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-wrapper {
+  width: 450px;
+  max-width: 95%;
+  background-color: var(--text-white);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.form-container {
+  padding: 40px;
+}
+
+.verify-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.verify-header h2 {
+  color: var(--accent-color);
+  font-weight: 700;
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.verify-header p {
+  color: var(--copyright-bg);
+  font-size: 14px;
+}
+
+.email-icon-circle {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px auto;
+}
+
+.email-icon-circle i {
+  color: var(--text-white);
+  font-size: 32px;
+}
+
+.email-box {
+  background-color: #f8f9fa;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 12px 15px;
+  text-align: center;
+  color: var(--accent-color);
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 24px;
+  word-break: break-all;
+}
+
+.info-text {
+  color: var(--copyright-bg);
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.btn-verify {
+  background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
+  color: var(--text-white);
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-weight: 600;
+  font-size: 16px;
+  width: 100%;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+}
+
+.btn-verify:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(14, 24, 48, 0.4);
+  color: var(--text-white);
+}
+
+.btn-verify:disabled {
+  opacity: 0.7;
+  transform: none;
+  cursor: not-allowed;
+}
+
+.logout-link {
+  text-align: center;
+  margin-top: 25px;
+  padding-top: 25px;
+  border-top: 1px solid #e0e0e0;
+  color: var(--copyright-bg);
+  font-size: 14px;
+}
+
+.logout-link a {
+  color: var(--accent-color);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.logout-link a:hover {
+  text-decoration: underline;
+}
+
+.help-text {
+  text-align: center;
+  color: var(--copyright-bg);
+  font-size: 12px;
+  margin-top: 16px;
+  padding: 0 10px;
+}
+
+.alert-success-custom {
+  background-color: #d1e7dd;
+  border: 1px solid #a3cfbb;
+  color: #0a3622;
+  border-radius: 10px;
+  padding: 12px 15px;
+  font-size: 14px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.alert-info-custom {
+  background-color: #cff4fc;
+  border: 1px solid #9eeaf9;
+  color: #055160;
+  border-radius: 10px;
+  padding: 12px 15px;
+  font-size: 14px;
+  margin-bottom: 20px;
+  text-align: center;
+}
