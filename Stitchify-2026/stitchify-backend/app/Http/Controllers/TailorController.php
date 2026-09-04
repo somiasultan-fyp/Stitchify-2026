@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Order;
 use App\Models\Tailor;
 use App\Models\User; 
+use App\models\portfolio;
 use App\Models\Notification;
 
 class TailorController extends Controller
@@ -288,6 +289,47 @@ class TailorController extends Controller
 
     return redirect()->route('tailor.profile')->with('success', 'Profile updated successfully!');
 }
+
+    public function uploadPortfolio(Request $request)
+    {
+        $tailor = Auth::user()->tailor;
+
+        $validated = $request->validate([
+            'title' => 'nullable|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // Max 5MB
+        ]);
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+            $imagePath = $image->storeAs('portfolios', $imageName, 'public');
+
+            Portfolio::create([
+                'tailor_id' => $tailor->id,
+                'title' => $validated['title'] ?? null,
+                'description' => $validated['description'] ?? null,
+                'image_path' => $imagePath,
+                'sort_order' => $tailor->portfolios()->count(),
+            ]);
+        }
+
+        return back()->with('success', 'Portfolio image uploaded successfully!');
+    }
+
+     public function deletePortfolio($id)
+    {
+        $tailor = Auth::user()->tailor;
+        $portfolio = $tailor->portfolios()->findOrFail($id);
+
+        if (Storage::disk('public')->exists($portfolio->image_path)) {
+            Storage::disk('public')->delete($portfolio->image_path);
+        }
+
+        $portfolio->delete();
+        return back()->with('success', 'Portfolio image deleted successfully!');
+    }
+
     public function byCategory($category)
 {
     $tailors = Tailor::with('user')

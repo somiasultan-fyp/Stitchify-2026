@@ -11,6 +11,48 @@
     <link rel="stylesheet" href="{{ asset('css/common.css') }}">
     <link rel="stylesheet" href="{{ asset('css/tailor-dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
+    <style>
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .portfolio-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #e0e0e0;
+            aspect-ratio: 1;
+        }
+        .portfolio-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .portfolio-delete-form {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+        .portfolio-delete-btn {
+            background: rgba(220, 53, 69, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .portfolio-delete-btn:hover {
+            background: #dc3545;
+            transform: scale(1.1);
+        }
+    </style>
 </head>
 <body>
 
@@ -262,8 +304,49 @@
                         <i class="fas fa-save me-2"></i> Save Changes
                     </button>
                 </div>
-
             </form>
+
+            <div class="form-card mt-4">
+                <div class="form-card-title">
+                    <i class="fas fa-images"></i> Portfolio
+                </div>
+                
+                <form method="POST" action="{{ route('tailor.portfolio.upload') }}" enctype="multipart/form-data" class="mb-4">
+                    @csrf
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-8">
+                            <label class="form-label">Upload New Image</label>
+                            <input type="file" name="image" class="form-control" accept="image/*" required>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn-save w-100">
+                                <i class="fas fa-upload me-2"></i> Upload
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="portfolio-grid">
+                    @forelse($tailor->portfolios as $portfolio)
+                        <div class="portfolio-item">
+                            <img src="{{ Storage::url($portfolio->image_path) }}" alt="Portfolio Image">
+                            <form method="POST" action="{{ route('tailor.portfolio.delete', $portfolio->id) }}" class="portfolio-delete-form">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="portfolio-delete-btn" onclick="return confirm('Are you sure you want to delete this image?');">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    @empty
+                        <div class="col-12 text-center text-muted py-4">
+                            <i class="fas fa-images fa-2x mb-2"></i>
+                            <p>No portfolio images uploaded yet.</p>
+                        </div>
+                    @endforelse
+                </div>
+            </div>
+
         </div>
 
     </div>

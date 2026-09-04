@@ -82,6 +82,11 @@ body {
 
 .password-toggle {
   position: relative;
+  width: 100%;
+}
+
+.password-toggle .form-control {
+  padding-right: 45px;
 }
 
 .password-toggle .toggle-icon {

@@ -117,6 +117,54 @@
             border: none;
             border-radius: 10px;
             overflow: hidden;
+            position: relative;
+        }
+
+        .tailor-card-header {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .rating-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
+            color: white;
+            padding: 6px 10px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+            font-size: 13px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+
+        .rating-badge i {
+            color: #fbbf24;
+            font-size: 12px;
+        }
+
+        .rating-badge small {
+            font-size: 11px;
+            opacity: 0.9;
+        }
+
+        .tailor-avatar img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #334155;
+        }
+
+        .tailor-category {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-transform: capitalize;
         }
 
         .service-img {
@@ -361,20 +409,30 @@
         <h2 class="text-center mb-5" style="color: var(--primary-bg);">Professional Tailors</h2>
         <div class="row g-4">
             @forelse($topTailors as $tailor)
+            @php
+                $averageRating = $tailor->reviews()->avg('rating') ?? 0;
+                $totalReviews = $tailor->reviews()->count();
+            @endphp
             <div class="col-md-4">
                 <div class="card tailor-card h-100 p-3">
-                    <div class="text-center">
+                    <div class="tailor-card-header text-center">
                         @if($tailor->user->profile_image)
                             <img src="{{ Storage::url($tailor->user->profile_image) }}"
                                  alt="{{ $tailor->user->name }}"
-                                 style="width:100px;height:100px;object-fit:cover;border-radius:50%;margin-bottom:15px;">
+                                 class="tailor-avatar">
                         @else
                             <i class="fa-solid fa-user-tie fa-4x mb-3 text-white"></i>
                         @endif
+                        
+                        <div class="rating-badge">
+                            <i class="fas fa-star"></i>
+                            <span>{{ number_format($averageRating, 1) }}</span>
+                            <small>({{ $totalReviews }})</small>
+                        </div>
                     </div>
                     <div class="card-body text-center">
                         <h5 class="card-title">{{ $tailor->user->name }}</h5>
-                        <p class="card-text">{{ $tailor->specialization ?? 'General Tailoring' }}</p>
+                        <p class="tailor-category">{{ ucfirst($tailor->specialization ?? 'General Tailoring') }}</p>
                         <p class="card-text small">
                             <i class="fas fa-star me-1"></i>{{ $tailor->experience_years ?? 0 }} yrs experience
                             &nbsp;|&nbsp;

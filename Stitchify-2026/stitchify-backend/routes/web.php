@@ -22,7 +22,6 @@ Route::get('/', function () {
         $reviews = \App\Models\Review::with('customer.user')->latest()->take(5)->get();
 
     return view('home', compact('topTailors', 'reviews'));
-    //$reviews = collect();
 })->name('home');
 Route::get('/tailors', [TailorController::class, 'index'])->name('tailors.index');
 Route::get('/tailors/{id}',[TailorController::class, 'show'])->name('tailors.show');
@@ -88,6 +87,8 @@ Route::middleware(['auth', 'verified', 'role:tailor'])->group(function () {
     Route::get('/tailor/order/{id}/detail',  [TailorController::class, 'orderDetail'])->name('tailor.order.detail');
     Route::get('/tailor/profile',            [TailorController::class, 'profile'])->name('tailor.profile');
     Route::post('/tailor/profile/update',    [TailorController::class, 'updateProfile'])->name('tailor.profile.update');
+    Route::post('/tailor/portfolio/upload',  [TailorController::class, 'uploadPortfolio'])->name('tailor.portfolio.upload');
+    Route::delete('/tailor/portfolio/{id}/delete', [TailorController::class, 'deletePortfolio'])->name('tailor.portfolio.delete');
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {

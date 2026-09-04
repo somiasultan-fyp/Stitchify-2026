@@ -170,10 +170,26 @@ body {
   background: #E6F1FB;
   border: 1.5px solid #B5D4F4;
 }
-.note-block.info p { font-size: 13px; color: #0C447C; margin: 0; line-height: 1.6; }
 
+.note-block.info p { font-size: 13px; color: #0C447C; margin: 0; line-height: 1.6; }
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 4px;
+}
+
+.form-row-address {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 15px;
+  margin-bottom: 4px;
+  align-items: start;
+}
 @media (max-width: 576px) {
   .meas-grid { grid-template-columns: 1fr; }
+  .form-row-2 { grid-template-columns: 1fr; }
+  .form-row-address { grid-template-columns: 1fr; }
   .registration-wrapper { width: 100%; }
 }
 </style>
@@ -195,29 +211,33 @@ body {
 
     <div class="section-divider"><span>Contact & Delivery</span></div>
 
+  <div class="form-row-2">
     <div class="mb-3">
-      <label class="form-label">Full Name *</label>
+     <label class="form-label">Full Name *</label>
       <input id="cname" class="form-control" placeholder="Enter your full name" type="text">
       <span class="error-text" id="cnameErr"></span>
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Phone Number *</label>
+    <label class="form-label">Phone Number *</label>
       <input id="cphone" class="form-control" placeholder="+92 300 1234567" type="tel">
       <span class="error-text" id="cphoneErr"></span>
     </div>
+  </div>
 
+  <div class="form-row-address">
     <div class="mb-3">
-      <label class="form-label">Delivery Address *</label>
+     <label class="form-label">Delivery Address *</label>
       <textarea id="caddr" class="form-control" rows="2" placeholder="House no, street, area, city"></textarea>
       <span class="error-text" id="caddrErr"></span>
     </div>
 
     <div class="mb-3">
-      <label class="form-label">City *</label>
+     <label class="form-label">City *</label>
       <input id="ccity" class="form-control" placeholder="Lahore" type="text">
       <span class="error-text" id="ccityErr"></span>
     </div>
+  </div>
 
     <div class="section-divider"><span>Delivery Method</span></div>
 
@@ -406,19 +426,20 @@ body {
 
     <div class="section-divider"><span>Fabric Details</span></div>
 
+  <div class="form-row-2">
     <div class="mb-3">
-      <label class="form-label">Fabric Name *</label>
+     <label class="form-label">Fabric Name *</label>
       <input id="fabricName" class="form-control" placeholder="e.g. Lawn, Khaddar, Silk, Linen, Cotton" type="text">
       <span class="error-text" id="fabricNameErr"></span>
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Fabric Color *</label>
+     <label class="form-label">Fabric Color *</label>
       <input id="fabricColorText" class="form-control" placeholder="e.g. Navy Blue, Off White, Dark Red" type="text">
       <span class="error-text" id="fabricColorErr"></span>
       <span class="requirement-text">Type the name of Color</span>
     </div>
-
+  </div>
     <div class="section-divider"><span>Payment</span></div>
 
     <div class="info-block mb-3">
