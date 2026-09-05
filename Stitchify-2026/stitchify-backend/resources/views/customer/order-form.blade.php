@@ -560,6 +560,11 @@ body {
           ? `<p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Delivery:</strong> Delivery service requested</p>`
           : `<p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Delivery:</strong> Self pickup / drop-off</p>`;
 
+        const customerName = document.getElementById('cname').value.trim();
+        const customerPhone = document.getElementById('cphone').value.trim();
+        const customerGarment = document.getElementById('garment').value;
+        const customerFabricName = document.getElementById('fabricName').value.trim();
+        const customerFabricColor = document.getElementById('fabricColorText').value.trim();   
         const formBody = document.querySelector('.form-body');
         formBody.innerHTML = '';
         const success = document.createElement('div');
@@ -572,10 +577,10 @@ body {
           <p style="color:#575a5b;font-size:14px;margin-bottom:4px;"><strong>Order Number:</strong> ${result.order_number}</p>
           <p style="color:#575a5b;font-size:14px;margin-bottom:20px;">Your order has been sent to the tailor. Payment will be unlocked after acceptance.</p>
           <div style="background:#f8f9fa;border-radius:12px;padding:16px;text-align:left;border:2px solid #e0e0e0;margin-bottom:14px;">
-            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Name:</strong> ${document.getElementById('cname').value}</p>
-            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Phone:</strong> ${document.getElementById('cphone').value}</p>
-            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Garment:</strong> ${document.getElementById('garment').value}</p>
-            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Fabric:</strong> ${document.getElementById('fabricName').value} &mdash; ${document.getElementById('fabricColorText').value}</p>
+            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Name:</strong>${customerName}</p>
+            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Phone:</strong> ${customerPhone}</p>
+            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Garment:</strong> ${customerGarment}</p>
+            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Fabric:</strong> ${customerFabricName} &mdash; ${customerFabricColor}</p>
             ${deliveryLine}
           </div>
           <div style="background:#E6F1FB;border-radius:10px;padding:12px;border:1.5px solid #B5D4F4;margin-bottom:20px;">
