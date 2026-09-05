@@ -509,6 +509,10 @@ body {
     const formData = new FormData();
 
     formData.append('tailor_id', {{ $tailor->id }});
+    formData.append('recipient_name',    document.getElementById('cname').value.trim());
+    formData.append('recipient_phone',   document.getElementById('cphone').value.trim());
+    formData.append('recipient_address', document.getElementById('caddr').value.trim());
+    formData.append('recipient_city',    document.getElementById('ccity').value.trim());
     formData.append('customer_name', document.getElementById('cname').value.trim());
     formData.append('customer_phone', document.getElementById('cphone').value.trim());
     formData.append('customer_address', document.getElementById('caddr').value.trim());

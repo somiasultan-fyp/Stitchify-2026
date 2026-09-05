@@ -71,6 +71,10 @@ class CustomerOrderController extends Controller
             DB::transaction(function () use ($request, $tailor, $customer, $designImagePath, &$order) {
                 
                 $order = Order::create([
+                    'recipient_name'    => $request->recipient_name,
+                    'recipient_phone'   => $request->recipient_phone,
+                    'recipient_address' => $request->recipient_address,
+                    'recipient_city'    => $request->recipient_city,
                     'order_number' => Order::generateOrderNumber(),
                     'customer_id' => $customer->id,
                     'tailor_id' => $tailor->id,
