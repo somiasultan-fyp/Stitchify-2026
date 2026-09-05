@@ -24,7 +24,7 @@ body {
   background: #f0f2f5;
 }
 .registration-wrapper {
-  width: 700px;
+  width: 500px;
   max-width: 95%;
   background-color: var(--text-white);
   border-radius: 20px;
@@ -81,11 +81,7 @@ body {
   border-left: 3px solid #1b2a4a;
 }
 .meas-grid {
-  display: grid; 
-  grid-template-columns: 1fr 1fr; 
-  gap: 15px; 
-  margin-bottom: 8px; 
-}
+  display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:4px; }
 .meas-item label {
   font-size:13px; font-weight:600; color:var(--primary-bg); margin-bottom:6px; display:block; }
 .meas-item input {
@@ -170,28 +166,7 @@ body {
   background: #E6F1FB;
   border: 1.5px solid #B5D4F4;
 }
-
 .note-block.info p { font-size: 13px; color: #0C447C; margin: 0; line-height: 1.6; }
-.form-row-2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  margin-bottom: 4px;
-}
-
-.form-row-address {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 15px;
-  margin-bottom: 4px;
-  align-items: start;
-}
-@media (max-width: 576px) {
-  .meas-grid { grid-template-columns: 1fr; }
-  .form-row-2 { grid-template-columns: 1fr; }
-  .form-row-address { grid-template-columns: 1fr; }
-  .registration-wrapper { width: 100%; }
-}
 </style>
 </head>
 <body>
@@ -211,33 +186,29 @@ body {
 
     <div class="section-divider"><span>Contact & Delivery</span></div>
 
-  <div class="form-row-2">
     <div class="mb-3">
-     <label class="form-label">Full Name *</label>
+      <label class="form-label">Full Name *</label>
       <input id="cname" class="form-control" placeholder="Enter your full name" type="text">
       <span class="error-text" id="cnameErr"></span>
     </div>
 
     <div class="mb-3">
-    <label class="form-label">Phone Number *</label>
+      <label class="form-label">Phone Number *</label>
       <input id="cphone" class="form-control" placeholder="+92 300 1234567" type="tel">
       <span class="error-text" id="cphoneErr"></span>
     </div>
-  </div>
 
-  <div class="form-row-address">
     <div class="mb-3">
-     <label class="form-label">Delivery Address *</label>
+      <label class="form-label">Delivery Address *</label>
       <textarea id="caddr" class="form-control" rows="2" placeholder="House no, street, area, city"></textarea>
       <span class="error-text" id="caddrErr"></span>
     </div>
 
     <div class="mb-3">
-     <label class="form-label">City *</label>
+      <label class="form-label">City *</label>
       <input id="ccity" class="form-control" placeholder="Lahore" type="text">
       <span class="error-text" id="ccityErr"></span>
     </div>
-  </div>
 
     <div class="section-divider"><span>Delivery Method</span></div>
 
@@ -303,7 +274,7 @@ body {
       <input type="file" id="designImages" accept="image/*" multiple style="display:none;">
     </div>
 
-    <div class="section-divider"><span>Measurements (inches) *</span></div>
+    <div class="section-divider"><span>Measurements (inches)</span></div>
 
     <div id="measDefault" class="text-center py-3" style="color:#999;">
       <i class="fas fa-tshirt me-2"></i>Please select a garment type first
@@ -313,108 +284,114 @@ body {
     <div id="meas-shalwar-men" class="meas-section" style="display:none;">
       <h6 class="meas-heading">Kameez</h6>
       <div class="meas-grid mb-3">
-        <div class="meas-item"><label>Chest *</label><input id="sm_chest" class="form-control" type="number" placeholder="e.g. 40"></div>
-        <div class="meas-item"><label>Length *</label><input id="sm_length" class="form-control" type="number" placeholder="e.g. 46"></div>
-        <div class="meas-item"><label>Shoulder *</label><input id="sm_shoulder" class="form-control" type="number" placeholder="e.g. 18"></div>
-        <div class="meas-item"><label>Sleeve *</label><input id="sm_sleeve" class="form-control" type="number" placeholder="e.g. 25"></div>
-        <div class="meas-item"><label>Neck *</label><input id="sm_neck" class="form-control" type="number" placeholder="e.g. 15"></div>
-        <div class="meas-item"><label>Waist *</label><input id="sm_waist" class="form-control" type="number" placeholder="e.g. 36"></div>
+        <div class="meas-item"><label>Chest</label><input id="sm_chest" class="form-control" type="number" placeholder="e.g. 40"></div>
+        <div class="meas-item"><label>Length</label><input id="sm_length" class="form-control" type="number" placeholder="e.g. 46"></div>
+        <div class="meas-item"><label>Shoulder</label><input id="sm_shoulder" class="form-control" type="number" placeholder="e.g. 18"></div>
+        <div class="meas-item"><label>Sleeve</label><input id="sm_sleeve" class="form-control" type="number" placeholder="e.g. 25"></div>
+        <div class="meas-item"><label>Neck</label><input id="sm_neck" class="form-control" type="number" placeholder="e.g. 15"></div>
+        <div class="meas-item"><label>Waist</label><input id="sm_waist" class="form-control" type="number" placeholder="e.g. 36"></div>
       </div>
       <h6 class="meas-heading">Shalwar</h6>
       <div class="meas-grid mb-3">
-        <div class="meas-item"><label>Shalwar Length *</label><input id="sm_shalwar_length" class="form-control" type="number" placeholder="e.g. 42"></div>
-        <div class="meas-item"><label>Hip / Seat *</label><input id="sm_hip" class="form-control" type="number" placeholder="e.g. 42"></div>
-        <div class="meas-item"><label>Waist (Shalwar) *</label><input id="sm_shalwar_waist" class="form-control" type="number" placeholder="e.g. 36"></div>
-        <div class="meas-item"><label>Paincha (Bottom) *</label><input id="sm_paincha" class="form-control" type="number" placeholder="e.g. 14"></div>
+        <div class="meas-item"><label>Shalwar Length</label><input id="sm_shalwar_length" class="form-control" type="number" placeholder="e.g. 42"></div>
+        <div class="meas-item"><label>Hip / Seat</label><input id="sm_hip" class="form-control" type="number" placeholder="e.g. 42"></div>
+        <div class="meas-item"><label>Waist (Shalwar)</label><input id="sm_shalwar_waist" class="form-control" type="number" placeholder="e.g. 36"></div>
+        <div class="meas-item"><label>Paincha (Bottom)</label><input id="sm_paincha" class="form-control" type="number" placeholder="e.g. 14"></div>
       </div>
     </div>
 
+    <!-- Shalwar Kameez Women -->
     <div id="meas-shalwar-women" class="meas-section" style="display:none;">
       <h6 class="meas-heading">Kameez</h6>
       <div class="meas-grid mb-3">
-        <div class="meas-item"><label>Chest *</label><input id="sw_chest" class="form-control" type="number" placeholder="e.g. 38"></div>
-        <div class="meas-item"><label>Waist *</label><input id="sw_waist" class="form-control" type="number" placeholder="e.g. 32"></div>
-        <div class="meas-item"><label>Hip *</label><input id="sw_hip" class="form-control" type="number" placeholder="e.g. 40"></div>
-        <div class="meas-item"><label>Length (Kameez) *</label><input id="sw_length" class="form-control" type="number" placeholder="e.g. 44"></div>
-        <div class="meas-item"><label>Shoulder *</label><input id="sw_shoulder" class="form-control" type="number" placeholder="e.g. 14"></div>
-        <div class="meas-item"><label>Sleeve *</label><input id="sw_sleeve" class="form-control" type="number" placeholder="e.g. 22"></div>
-        <div class="meas-item"><label>Neck *</label><input id="sw_neck" class="form-control" type="number" placeholder="e.g. 14"></div>
-        <div class="meas-item"><label>Daman (Hem) *</label><input id="sw_daman" class="form-control" type="number" placeholder="e.g. 56"></div>
+        <div class="meas-item"><label>Chest</label><input id="sw_chest" class="form-control" type="number" placeholder="e.g. 38"></div>
+        <div class="meas-item"><label>Waist</label><input id="sw_waist" class="form-control" type="number" placeholder="e.g. 32"></div>
+        <div class="meas-item"><label>Hip</label><input id="sw_hip" class="form-control" type="number" placeholder="e.g. 40"></div>
+        <div class="meas-item"><label>Length (Kameez)</label><input id="sw_length" class="form-control" type="number" placeholder="e.g. 44"></div>
+        <div class="meas-item"><label>Shoulder</label><input id="sw_shoulder" class="form-control" type="number" placeholder="e.g. 14"></div>
+        <div class="meas-item"><label>Sleeve</label><input id="sw_sleeve" class="form-control" type="number" placeholder="e.g. 22"></div>
+        <div class="meas-item"><label>Neck</label><input id="sw_neck" class="form-control" type="number" placeholder="e.g. 14"></div>
+        <div class="meas-item"><label>Daman (Hem)</label><input id="sw_daman" class="form-control" type="number" placeholder="e.g. 56"></div>
       </div>
       <h6 class="meas-heading">Shalwar / Trouser</h6>
       <div class="meas-grid mb-3">
-        <div class="meas-item"><label>Shalwar Length *</label><input id="sw_shalwar_length" class="form-control" type="number" placeholder="e.g. 40"></div>
-        <div class="meas-item"><label>Hip / Seat *</label><input id="sw_shalwar_hip" class="form-control" type="number" placeholder="e.g. 40"></div>
-        <div class="meas-item"><label>Waist (Shalwar) *</label><input id="sw_shalwar_waist" class="form-control" type="number" placeholder="e.g. 32"></div>
-        <div class="meas-item"><label>Paincha *</label><input id="sw_paincha" class="form-control" type="number" placeholder="e.g. 12"></div>
+        <div class="meas-item"><label>Shalwar Length</label><input id="sw_shalwar_length" class="form-control" type="number" placeholder="e.g. 40"></div>
+        <div class="meas-item"><label>Hip / Seat</label><input id="sw_shalwar_hip" class="form-control" type="number" placeholder="e.g. 40"></div>
+        <div class="meas-item"><label>Waist (Shalwar)</label><input id="sw_shalwar_waist" class="form-control" type="number" placeholder="e.g. 32"></div>
+        <div class="meas-item"><label>Paincha</label><input id="sw_paincha" class="form-control" type="number" placeholder="e.g. 12"></div>
       </div>
     </div>
 
+    <!-- Kurta -->
     <div id="meas-kurta" class="meas-section" style="display:none;">
       <div class="meas-grid mb-3">
-        <div class="meas-item"><label>Chest *</label><input id="k_chest" class="form-control" type="number" placeholder="e.g. 40"></div>
-        <div class="meas-item"><label>Length *</label><input id="k_length" class="form-control" type="number" placeholder="e.g. 42"></div>
-        <div class="meas-item"><label>Shoulder *</label><input id="k_shoulder" class="form-control" type="number" placeholder="e.g. 17"></div>
-        <div class="meas-item"><label>Sleeve *</label><input id="k_sleeve" class="form-control" type="number" placeholder="e.g. 24"></div>
-        <div class="meas-item"><label>Neck *</label><input id="k_neck" class="form-control" type="number" placeholder="e.g. 15"></div>
-        <div class="meas-item"><label>Waist *</label><input id="k_waist" class="form-control" type="number" placeholder="e.g. 38"></div>
-        <div class="meas-item"><label>Daman *</label><input id="k_daman" class="form-control" type="number" placeholder="e.g. 52"></div>
+        <div class="meas-item"><label>Chest</label><input id="k_chest" class="form-control" type="number" placeholder="e.g. 40"></div>
+        <div class="meas-item"><label>Length</label><input id="k_length" class="form-control" type="number" placeholder="e.g. 42"></div>
+        <div class="meas-item"><label>Shoulder</label><input id="k_shoulder" class="form-control" type="number" placeholder="e.g. 17"></div>
+        <div class="meas-item"><label>Sleeve</label><input id="k_sleeve" class="form-control" type="number" placeholder="e.g. 24"></div>
+        <div class="meas-item"><label>Neck</label><input id="k_neck" class="form-control" type="number" placeholder="e.g. 15"></div>
+        <div class="meas-item"><label>Waist</label><input id="k_waist" class="form-control" type="number" placeholder="e.g. 38"></div>
+        <div class="meas-item"><label>Daman</label><input id="k_daman" class="form-control" type="number" placeholder="e.g. 52"></div>
       </div>
     </div>
 
+    <!-- Suit / Pant Coat -->
     <div id="meas-suit" class="meas-section" style="display:none;">
       <h6 class="meas-heading">Coat / Blazer</h6>
       <div class="meas-grid mb-3">
-        <div class="meas-item"><label>Chest *</label><input id="s_chest" class="form-control" type="number" placeholder="e.g. 42"></div>
-        <div class="meas-item"><label>Waist *</label><input id="s_waist" class="form-control" type="number" placeholder="e.g. 38"></div>
-        <div class="meas-item"><label>Shoulder *</label><input id="s_shoulder" class="form-control" type="number" placeholder="e.g. 18"></div>
-        <div class="meas-item"><label>Sleeve *</label><input id="s_sleeve" class="form-control" type="number" placeholder="e.g. 25"></div>
-        <div class="meas-item"><label>Coat Length *</label><input id="s_coat_length" class="form-control" type="number" placeholder="e.g. 30"></div>
-        <div class="meas-item"><label>Neck *</label><input id="s_neck" class="form-control" type="number" placeholder="e.g. 15"></div>
+        <div class="meas-item"><label>Chest</label><input id="s_chest" class="form-control" type="number" placeholder="e.g. 42"></div>
+        <div class="meas-item"><label>Waist</label><input id="s_waist" class="form-control" type="number" placeholder="e.g. 38"></div>
+        <div class="meas-item"><label>Shoulder</label><input id="s_shoulder" class="form-control" type="number" placeholder="e.g. 18"></div>
+        <div class="meas-item"><label>Sleeve</label><input id="s_sleeve" class="form-control" type="number" placeholder="e.g. 25"></div>
+        <div class="meas-item"><label>Coat Length</label><input id="s_coat_length" class="form-control" type="number" placeholder="e.g. 30"></div>
+        <div class="meas-item"><label>Neck</label><input id="s_neck" class="form-control" type="number" placeholder="e.g. 15"></div>
       </div>
       <h6 class="meas-heading">Pant / Trouser</h6>
       <div class="meas-grid mb-3">
-        <div class="meas-item"><label>Pant Length *</label><input id="s_pant_length" class="form-control" type="number" placeholder="e.g. 42"></div>
-        <div class="meas-item"><label>Waist (Pant) *</label><input id="s_pant_waist" class="form-control" type="number" placeholder="e.g. 36"></div>
-        <div class="meas-item"><label>Hip / Seat *</label><input id="s_hip" class="form-control" type="number" placeholder="e.g. 42"></div>
-        <div class="meas-item"><label>Thigh *</label><input id="s_thigh" class="form-control" type="number" placeholder="e.g. 24"></div>
-        <div class="meas-item"><label>Bottom (Paincha) *</label><input id="s_paincha" class="form-control" type="number" placeholder="e.g. 16"></div>
+        <div class="meas-item"><label>Pant Length</label><input id="s_pant_length" class="form-control" type="number" placeholder="e.g. 42"></div>
+        <div class="meas-item"><label>Waist (Pant)</label><input id="s_pant_waist" class="form-control" type="number" placeholder="e.g. 36"></div>
+        <div class="meas-item"><label>Hip / Seat</label><input id="s_hip" class="form-control" type="number" placeholder="e.g. 42"></div>
+        <div class="meas-item"><label>Thigh</label><input id="s_thigh" class="form-control" type="number" placeholder="e.g. 24"></div>
+        <div class="meas-item"><label>Bottom (Paincha)</label><input id="s_paincha" class="form-control" type="number" placeholder="e.g. 16"></div>
       </div>
     </div>
 
+    <!-- Abaya -->
     <div id="meas-abaya" class="meas-section" style="display:none;">
       <div class="meas-grid mb-3">
-        <div class="meas-item"><label>Total Length *</label><input id="a_length" class="form-control" type="number" placeholder="e.g. 56"></div>
-        <div class="meas-item"><label>Chest *</label><input id="a_chest" class="form-control" type="number" placeholder="e.g. 40"></div>
-        <div class="meas-item"><label>Waist *</label><input id="a_waist" class="form-control" type="number" placeholder="e.g. 36"></div>
-        <div class="meas-item"><label>Hip *</label><input id="a_hip" class="form-control" type="number" placeholder="e.g. 44"></div>
-        <div class="meas-item"><label>Shoulder *</label><input id="a_shoulder" class="form-control" type="number" placeholder="e.g. 15"></div>
-        <div class="meas-item"><label>Sleeve Length *</label><input id="a_sleeve_length" class="form-control" type="number" placeholder="e.g. 24"></div>
-        <div class="meas-item"><label>Sleeve Width *</label><input id="a_sleeve_width" class="form-control" type="number" placeholder="e.g. 14"></div>
-        <div class="meas-item"><label>Neck *</label><input id="a_neck" class="form-control" type="number" placeholder="e.g. 14"></div>
-        <div class="meas-item"><label>Daman (Bottom Width) *</label><input id="a_daman" class="form-control" type="number" placeholder="e.g. 64"></div>
+        <div class="meas-item"><label>Total Length</label><input id="a_length" class="form-control" type="number" placeholder="e.g. 56"></div>
+        <div class="meas-item"><label>Chest</label><input id="a_chest" class="form-control" type="number" placeholder="e.g. 40"></div>
+        <div class="meas-item"><label>Waist</label><input id="a_waist" class="form-control" type="number" placeholder="e.g. 36"></div>
+        <div class="meas-item"><label>Hip</label><input id="a_hip" class="form-control" type="number" placeholder="e.g. 44"></div>
+        <div class="meas-item"><label>Shoulder</label><input id="a_shoulder" class="form-control" type="number" placeholder="e.g. 15"></div>
+        <div class="meas-item"><label>Sleeve Length</label><input id="a_sleeve_length" class="form-control" type="number" placeholder="e.g. 24"></div>
+        <div class="meas-item"><label>Sleeve Width</label><input id="a_sleeve_width" class="form-control" type="number" placeholder="e.g. 14"></div>
+        <div class="meas-item"><label>Neck</label><input id="a_neck" class="form-control" type="number" placeholder="e.g. 14"></div>
+        <div class="meas-item"><label>Daman (Bottom Width)</label><input id="a_daman" class="form-control" type="number" placeholder="e.g. 64"></div>
       </div>
     </div>
 
+    <!-- Children's Dress -->
     <div id="meas-children" class="meas-section" style="display:none;">
       <div class="meas-grid mb-3">
-        <div class="meas-item"><label>Age / Size *</label><input id="c_age" class="form-control" type="text" placeholder="e.g. 5 years / 20"></div>
-        <div class="meas-item"><label>Chest *</label><input id="c_chest" class="form-control" type="number" placeholder="e.g. 26"></div>
-        <div class="meas-item"><label>Length *</label><input id="c_length" class="form-control" type="number" placeholder="e.g. 28"></div>
-        <div class="meas-item"><label>Shoulder *</label><input id="c_shoulder" class="form-control" type="number" placeholder="e.g. 11"></div>
-        <div class="meas-item"><label>Sleeve *</label><input id="c_sleeve" class="form-control" type="number" placeholder="e.g. 14"></div>
-        <div class="meas-item"><label>Waist *</label><input id="c_waist" class="form-control" type="number" placeholder="e.g. 24"></div>
+        <div class="meas-item"><label>Age / Size</label><input id="c_age" class="form-control" type="text" placeholder="e.g. 5 years / 20"></div>
+        <div class="meas-item"><label>Chest</label><input id="c_chest" class="form-control" type="number" placeholder="e.g. 26"></div>
+        <div class="meas-item"><label>Length</label><input id="c_length" class="form-control" type="number" placeholder="e.g. 28"></div>
+        <div class="meas-item"><label>Shoulder</label><input id="c_shoulder" class="form-control" type="number" placeholder="e.g. 11"></div>
+        <div class="meas-item"><label>Sleeve</label><input id="c_sleeve" class="form-control" type="number" placeholder="e.g. 14"></div>
+        <div class="meas-item"><label>Waist</label><input id="c_waist" class="form-control" type="number" placeholder="e.g. 24"></div>
       </div>
     </div>
 
+    <!-- Other -->
     <div id="meas-other" class="meas-section" style="display:none;">
       <div class="meas-grid mb-3">
-        <div class="meas-item"><label>Chest *</label><input id="o_chest" class="form-control" type="number" placeholder="e.g. 40"></div>
-        <div class="meas-item"><label>Waist *</label><input id="o_waist" class="form-control" type="number" placeholder="e.g. 36"></div>
-        <div class="meas-item"><label>Length *</label><input id="o_length" class="form-control" type="number" placeholder="e.g. 44"></div>
-        <div class="meas-item"><label>Shoulder *</label><input id="o_shoulder" class="form-control" type="number" placeholder="e.g. 17"></div>
-        <div class="meas-item"><label>Sleeve *</label><input id="o_sleeve" class="form-control" type="number" placeholder="e.g. 24"></div>
-        <div class="meas-item"><label>Hip *</label><input id="o_hip" class="form-control" type="number" placeholder="e.g. 40"></div>
+        <div class="meas-item"><label>Chest</label><input id="o_chest" class="form-control" type="number" placeholder="e.g. 40"></div>
+        <div class="meas-item"><label>Waist</label><input id="o_waist" class="form-control" type="number" placeholder="e.g. 36"></div>
+        <div class="meas-item"><label>Length</label><input id="o_length" class="form-control" type="number" placeholder="e.g. 44"></div>
+        <div class="meas-item"><label>Shoulder</label><input id="o_shoulder" class="form-control" type="number" placeholder="e.g. 17"></div>
+        <div class="meas-item"><label>Sleeve</label><input id="o_sleeve" class="form-control" type="number" placeholder="e.g. 24"></div>
+        <div class="meas-item"><label>Hip</label><input id="o_hip" class="form-control" type="number" placeholder="e.g. 40"></div>
       </div>
       <div class="mb-3">
         <label class="form-label">Additional Notes for Measurements</label>
@@ -422,24 +399,21 @@ body {
       </div>
     </div>
 
-    <span class="error-text" id="measErr" style="text-align: center; display: none; margin-bottom: 10px; font-weight: 600;"></span>
-
     <div class="section-divider"><span>Fabric Details</span></div>
 
-  <div class="form-row-2">
     <div class="mb-3">
-     <label class="form-label">Fabric Name *</label>
+      <label class="form-label">Fabric Name *</label>
       <input id="fabricName" class="form-control" placeholder="e.g. Lawn, Khaddar, Silk, Linen, Cotton" type="text">
       <span class="error-text" id="fabricNameErr"></span>
     </div>
 
     <div class="mb-3">
-     <label class="form-label">Fabric Color *</label>
+      <label class="form-label">Fabric Color *</label>
       <input id="fabricColorText" class="form-control" placeholder="e.g. Navy Blue, Off White, Dark Red" type="text">
       <span class="error-text" id="fabricColorErr"></span>
       <span class="requirement-text">Type the name of Color</span>
     </div>
-  </div>
+
     <div class="section-divider"><span>Payment</span></div>
 
     <div class="info-block mb-3">
@@ -473,8 +447,6 @@ body {
   document.getElementById('garment').addEventListener('change', function() {
     document.querySelectorAll('.meas-section').forEach(el => el.style.display = 'none');
     document.getElementById('measDefault').style.display = 'none';
-    document.getElementById('measErr').style.display = 'none'; 
-
     const val = this.value;
     if      (val === 'Shalwar Kameez (Men)')   document.getElementById('meas-shalwar-men').style.display   = 'block';
     else if (val === 'Shalwar Kameez (Women)') document.getElementById('meas-shalwar-women').style.display = 'block';
@@ -488,7 +460,6 @@ body {
 
   function getMeasurements() {
     const garment = document.getElementById('garment').value;
-
     if (garment === 'Shalwar Kameez (Men)') {
       return { chest: document.getElementById('sm_chest').value, length: document.getElementById('sm_length').value, shoulder: document.getElementById('sm_shoulder').value, sleeve: document.getElementById('sm_sleeve').value, neck: document.getElementById('sm_neck').value, waist: document.getElementById('sm_waist').value, shalwar_length: document.getElementById('sm_shalwar_length').value, hip: document.getElementById('sm_hip').value, shalwar_waist: document.getElementById('sm_shalwar_waist').value, paincha: document.getElementById('sm_paincha').value };
     } else if (garment === 'Shalwar Kameez (Women)') {
@@ -514,21 +485,16 @@ body {
     const label = document.getElementById('imageLabel');
     previewBox.innerHTML = '';
     previewBox.style.display = uploadedFiles.length ? 'flex' : 'none';
-
     uploadedFiles.forEach((file, index) => {
       const reader = new FileReader();
       reader.onload = e => {
         const wrap = document.createElement('div');
         wrap.style.cssText = 'position:relative; width:72px; height:72px; flex-shrink:0;';
-        wrap.innerHTML = `
-          <img src="${e.target.result}" style="width:72px;height:72px;object-fit:cover;border-radius:8px;border:2px solid #e0e0e0;">
-          <button onclick="removeImage(${index})" title="Remove" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#dc3545;color:#fff;border:none;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;">&#x2715;</button>
-        `;
+        wrap.innerHTML = `<img src="${e.target.result}" style="width:72px;height:72px;object-fit:cover;border-radius:8px;border:2px solid #e0e0e0;"><button onclick="removeImage(${index})" title="Remove" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#dc3545;color:#fff;border:none;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;">&#x2715;</button>`;
         previewBox.appendChild(wrap);
       };
       reader.readAsDataURL(file);
     });
-
     label.textContent = uploadedFiles.length > 0 ? uploadedFiles.length + ' picture(s) selected' : 'Upload design pictures (optional)';
   }
 
@@ -543,16 +509,11 @@ body {
     renderPreviews();
   });
 
-  document.querySelector('label[for="designImages"]').addEventListener('mouseover', function() {
-    this.style.borderColor = '#1B2A4A';
-  });
-  document.querySelector('label[for="designImages"]').addEventListener('mouseout', function() {
-    this.style.borderColor = '#e0e0e0';
-  });
+  document.querySelector('label[for="designImages"]').addEventListener('mouseover', function() { this.style.borderColor = '#1B2A4A'; });
+  document.querySelector('label[for="designImages"]').addEventListener('mouseout',  function() { this.style.borderColor = '#e0e0e0'; });
 
   function validate() {
     let ok = true;
-
     const required = [
       ['cname',           'cnameErr',       'Full name is required'],
       ['cphone',          'cphoneErr',      'Phone number is required'],
@@ -562,7 +523,6 @@ body {
       ['fabricName',      'fabricNameErr',  'Fabric name is required'],
       ['fabricColorText', 'fabricColorErr', 'Fabric color is required'],
     ];
-
     required.forEach(([id, errId, msg]) => {
       const el = document.getElementById(id);
       if (!el) return;
@@ -576,90 +536,50 @@ body {
         err.textContent = '';
       }
     });
-
     if (!deliveryChoice) {
       document.getElementById('deliveryChoiceErr').textContent = 'Please select a delivery option';
       ok = false;
-    } else {
-      document.getElementById('deliveryChoiceErr').textContent = '';
     }
-
-    const visibleMeasSection = document.querySelector('.meas-section[style*="block"]');
-    const measErrEl = document.getElementById('measErr');
-    
-    if (visibleMeasSection) {
-      const measInputs = visibleMeasSection.querySelectorAll('input[type="number"], input[type="text"]');
-      let measOk = true;
-      
-      measInputs.forEach(input => {
-        if (!input.value.trim()) {
-          input.classList.add('is-invalid');
-          measOk = false;
-        } else {
-          input.classList.remove('is-invalid');
-        }
-      });
-
-      if (!measOk) {
-        measErrEl.textContent = '⚠️ Please fill in all measurement fields marked with *';
-        measErrEl.style.display = 'block';
-        ok = false;
-      } else {
-        measErrEl.style.display = 'none';
-        measErrEl.textContent = '';
-      }
-    }
-
     return ok;
   }
 
   document.getElementById('submitBtn').addEventListener('click', async () => {
     if (!validate()) {
-      const firstError = document.querySelector('.is-invalid') || document.getElementById('measErr');
+      const firstError = document.querySelector('.is-invalid');
       if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
 
     const measurements = getMeasurements();
 
-    const data = {
-      tailor_id:            {{ $tailor->id }},
-      customer_name:        document.getElementById('cname').value.trim(),
-      customer_phone:       document.getElementById('cphone').value.trim(),
-      customer_address:     document.getElementById('caddr').value.trim(),
-      customer_city:        document.getElementById('ccity').value.trim(),
-      dress_type:           document.getElementById('garment').value,
-      fabric_name:          document.getElementById('fabricName').value.trim(),
-      fabric_color:         document.getElementById('fabricColorText').value.trim(),
-      fabric_provided_by:   'customer',
-      special_instructions: document.getElementById('notes').value.trim(),
-      delivery_type:        deliveryChoice === 'yes' ? 'home_delivery' : 'pickup',
-      measurement_method:   'manual',
-      chest:                measurements.chest || null,
-      waist:                measurements.waist || measurements.shalwar_waist || null,
-      hips:                 measurements.hip || measurements.shalwar_hip || null,
-      shoulder:             measurements.shoulder || null,
-      sleeve_length:        measurements.sleeve || measurements.sleeve_length || null,
-      shirt_length:         measurements.length || measurements.coat_length || null,
-      trouser_length:       measurements.shalwar_length || measurements.pant_length || null,
-      trouser_waist:        measurements.pant_waist || measurements.shalwar_waist || null,
-      neck:                 measurements.neck || null,
-      measurements:         measurements,
-    };
-    
+    // ===== FormData use karo — image file properly upload hogi =====
+    const formData = new FormData();
 
-    const imagePromises = uploadedFiles.map(file => {
-    return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onload = (e) => resolve(e.target.result);
-    reader.readAsDataURL(file);
-    });
-});
+    formData.append('tailor_id',            {{ $tailor->id }});
+    formData.append('dress_type',           document.getElementById('garment').value);
+    formData.append('fabric_name',          document.getElementById('fabricName').value.trim());
+    formData.append('fabric_color',         document.getElementById('fabricColorText').value.trim());
+    formData.append('fabric_provided_by',   'customer');
+    formData.append('special_instructions', document.getElementById('notes').value.trim());
+    formData.append('delivery_type',        deliveryChoice === 'yes' ? 'home_delivery' : 'pickup');
+    formData.append('measurement_method',   'manual');
 
-    const imageBase64Array = await Promise.all(imagePromises);
+    // Measurements
+    formData.append('chest',          measurements.chest || '');
+    formData.append('waist',          measurements.waist || measurements.shalwar_waist || '');
+    formData.append('hips',           measurements.hip   || measurements.shalwar_hip   || '');
+    formData.append('shoulder',       measurements.shoulder    || '');
+    formData.append('sleeve_length',  measurements.sleeve      || measurements.sleeve_length || '');
+    formData.append('shirt_length',   measurements.length      || measurements.coat_length   || '');
+    formData.append('trouser_length', measurements.shalwar_length || measurements.pant_length || '');
+    formData.append('trouser_waist',  measurements.pant_waist  || measurements.shalwar_waist || '');
+    formData.append('neck',           measurements.neck || '');
+    formData.append('measurements',   JSON.stringify(measurements));
 
-    data.design_images = imageBase64Array;
-    console.log('Sending Request Payload:', data);
+    // Design image — agar upload ki hai toh attach karo
+    if (uploadedFiles.length > 0) {
+      formData.append('design_image', uploadedFiles[0]);
+    }
 
     const submitBtn = document.getElementById('submitBtn');
     submitBtn.disabled = true;
@@ -669,26 +589,22 @@ body {
       const response = await fetch('/order/store', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          // Content-Type mat likho — browser khud multipart/form-data set karega
           'X-CSRF-TOKEN': '{{ csrf_token() }}',
           'Accept': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: formData
       });
 
       const result = await response.json();
 
       if (response.ok && result.success) {
-        const customerName  = document.getElementById('cname').value;
-        const customerPhone = document.getElementById('cphone').value;
-
         const deliveryLine = deliveryChoice === 'yes'
           ? `<p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Delivery:</strong> Delivery service requested</p>`
           : `<p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Delivery:</strong> Self pickup / drop-off</p>`;
 
         const formBody = document.querySelector('.form-body');
         formBody.innerHTML = '';
-
         const success = document.createElement('div');
         success.style.cssText = 'text-align:center; padding: 30px 10px;';
         success.innerHTML = `
@@ -699,10 +615,10 @@ body {
           <p style="color:#575a5b;font-size:14px;margin-bottom:4px;"><strong>Order Number:</strong> ${result.order_number}</p>
           <p style="color:#575a5b;font-size:14px;margin-bottom:20px;">Your order has been sent to the tailor. Payment will be unlocked after acceptance.</p>
           <div style="background:#f8f9fa;border-radius:12px;padding:16px;text-align:left;border:2px solid #e0e0e0;margin-bottom:14px;">
-            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Name:</strong> ${customerName}</p>
-            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Phone:</strong> ${customerPhone}</p>
-            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Garment:</strong> ${data.dress_type}</p>
-            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Fabric:</strong> ${data.fabric_name} &mdash; ${data.fabric_color}</p>
+            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Name:</strong> ${document.getElementById('cname').value}</p>
+            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Phone:</strong> ${document.getElementById('cphone').value}</p>
+            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Garment:</strong> ${document.getElementById('garment').value}</p>
+            <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Fabric:</strong> ${document.getElementById('fabricName').value} &mdash; ${document.getElementById('fabricColorText').value}</p>
             ${deliveryLine}
           </div>
           <div style="background:#E6F1FB;border-radius:10px;padding:12px;border:1.5px solid #B5D4F4;margin-bottom:20px;">
@@ -715,14 +631,13 @@ body {
         formBody.appendChild(success);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        alert('Error: ' + (result.message || 'Order submission failed.'));
+        alert('Error: ' + (result.message || 'Order save nahi ho saka.'));
         submitBtn.disabled = false;
         submitBtn.innerHTML = `<i class="fas fa-check"></i> &nbsp;Submit Order`;
       }
-
     } catch (error) {
       console.error('Submission Error:', error);
-      alert('Connection is failed.');
+      alert('Backend server se connection fail ho gaya. Logs check karein.');
       submitBtn.disabled = false;
       submitBtn.innerHTML = `<i class="fas fa-check"></i> &nbsp;Submit Order`;
     }
