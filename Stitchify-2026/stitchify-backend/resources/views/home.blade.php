@@ -88,6 +88,11 @@
             padding: 20px;
             border-radius: 10px;
         }
+        .card-title {
+            font-size: 16px !important;
+            margin-bottom: 5px !important;
+        }
+
         .carousel-indicators [data-bs-target] {
             background-color: var(--accent-color);
         }
@@ -118,6 +123,7 @@
             border-radius: 10px;
             overflow: hidden;
             position: relative;
+            padding: 20px !important;
         }
 
         .tailor-card-header {
@@ -131,20 +137,20 @@
             right: 10px;
             background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
             color: white;
-            padding: 6px 10px;
-            border-radius: 8px;
+            padding: 5px 8px !important;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             gap: 4px;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 11px !important;
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             z-index: 10;
         }
 
         .rating-badge i {
             color: #fbbf24;
-            font-size: 12px;
+            font-size: 10px !important;
         }
 
         .rating-badge small {
@@ -153,17 +159,18 @@
         }
 
         .tailor-avatar img {
-            width: 100px;
-            height: 100px;
+            width: 80px !important;
+            height: 80px !important;
             border-radius: 50%;
             object-fit: cover;
             border: 3px solid #334155;
+            margin-bottom: 10px !important;
         }
 
         .tailor-category {
             color: #94a3b8;
-            font-size: 14px;
-            margin-bottom: 10px;
+            font-size: 13px !important;
+            margin-bottom: 8px !important;
             text-transform: capitalize;
         }
 
@@ -395,7 +402,7 @@
             <div class="modal-body p-0">
                 <div class="ratio ratio-16x9">
                     <video controls>
-                        <source src="{{ asset('measurement-video.mp4') }}" type="video/mp4">
+                        <source src="{{ asset('measurements.mp4') }}" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
                 </div>
