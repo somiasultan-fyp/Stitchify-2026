@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class DeliveryController extends Controller
 {
-    //Delivery auto-create after payment
+    // Delivery auto-create after payment
     public static function createAfterPayment(Order $order): void
     {
         if ($order->delivery_type !== 'home_delivery') {
@@ -31,29 +31,35 @@ class DeliveryController extends Controller
             'estimated_date'   => now()->addDays(2),
         ]);
 
-        $order->update(['tracking_id' => $delivery->tracking_id]);
+        $order->update([
+            'tracking_id' => $delivery->tracking_id
+        ]);
 
+        // Customer notification
         Notification::create([
             'user_id'    => $order->customer->user->id,
             'title'      => 'Delivery Scheduled!',
             'message'    => 'Your fabric pickup has been scheduled. Tracking ID: ' .
-                           $delivery->tracking_id .
-                           '. Our courier will contact you shortly.',
+                            $delivery->tracking_id .
+                            '. Our courier will contact you shortly.',
             'type'       => 'delivery',
             'action_url' => '/customer/dashboard',
         ]);
 
+        // Tailor notification
         Notification::create([
             'user_id'    => $order->tailor->user->id,
             'title'      => 'Fabric Coming Your Way!',
             'message'    => 'Fabric for order #' . $order->order_number .
-                           ' will be delivered to you soon. Tracking: ' .
-                           $delivery->tracking_id,
+                            ' will be delivered to you soon. Tracking: ' .
+                            $delivery->tracking_id,
             'type'       => 'delivery',
             'action_url' => '/tailor/dashboard',
         ]);
     }
 
+
+    // Customer tracking page
     public function track(Order $order)
     {
         if ($order->customer->user_id !== auth()->id()) {
@@ -70,54 +76,63 @@ class DeliveryController extends Controller
         return view('customer.tracking', compact('order', 'delivery'));
     }
 
+
+    // Tailor updates delivery status
     public function updateStatus(Request $request, Delivery $delivery)
-{
-    $order = $delivery->order;
+    {
+        $order = $delivery->order;
 
-    // Only the tailor assigned to this order can update delivery status
-    if (auth()->user()->role !== 'tailor' ||
-        !$authTailor = auth()->user()->tailor ||
-        $order->tailor_id !== $authTailor->id) {
-        abort(403, 'Unauthorized access.');
-    }
+        $tailor = auth()->user()->tailor;
 
-    $request->validate([
-        'status' => 'required|in:scheduled,picked_up_from_customer,
-                     delivered_to_tailor,stitching_in_progress,
-                     picked_up_from_tailor,out_for_delivery,delivered',
-        'notes'  => 'nullable|string|max:500',
-    ]);
+        // Only assigned tailor can update delivery
+        if (
+            auth()->user()->role !== 'tailor' ||
+            !$tailor ||
+            $order->tailor_id !== $tailor->id
+        ) {
+            abort(403, 'Unauthorized access.');
+        }
 
-    $delivery->update([
-        'status' => $request->status,
-        'notes'  => $request->notes,
-    ]);
-
-    if ($request->status === 'delivered') {
-        $order->update([
-            'status'               => 'delivered',
-            'actual_delivery_date' => now(),
+        $request->validate([
+            'status' => 'required|in:scheduled,picked_up_from_customer,delivered_to_tailor,stitching_in_progress,picked_up_from_tailor,out_for_delivery,delivered',
+            'notes'  => 'nullable|string|max:500',
         ]);
 
-        $order->tailor->incrementSlot();
+        $delivery->update([
+            'status' => $request->status,
+            'notes'  => $request->notes,
+        ]);
+
+        // If delivery is completed
+        if ($request->status === 'delivered') {
+
+            $order->update([
+                'status'               => 'delivered',
+                'actual_delivery_date' => now(),
+            ]);
+
+            $order->tailor->incrementSlot();
+        }
+
+        // Notify customer
+        Notification::create([
+            'user_id'    => $order->customer->user->id,
+            'title'      => 'Delivery Update — ' . $delivery->tracking_id,
+            'message'    => 'Your order status: ' . $delivery->status_label,
+            'type'       => 'delivery',
+            'action_url' => '/customer/track/' . $order->id,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Delivery status updated successfully.',
+            'status'  => $delivery->status_label,
+        ]);
     }
 
-    Notification::create([
-        'user_id'    => $order->customer->user->id,
-        'title'      => 'Delivery Update — ' . $delivery->tracking_id,
-        'message'    => 'Your order status: ' . $delivery->status_label,
-        'type'       => 'delivery',
-        'action_url' => '/customer/track/' . $order->id,
-    ]);
 
-    return response()->json([
-        'success' => true,
-        'message' => 'Delivery status updated successfully.',
-        'status'  => $delivery->status_label,
-    ]);
-}
-
-   public function getStatus(Order $order)
+    // Customer gets delivery status
+    public function getStatus(Order $order)
     {
         if ($order->customer->user_id !== auth()->id()) {
             abort(403, 'Unauthorized access.');
@@ -127,20 +142,19 @@ class DeliveryController extends Controller
 
         if (!$delivery) {
             return response()->json([
-                'found'  => false,
-                'message'=> 'No delivery record found.',
+                'found'   => false,
+                'message' => 'No delivery record found.',
             ]);
         }
 
         return response()->json([
-            'found'       => true,
-            'tracking_id' => $delivery->tracking_id,
-            'status'      => $delivery->status,
-            'status_label'=> $delivery->status_label,
-            'progress'    => $delivery->progress,
-            'courier'     => $delivery->courier_name,
-            'estimated'   => $delivery->estimated_date?->format('d M Y'),
+            'found'        => true,
+            'tracking_id'  => $delivery->tracking_id,
+            'status'       => $delivery->status,
+            'status_label' => $delivery->status_label,
+            'progress'     => $delivery->progress,
+            'courier'      => $delivery->courier_name,
+            'estimated'    => $delivery->estimated_date?->format('d M Y'),
         ]);
     }
 }
-
