@@ -93,6 +93,7 @@ Route::middleware(['auth', 'verified', 'role:tailor'])->group(function () {
     Route::get('/tailor/orders/{order}',          [TailorDashboardController::class, 'showOrder'])->name('tailor.orders.show');
     Route::patch('/tailor/orders/{order}/accept', [TailorDashboardController::class, 'acceptOrder'])->name('tailor.orders.accept');
     Route::patch('/tailor/orders/{order}/reject', [TailorDashboardController::class, 'rejectOrder'])->name('tailor.orders.reject');
+    Route::patch('/tailor/delivery/{delivery}/status', [DeliveryController::class, 'updateStatus'])->name('tailor.delivery.update');
     Route::patch('/tailor/orders/{order}/status', [TailorDashboardController::class, 'updateStatus'])->name('tailor.orders.status');
 
     // Profile & Portfolio
@@ -128,7 +129,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::patch('/admin/users/{user}/toggle',             [AdminController::class, 'toggleUser'])->name('admin.users.toggle');
     Route::patch('/admin/complaints/{complaint}/respond',  [AdminController::class, 'respondComplaint'])->name('admin.complaints.respond');
-    Route::patch('/admin/delivery/{delivery}/status',      [DeliveryController::class, 'updateStatus'])->name('delivery.update');
     Route::patch('/admin/tailors/{user}/approve',          [AdminController::class, 'approveTailor'])->name('admin.tailors.approve');
 });
 
