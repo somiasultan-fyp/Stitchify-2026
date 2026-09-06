@@ -21,12 +21,19 @@ class TailorDashboardController extends Controller
             ->groupBy('status');
 
         $stats = [
-            'pending'     => $orders->get('pending', collect())->count(),
-            'in_progress' => $orders->get('in_progress', collect())->count(),
-            'ready'       => $orders->get('ready', collect())->count(),
-            'dispatched'  => $orders->get('dispatched', collect())->count(),
-            'delivered'   => $orders->get('delivered', collect())->count(),
-            'slots_left'  => $tailor->available_slots,
+            'pending'         => $orders->get('pending', collect())->count(),
+            'in_progress'     => $orders->get('in_progress', collect())->count(),
+            'ready'           => $orders->get('ready', collect())->count(),
+            'dispatched'      => $orders->get('dispatched', collect())->count(),
+            'delivered'       => $orders->get('delivered', collect())->count(),
+            'slots_left'      => $tailor->available_slots,
+            'available_slots' => $tailor->available_slots,
+            'max_slots'       => $tailor->max_slots ?? 20,
+            'active'          => $orders->get('accepted', collect())->count()
+                               + $orders->get('in_progress', collect())->count()
+                               + $orders->get('ready', collect())->count()
+                               + $orders->get('dispatched', collect())->count(),
+            'completed'       => $orders->get('delivered', collect())->count(),
         ];
 
         $pendingOrders = $orders->get('pending', collect());
@@ -38,12 +45,15 @@ class TailorDashboardController extends Controller
 
         $completedOrders = $orders->get('delivered', collect());
 
+        $completedCount = $orders->get('delivered', collect())->count();
+
         return view('tailor.tailordashboard', compact(
             'tailor',
             'stats',
             'pendingOrders',
             'activeOrders',
-            'completedOrders'
+            'completedOrders',
+            'completedCount'
         ));
     }
 
@@ -51,7 +61,7 @@ class TailorDashboardController extends Controller
     {
         $this->authorizeTailor($order);
 
-        $order->load(['customer.user', 'measurement']);
+        $order->load(['customer.user', 'measurement', 'delivery']);
 
         return view('tailor.order-detail', compact('order'));
     }
