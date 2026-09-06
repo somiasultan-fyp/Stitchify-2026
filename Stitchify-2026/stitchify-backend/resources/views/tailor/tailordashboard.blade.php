@@ -163,6 +163,7 @@
     </div>
   </div>
 
+  {{-- PENDING ORDERS --}}
   <div class="content-section" id="pending-orders">
     <h3 class="section-title">
       Pending Orders
@@ -183,7 +184,7 @@
         <p><strong>Customer:</strong> {{ $order->recipient_name ?? $order->customer->user->name }}</p>
         <p><strong>Phone:</strong> {{ $order->recipient_phone ?? '—' }}</p>
         @if($order->recipient_address || $order->recipient_city)
-        <p><strong>Address:</strong> {{ $order->recipient_address }}, {{ $order->recipient_city }}</p>
+          <p><strong>Address:</strong> {{ $order->recipient_address }}, {{ $order->recipient_city }}</p>
         @endif
         <p><strong>Item:</strong> {{ $order->dress_type }}</p>
         @if($order->special_instructions)
@@ -196,12 +197,10 @@
                 onclick="openAcceptModal({{ $order->id }}, '{{ $order->order_number }}')">
           <i class="fas fa-check me-1"></i> Accept Order
         </button>
-
         <button class="btn-sm-custom btn-reject"
                 onclick="openRejectModal({{ $order->id }}, '{{ $order->order_number }}')">
           <i class="fas fa-times me-1"></i> Reject
         </button>
-
         <button class="btn-sm-custom btn-view"
                 onclick="viewDetail({{ $order->id }})">
           <i class="fas fa-eye me-1"></i> View Details
@@ -216,6 +215,7 @@
     @endforelse
   </div>
 
+  {{-- ACTIVE ORDERS --}}
   <div class="content-section" id="active-orders">
     <h3 class="section-title">Active Orders</h3>
 
@@ -224,7 +224,8 @@
       <div class="order-header">
         <div class="order-id">#{{ $order->order_number }}</div>
         <span class="order-status
-          {{ $order->status === 'ready' ? 'status-ready' : 'status-progress' }}">
+          {{ $order->status === 'ready'       ? 'status-ready'      :
+            ($order->status === 'dispatched'  ? 'status-dispatched' : 'status-progress') }}">
           {{ ucfirst(str_replace('_', ' ', $order->status)) }}
         </span>
       </div>
@@ -232,20 +233,21 @@
         <p><strong>Customer:</strong> {{ $order->recipient_name ?? $order->customer->user->name }}</p>
         <p><strong>Phone:</strong> {{ $order->recipient_phone ?? '—' }}</p>
         @if($order->recipient_address || $order->recipient_city)
-        <p><strong>Address:</strong> {{ $order->recipient_address }}, {{ $order->recipient_city }}</p>
+          <p><strong>Address:</strong> {{ $order->recipient_address }}, {{ $order->recipient_city }}</p>
         @endif
         <p><strong>Item:</strong> {{ $order->dress_type }}</p>
         <p><strong>Price:</strong> Rs. {{ number_format($order->price) }}</p>
         @if($order->expected_delivery_date)
           <p><strong>Expected Delivery:</strong>
             {{ \Carbon\Carbon::parse($order->expected_delivery_date)->format('M d, Y') }}
-           @if(\Carbon\Carbon::parse($order->expected_delivery_date)->isPast())
+            @if(\Carbon\Carbon::parse($order->expected_delivery_date)->isPast())
               <span class="badge bg-danger ms-1">Overdue!</span>
             @endif
           </p>
         @endif
         <p><strong>Order Date:</strong> {{ $order->created_at->format('M d, Y') }}</p>
       </div>
+
       <div class="order-actions">
 
         @if($order->status === 'accepted')
@@ -253,22 +255,33 @@
                   onclick="updateStatus({{ $order->id }}, 'in_progress', this)">
             <i class="fas fa-cut me-1"></i> Start Stitching
           </button>
+
         @elseif($order->status === 'in_progress')
           <button class="btn-sm-custom btn-complete"
                   onclick="updateStatus({{ $order->id }}, 'ready', this)">
             <i class="fas fa-check me-1"></i> Mark Ready
           </button>
+
         @elseif($order->status === 'ready')
           <button class="btn-sm-custom btn-complete"
                   onclick="updateStatus({{ $order->id }}, 'dispatched', this)">
             <i class="fas fa-truck me-1"></i> Mark Dispatched
           </button>
+
+        {{-- ✅ NEW — Mark Delivered Button --}}
+        @elseif($order->status === 'dispatched')
+          <button class="btn-sm-custom btn-complete"
+                  onclick="updateStatus({{ $order->id }}, 'delivered', this)">
+            <i class="fas fa-check-double me-1"></i> Mark Delivered
+          </button>
+
         @endif
 
         <button class="btn-sm-custom btn-view"
                 onclick="viewDetail({{ $order->id }})">
           <i class="fas fa-eye me-1"></i> View Details
         </button>
+
       </div>
     </div>
     @empty
@@ -279,6 +292,7 @@
     @endforelse
   </div>
 
+  {{-- PERFORMANCE --}}
   <div class="content-section" id="performance">
     <h3 class="section-title">Performance Metrics</h3>
     <div class="performance-stat">
@@ -295,6 +309,7 @@
     </div>
   </div>
 
+  {{-- REVIEWS --}}
   <div class="content-section" id="reviews">
     <h3 class="section-title">Recent Reviews</h3>
     <div class="empty-state">
@@ -305,6 +320,7 @@
 
 </div>
 
+{{-- Accept Modal --}}
 <div class="modal fade" id="acceptModal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -341,6 +357,7 @@
   </div>
 </div>
 
+{{-- Reject Modal --}}
 <div class="modal fade" id="rejectModal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -371,6 +388,7 @@
   </div>
 </div>
 
+{{-- Detail Modal --}}
 <div class="modal fade" id="detailModal" tabindex="-1">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
