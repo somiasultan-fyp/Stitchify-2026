@@ -71,46 +71,53 @@ class DeliveryController extends Controller
     }
 
     public function updateStatus(Request $request, Delivery $delivery)
-    {
-        $request->validate([
-            'status' => 'required|in:scheduled,picked_up_from_customer,
-                         delivered_to_tailor,stitching_in_progress,
-                         picked_up_from_tailor,out_for_delivery,delivered',
-            'notes'  => 'nullable|string|max:500',
-        ]);
+{
+    $order = $delivery->order;
 
-        $delivery->update([
-            'status' => $request->status,
-            'notes'  => $request->notes,
-        ]);
-
-        $order = $delivery->order;
-
-        if ($request->status === 'delivered') {
-            $order->update([
-                'status'               => 'delivered',
-                'actual_delivery_date' => now(),
-            ]);
-
-            $order->tailor->incrementSlot();
-        }
-
-        Notification::create([
-            'user_id'    => $order->customer->user->id,
-            'title'      => 'Delivery Update — ' . $delivery->tracking_id,
-            'message'    => 'Your order status: ' . $delivery->status_label,
-            'type'       => 'delivery',
-            'action_url' => '/customer/track/' . $order->id,
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Delivery status updated successfully.',
-            'status'  => $delivery->status_label,
-        ]);
+    // Only the tailor assigned to this order can update delivery status
+    if (auth()->user()->role !== 'tailor' ||
+        !$authTailor = auth()->user()->tailor ||
+        $order->tailor_id !== $authTailor->id) {
+        abort(403, 'Unauthorized access.');
     }
 
-    public function getStatus(Order $order)
+    $request->validate([
+        'status' => 'required|in:scheduled,picked_up_from_customer,
+                     delivered_to_tailor,stitching_in_progress,
+                     picked_up_from_tailor,out_for_delivery,delivered',
+        'notes'  => 'nullable|string|max:500',
+    ]);
+
+    $delivery->update([
+        'status' => $request->status,
+        'notes'  => $request->notes,
+    ]);
+
+    if ($request->status === 'delivered') {
+        $order->update([
+            'status'               => 'delivered',
+            'actual_delivery_date' => now(),
+        ]);
+
+        $order->tailor->incrementSlot();
+    }
+
+    Notification::create([
+        'user_id'    => $order->customer->user->id,
+        'title'      => 'Delivery Update — ' . $delivery->tracking_id,
+        'message'    => 'Your order status: ' . $delivery->status_label,
+        'type'       => 'delivery',
+        'action_url' => '/customer/track/' . $order->id,
+    ]);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Delivery status updated successfully.',
+        'status'  => $delivery->status_label,
+    ]);
+}
+
+   public function getStatus(Order $order)
     {
         if ($order->customer->user_id !== auth()->id()) {
             abort(403, 'Unauthorized access.');

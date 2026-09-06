@@ -22,40 +22,6 @@ function filterOrders() {
     });
 }
 
-async function updateDelivery(deliveryId, orderId) {
-    const status = document.getElementById('deliveryStatus-' + orderId).value;
-    const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-    try {
-        const res = await fetch('/admin/delivery/' + deliveryId + '/status', {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrf,
-            },
-            body: JSON.stringify({ status }),
-        });
-
-        const data = await res.json();
-
-        if (data.success) {
-            showToast('Delivery status updated: ' + data.status, 'success');
-        } else {
-            showToast('Update failed. Please try again.', 'danger');
-        }
-    } catch (err) {
-        showToast('Server error. Please try again.', 'danger');
-    }
-}
-
-function showToast(msg, type = '') {
-    const container = document.getElementById('toastContainer');
-    const toast = document.createElement('div');
-    toast.className = `toast-msg ${type}`;
-    toast.textContent = msg;
-    container.appendChild(toast);
-    setTimeout(() => toast.remove(), 3500);
-}
 
 document.querySelectorAll('.sidebar-menu a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {

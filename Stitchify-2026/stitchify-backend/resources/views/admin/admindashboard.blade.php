@@ -312,36 +312,6 @@
               </span>
             </td>
             <td>
-              @if($order->delivery)
-                <div style="margin-top:4px;">
-                  <span style="font-size:11px;color:#666;display:block;margin-bottom:4px;">
-                    Current: <strong>{{ ucfirst(str_replace('_',' ',$order->delivery->status)) }}</strong>
-                  </span>
-                  <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                    <select id="deliveryStatus-{{ $order->id }}"
-                            style="border:1px solid #ddd;border-radius:6px;
-                                   padding:4px 8px;font-size:12px;">
-                      @foreach(['scheduled','picked_up_from_customer','delivered_to_tailor',
-                                'stitching_in_progress','picked_up_from_tailor',
-                                'out_for_delivery','delivered'] as $st)
-                        <option value="{{ $st }}"
-                          {{ $order->delivery->status === $st ? 'selected' : '' }}>
-                          {{ ucfirst(str_replace('_',' ',$st)) }}
-                        </option>
-                      @endforeach
-                    </select>
-                    <button type="button"
-                            onclick="updateDelivery({{ $order->delivery->id }}, '{{ $order->id }}')"
-                            style="background:#1B2A4A;color:white;border:none;
-                                   border-radius:6px;padding:4px 12px;
-                                   font-size:12px;cursor:pointer;">
-                      Update
-                    </button>
-                  </div>
-                </div>
-              @else
-                <span style="font-size:12px;color:#aaa;">No delivery</span>
-              @endif
             </td>
           </tr>
           @empty

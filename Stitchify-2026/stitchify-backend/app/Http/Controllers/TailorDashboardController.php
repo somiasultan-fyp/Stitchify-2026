@@ -15,7 +15,7 @@ class TailorDashboardController extends Controller
         $tailor = auth()->user()->tailor;
 
         $orders = Order::where('tailor_id', $tailor->id)
-            ->with(['customer.user'])
+            ->with(['customer.user' , 'delivery'])
             ->latest()
             ->get()
             ->groupBy('status');
