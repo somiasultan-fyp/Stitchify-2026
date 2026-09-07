@@ -160,7 +160,7 @@ async function viewDetail(orderId) {
   new bootstrap.Modal(document.getElementById('detailModal')).show();
 
   try {
-    const res = await fetch(`/tailor/order/${orderId}/detail`);
+    const res = await fetch(`/tailor/orders/${orderId}`);
     const data = await res.json();
 
     if (data.success) {
