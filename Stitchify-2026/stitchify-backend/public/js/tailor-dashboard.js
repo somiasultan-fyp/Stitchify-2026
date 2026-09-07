@@ -127,7 +127,7 @@ async function updateStatus(orderId, newStatus, btn) {
 
   try {
     const res = await fetch(`/tailor/order/${orderId}/status`, {
-      method: 'POST',
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
         'X-CSRF-TOKEN': CSRF,
