@@ -268,7 +268,7 @@
             <i class="fas fa-truck me-1"></i> Mark Dispatched
           </button>
 
-        {{-- ✅ NEW — Mark Delivered Button --}}
+        {{-- ✅ Mark Delivered Button --}}
         @elseif($order->status === 'dispatched')
           <button class="btn-sm-custom btn-complete"
                   onclick="updateStatus({{ $order->id }}, 'delivered', this)">
