@@ -168,10 +168,7 @@ Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
         ->name('delivery.status');
 });
 
-
--
 //Tailor Routes
-
 
 Route::middleware(['auth', 'verified', 'role:tailor'])->group(function () {
 

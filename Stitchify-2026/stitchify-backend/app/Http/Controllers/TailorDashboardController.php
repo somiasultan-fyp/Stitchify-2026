@@ -57,14 +57,20 @@ class TailorDashboardController extends Controller
         ));
     }
 
-    public function showOrder(Order $order)
-    {
-        $this->authorizeTailor($order);
+    public function showOrder(Order $order, Request $request)
+{
+    $this->authorizeTailor($order);
+    $order->load(['customer.user', 'measurement', 'delivery']);
 
-        $order->load(['customer.user', 'measurement', 'delivery']);
-
-        return view('tailor.order-detail', compact('order'));
+    if ($request->ajax() || $request->wantsJson()) {
+        return response()->json([
+            'success' => true,
+            'order'   => $order
+        ]);
     }
+
+    return view('tailor.order-detail', compact('order'));
+}
 
     public function acceptOrder(Request $request, Order $order)
     {
