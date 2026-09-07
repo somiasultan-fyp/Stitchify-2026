@@ -40,8 +40,8 @@ async function confirmAccept() {
   btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Accepting...';
 
   try {
-    const res = await fetch(`/tailor/order/${currentAcceptId}/accept`, {
-      method: 'POST',
+    const res = await fetch(`/tailor/orders/${currentAcceptId}/accept`, {
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
         'X-CSRF-TOKEN': CSRF,
@@ -53,12 +53,9 @@ async function confirmAccept() {
 
     if (data.success) {
       bootstrap.Modal.getInstance(document.getElementById('acceptModal')).hide();
-
       const card = document.getElementById(`pending-card-${currentAcceptId}`);
       if (card) card.remove();
-
       showToast('Order accepted. Notification sent to customer.', 'success');
-
       setTimeout(() => location.reload(), 1500);
     } else {
       showToast(data.message || 'Something went wrong.', 'danger');
@@ -88,8 +85,8 @@ async function confirmReject() {
   document.getElementById('rejectReason').classList.remove('is-invalid');
 
   try {
-    const res = await fetch(`/tailor/order/${currentRejectId}/reject`, {
-      method: 'POST',
+    const res = await fetch(`/tailor/orders/${currentRejectId}/reject`, {
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
         'X-CSRF-TOKEN': CSRF,
@@ -101,10 +98,8 @@ async function confirmReject() {
 
     if (data.success) {
       bootstrap.Modal.getInstance(document.getElementById('rejectModal')).hide();
-
       const card = document.getElementById(`pending-card-${currentRejectId}`);
       if (card) card.remove();
-
       showToast('Order rejected. Notification sent to customer.', 'warning');
       setTimeout(() => location.reload(), 1500);
     } else {
@@ -120,13 +115,14 @@ async function updateStatus(orderId, newStatus, btn) {
     in_progress: 'Stitching started.',
     ready: 'Order marked as ready.',
     dispatched: 'Order dispatched.',
+    delivered: 'Order delivered.',
   };
 
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
 
   try {
-    const res = await fetch(`/tailor/order/${orderId}/status`, {
+    const res = await fetch(`/tailor/orders/${orderId}/status`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -174,15 +170,16 @@ async function viewDetail(orderId) {
             <table class="table table-borderless table-sm">
               <tr><th>Order #</th><td>${o.order_number}</td></tr>
               <tr><th>Customer</th><td>${o.recipient_name || o.customer_name || '—'}</td></tr>
-              <tr><th>Phone</th><td>${o.recipient_phone || o.customer_phone || '—'}</td></tr> ${o.recipient_address || o.recipient_city ? `
+              <tr><th>Phone</th><td>${o.recipient_phone || o.customer_phone || '—'}</td></tr>
+              ${o.recipient_address || o.recipient_city ? `
               <tr><th>Address</th><td>${o.recipient_address || ''}, ${o.recipient_city || ''}</td></tr>
               ` : ''}
               <tr><th>Dress Type</th><td>${o.dress_type}</td></tr>
               <tr><th>Fabric Detail</th><td>${o.fabric_details || '—'}</td></tr>
               ${o.design_image ? `
               <tr>
-              <th>Design Reference</th>
-              <td><img src="${o.design_image}" style="max-width:120px; max-height:120px; border-radius:8px; cursor:pointer;" onclick="window.open('${o.design_image}', '_blank')"></td>
+                <th>Design Reference</th>
+                <td><img src="${o.design_image}" style="max-width:120px;max-height:120px;border-radius:8px;cursor:pointer;" onclick="window.open('${o.design_image}', '_blank')"></td>
               </tr>
               ` : ''}
               <tr><th>Delivery Type</th><td>${o.delivery_type}</td></tr>
@@ -207,12 +204,12 @@ async function viewDetail(orderId) {
               <tr><th>Trouser Waist</th><td>${m.trouser_waist || '—'}"</td></tr>
               <tr><th>Neck</th><td>${m.neck || '—'}"</td></tr>
               ${m.additional_notes ? `<tr><th>Notes</th><td>${m.additional_notes}</td></tr>` : ''}
-              ${m.details ? Object.entries(m.details).map(([key, value]) => `
-                <tr><th>${key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</th><td>${value || '—'}</td></tr>
-              `).join('') : ''}
             </table>` : '<p class="text-muted">Measurements are not available.</p>'}
           </div>
         </div>`;
+    } else {
+      document.getElementById('detailBody').innerHTML =
+        '<p class="text-danger text-center">Detail could not be loaded.</p>';
     }
   } catch (err) {
     document.getElementById('detailBody').innerHTML =
@@ -271,11 +268,11 @@ function loadNotifications() {
         list.innerHTML = data.notifications
           .map(
             (n) => `
-                <div class="notif-item ${n.is_read ? '' : 'unread'}">
-                    <div class="notif-item-title">${n.title}</div>
-                    <div class="notif-item-message">${n.message}</div>
-                    <div class="notif-item-time">${n.time}</div>
-                </div>
+              <div class="notif-item ${n.is_read ? '' : 'unread'}">
+                <div class="notif-item-title">${n.title}</div>
+                <div class="notif-item-message">${n.message}</div>
+                <div class="notif-item-time">${n.time}</div>
+              </div>
             `
           )
           .join('');
