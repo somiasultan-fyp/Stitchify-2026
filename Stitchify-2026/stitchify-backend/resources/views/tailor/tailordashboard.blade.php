@@ -163,7 +163,6 @@
     </div>
   </div>
 
-  {{-- PENDING ORDERS --}}
   <div class="content-section" id="pending-orders">
     <h3 class="section-title">
       Pending Orders
@@ -215,7 +214,6 @@
     @endforelse
   </div>
 
-  {{-- ACTIVE ORDERS --}}
   <div class="content-section" id="active-orders">
     <h3 class="section-title">Active Orders</h3>
 
@@ -268,7 +266,6 @@
             <i class="fas fa-truck me-1"></i> Mark Dispatched
           </button>
 
-        {{-- ✅ Mark Delivered Button --}}
         @elseif($order->status === 'dispatched')
           <button class="btn-sm-custom btn-complete"
                   onclick="updateStatus({{ $order->id }}, 'delivered', this)">
@@ -292,7 +289,6 @@
     @endforelse
   </div>
 
-  {{-- PERFORMANCE --}}
   <div class="content-section" id="performance">
     <h3 class="section-title">Performance Metrics</h3>
     <div class="performance-stat">
@@ -309,7 +305,6 @@
     </div>
   </div>
 
-  {{-- REVIEWS --}}
   <div class="content-section" id="reviews">
     <h3 class="section-title">Recent Reviews</h3>
     <div class="empty-state">
@@ -320,7 +315,6 @@
 
 </div>
 
-{{-- Accept Modal --}}
 <div class="modal fade" id="acceptModal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -357,7 +351,6 @@
   </div>
 </div>
 
-{{-- Reject Modal --}}
 <div class="modal fade" id="rejectModal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -388,7 +381,6 @@
   </div>
 </div>
 
-{{-- Detail Modal --}}
 <div class="modal fade" id="detailModal" tabindex="-1">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">

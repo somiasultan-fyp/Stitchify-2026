@@ -119,7 +119,8 @@ async function updateStatus(orderId, newStatus, btn) {
   };
 
   btn.disabled = true;
-  btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+  btn.innerHTML =
+    '<span class="spinner-border spinner-border-sm"></span>';
 
   try {
     const res = await fetch(`/tailor/orders/${orderId}/status`, {
@@ -127,21 +128,42 @@ async function updateStatus(orderId, newStatus, btn) {
       headers: {
         'Content-Type': 'application/json',
         'X-CSRF-TOKEN': CSRF,
+        'Accept': 'application/json'
       },
-      body: JSON.stringify({ status: newStatus }),
+      body: JSON.stringify({
+        status: newStatus
+      }),
     });
 
     const data = await res.json();
 
     if (data.success) {
-      showToast(labels[newStatus] || 'Status updated.', 'success');
-      setTimeout(() => location.reload(), 1200);
+      showToast(
+        labels[newStatus] || 'Status updated.',
+        'success'
+      );
+
+      setTimeout(() => {
+        location.reload();
+      }, 1200);
+
     } else {
-      showToast(data.message || 'Something went wrong.', 'danger');
+      showToast(
+        data.message || 'Something went wrong.',
+        'danger'
+      );
+
       btn.disabled = false;
     }
+
   } catch (err) {
-    showToast('Server error. Try again.', 'danger');
+    console.error('Status update error:', err);
+
+    showToast(
+      'Server error. Try again.',
+      'danger'
+    );
+
     btn.disabled = false;
   }
 }
