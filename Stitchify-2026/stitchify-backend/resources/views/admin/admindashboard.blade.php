@@ -141,7 +141,7 @@
     <h3 class="section-title">Manage Users</h3>
     <div class="filter-row">
       <input type="text" id="userSearch"
-             placeholder="🔍 Search by name or email..."
+             placeholder="Search by name or email..."
              oninput="filterUsers()">
       <select id="roleFilter" onchange="filterUsers()">
         <option value="">All Roles</option>
@@ -258,7 +258,7 @@
     <h3 class="section-title">Monitor All Orders</h3>
     <div class="filter-row">
       <input type="text" id="orderSearch"
-             placeholder="🔍 Search by order # or customer..."
+             placeholder=" Search by order # or customer..."
              oninput="filterOrders()">
       <select id="orderStatusFilter" onchange="filterOrders()">
         <option value="">All Statuses</option>
