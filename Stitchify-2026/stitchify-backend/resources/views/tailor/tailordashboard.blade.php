@@ -15,6 +15,8 @@
 <link rel="stylesheet" href="{{ asset('css/tailor-dashboard.css') }}">
 </head>
 <body>
+
+{{-- SIDEBAR --}}
 <div class="sidebar">
   @php
     $defaultAvatarSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#1B2A4A"/><circle cx="50" cy="38" r="18" fill="#ffffff"/><path d="M50 60c-22 0-34 12-34 26v14h68V86c0-14-12-26-34-26z" fill="#ffffff"/></svg>';
@@ -63,17 +65,16 @@
   </div>
 </div>
 
+{{-- MAIN CONTENT --}}
 <div class="main-content">
 
   <div class="top-bar" id="overview">
     <h2>Welcome, {{ auth()->user()->name }}!</h2>
-
     <div class="bell-wrapper">
       <button class="bell-btn" onclick="toggleNotif()">
         <i class="fas fa-bell"></i>
         <span id="bellBadge" class="bell-badge">0</span>
       </button>
-
       <div id="notifDropdown" class="notif-dropdown">
         <div class="notif-dropdown-header">
           <span><i class="fas fa-bell me-2"></i> Notifications</span>
@@ -96,12 +97,12 @@
     <div id="mainToast" class="toast align-items-center border-0" role="alert">
       <div class="d-flex">
         <div class="toast-body fw-bold" id="toastMsg"></div>
-        <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                data-bs-dismiss="toast"></button>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
       </div>
     </div>
   </div>
 
+  {{-- SLOT CAPACITY --}}
   <div class="slot-block">
     <div class="slot-block-header">
       <div class="slot-block-title">
@@ -109,16 +110,13 @@
       </div>
       <div class="slot-numbers">
         <div class="slot-pill total">
-          <span class="num">{{ $stats['max_slots'] }}</span>
-          Total Slots
+          <span class="num">{{ $stats['max_slots'] }}</span>Total Slots
         </div>
         <div class="slot-pill used">
-          <span class="num">{{ $stats['max_slots'] - $stats['available_slots'] }}</span>
-          In Use
+          <span class="num">{{ $stats['max_slots'] - $stats['available_slots'] }}</span>In Use
         </div>
         <div class="slot-pill free">
-          <span class="num">{{ $stats['available_slots'] }}</span>
-          Available
+          <span class="num">{{ $stats['available_slots'] }}</span>Available
         </div>
       </div>
     </div>
@@ -140,6 +138,7 @@
     <div class="slot-bar-label">{{ $usedPct }}% slots in use</div>
   </div>
 
+  {{-- STATS --}}
   <div class="stats-grid">
     <div class="stat-card">
       <div class="stat-icon orange"><i class="fas fa-hourglass-half"></i></div>
@@ -224,8 +223,8 @@
       <div class="order-header">
         <div class="order-id">#{{ $order->order_number }}</div>
         <span class="order-status
-          {{ $order->status === 'ready'       ? 'status-ready'      :
-            ($order->status === 'dispatched'  ? 'status-dispatched' : 'status-progress') }}">
+          {{ $order->status === 'ready'      ? 'status-ready'      :
+            ($order->status === 'dispatched' ? 'status-dispatched' : 'status-progress') }}">
           {{ ucfirst(str_replace('_', ' ', $order->status)) }}
         </span>
       </div>
@@ -249,7 +248,6 @@
       </div>
 
       <div class="order-actions">
-
         @if($order->status === 'accepted')
           <button class="btn-sm-custom btn-complete"
                   onclick="updateStatus({{ $order->id }}, 'in_progress', this)">
@@ -268,20 +266,17 @@
             <i class="fas fa-truck me-1"></i> Mark Dispatched
           </button>
 
-        {{-- ✅ Mark Delivered Button --}}
         @elseif($order->status === 'dispatched')
           <button class="btn-sm-custom btn-complete"
                   onclick="updateStatus({{ $order->id }}, 'delivered', this)">
             <i class="fas fa-check-double me-1"></i> Mark Delivered
           </button>
-
         @endif
 
         <button class="btn-sm-custom btn-view"
                 onclick="viewDetail({{ $order->id }})">
           <i class="fas fa-eye me-1"></i> View Details
         </button>
-
       </div>
     </div>
     @empty
@@ -329,9 +324,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        <p class="text-muted mb-3">
-          Order: <strong id="acceptOrderNum"></strong>
-        </p>
+        <p class="text-muted mb-3">Order: <strong id="acceptOrderNum"></strong></p>
         <div class="mb-3">
           <label class="form-label fw-bold">Price (Rs.) *</label>
           <input type="number" id="acceptPrice" class="form-control"
@@ -346,10 +339,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary"
-                data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-success"
-                id="confirmAcceptBtn" onclick="confirmAccept()">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-success" id="confirmAcceptBtn" onclick="confirmAccept()">
           <i class="fas fa-check me-1"></i> Accept Order
         </button>
       </div>
@@ -366,9 +357,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        <p class="text-muted mb-3">
-          Order: <strong id="rejectOrderNum"></strong>
-        </p>
+        <p class="text-muted mb-3">Order: <strong id="rejectOrderNum"></strong></p>
         <div class="mb-3">
           <label class="form-label fw-bold">Rejection Reason *</label>
           <textarea id="rejectReason" class="form-control" rows="3"
@@ -377,10 +366,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary"
-                data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-danger"
-                onclick="confirmReject()">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" onclick="confirmReject()">
           <i class="fas fa-times me-1"></i> Reject Order
         </button>
       </div>
@@ -406,6 +393,6 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
-<script src="{{ asset('js/tailor-dashboard.js') }}"></script>
+<script src="{{ asset('js/tailor-dashboard.js') . '?v=999' }}"></script>
 </body>
 </html>
