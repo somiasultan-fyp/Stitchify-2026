@@ -178,34 +178,29 @@ async function viewDetail(orderId) {
   new bootstrap.Modal(document.getElementById('detailModal')).show();
 
   try {
-    const res = await fetch(`/tailor/orders/${orderId}`);
+    const res = await fetch(`/tailor/orders/${orderId}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-TOKEN': CSRF,
+      },
+      credentials: 'same-origin',
+    });
     const data = await res.json();
-
     if (data.success) {
       const o = data.order;
       const m = o.measurement;
-
       document.getElementById('detailBody').innerHTML = `
         <div class="row g-3">
           <div class="col-md-6">
             <h6 class="fw-bold mb-3" style="color:var(--accent-color)">Order Info</h6>
             <table class="table table-borderless table-sm">
               <tr><th>Order #</th><td>${o.order_number}</td></tr>
-              <tr><th>Customer</th><td>${o.recipient_name || o.customer_name || '—'}</td></tr>
-              <tr><th>Phone</th><td>${o.recipient_phone || o.customer_phone || '—'}</td></tr>
-              ${o.recipient_address || o.recipient_city ? `
-              <tr><th>Address</th><td>${o.recipient_address || ''}, ${o.recipient_city || ''}</td></tr>
-              ` : ''}
+              <tr><th>Customer</th><td>${o.recipient_name || '—'}</td></tr>
+              <tr><th>Phone</th><td>${o.recipient_phone || '—'}</td></tr>
               <tr><th>Dress Type</th><td>${o.dress_type}</td></tr>
-              <tr><th>Fabric Detail</th><td>${o.fabric_details || '—'}</td></tr>
-              ${o.design_image ? `
-              <tr>
-                <th>Design Reference</th>
-                <td><img src="${o.design_image}" style="max-width:120px;max-height:120px;border-radius:8px;cursor:pointer;" onclick="window.open('${o.design_image}', '_blank')"></td>
-              </tr>
-              ` : ''}
-              <tr><th>Delivery Type</th><td>${o.delivery_type}</td></tr>
-              <tr><th>Special Note</th><td>${o.special_instructions || 'None'}</td></tr>
+              <tr><th>Fabric</th><td>${o.fabric_details || '—'}</td></tr>
               <tr><th>Status</th><td><span class="badge bg-warning text-dark">${o.status}</span></td></tr>
               <tr><th>Price</th><td>${o.price ? 'Rs. ' + o.price : '—'}</td></tr>
               <tr><th>Expected</th><td>${o.expected_delivery_date || '—'}</td></tr>
@@ -213,20 +208,17 @@ async function viewDetail(orderId) {
             </table>
           </div>
           <div class="col-md-6">
-            <h6 class="fw-bold mb-3" style="color:var(--accent-color)">Measurements (inches)</h6>
-            ${m ? `
-            <table class="table table-borderless table-sm">
+            <h6 class="fw-bold mb-3" style="color:var(--accent-color)">Measurements</h6>
+            ${m ? `<table class="table table-borderless table-sm">
               <tr><th>Chest</th><td>${m.chest || '—'}"</td></tr>
               <tr><th>Waist</th><td>${m.waist || '—'}"</td></tr>
               <tr><th>Hips</th><td>${m.hips || '—'}"</td></tr>
               <tr><th>Shoulder</th><td>${m.shoulder || '—'}"</td></tr>
-              <tr><th>Sleeve Length</th><td>${m.sleeve_length || '—'}"</td></tr>
+              <tr><th>Sleeve</th><td>${m.sleeve_length || '—'}"</td></tr>
               <tr><th>Shirt Length</th><td>${m.shirt_length || '—'}"</td></tr>
               <tr><th>Trouser Length</th><td>${m.trouser_length || '—'}"</td></tr>
               <tr><th>Trouser Waist</th><td>${m.trouser_waist || '—'}"</td></tr>
-              <tr><th>Neck</th><td>${m.neck || '—'}"</td></tr>
-              ${m.additional_notes ? `<tr><th>Notes</th><td>${m.additional_notes}</td></tr>` : ''}
-            </table>` : '<p class="text-muted">Measurements are not available.</p>'}
+            </table>` : '<p class="text-muted">No measurements.</p>'}
           </div>
         </div>`;
     } else {
@@ -238,7 +230,7 @@ async function viewDetail(orderId) {
       '<p class="text-danger text-center">Detail could not be loaded.</p>';
   }
 }
-
+  
 document.querySelectorAll('.sidebar-menu a[href^="#"]').forEach((anchor) => {
   anchor.addEventListener('click', function (e) {
     e.preventDefault();
