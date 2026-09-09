@@ -386,6 +386,6 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
-<script src="{{ asset('js/tailor-dashboard.js') . '?v=999' }}"></script>
+<script src="{{ asset('js/tailor-dashboard.js') }}?v={{ filemtime(public_path('js/tailor-dashboard.js')) }}"></script>
 </body>
 </html>
