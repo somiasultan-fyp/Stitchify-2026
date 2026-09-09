@@ -191,18 +191,41 @@
         <p><strong>Order Date:</strong> {{ $order->created_at->format('M d, Y') }}</p>
       </div>
       <div class="order-actions">
-        <button class="btn-sm-custom btn-accept"
-                onclick="openAcceptModal({{ $order->id }}, '{{ $order->order_number }}')">
-          <i class="fas fa-check me-1"></i> Accept Order
-        </button>
-        <button class="btn-sm-custom btn-reject"
-                onclick="openRejectModal({{ $order->id }}, '{{ $order->order_number }}')">
-          <i class="fas fa-times me-1"></i> Reject
-        </button>
-        <button class="btn-sm-custom btn-view"
-                onclick="viewDetail({{ $order->id }})">
-          <i class="fas fa-eye me-1"></i> View Details
-        </button>
+        
+      
+<form method="POST"
+      action="{{ route('tailor.orders.accept', $order->id) }}"
+      style="display:inline;">
+  @csrf
+  @method('PATCH')
+  <input type="number" name="price"
+         placeholder="Price (Rs.)"
+         style="border:1px solid #ddd;border-radius:6px;padding:5px 10px;font-size:13px;width:130px;"
+         required>
+  <input type="number" name="delivery_days"
+         placeholder="Days"
+         style="border:1px solid #ddd;border-radius:6px;padding:5px 10px;font-size:13px;width:70px;"
+         required>
+  <button type="submit" class="btn-sm-custom btn-accept">
+    <i class="fas fa-check me-1"></i> Accept
+  </button>
+</form>
+
+<form method="POST"
+      action="{{ route('tailor.orders.reject', $order->id) }}"
+      style="display:inline;"
+      onsubmit="return confirm('Reject this order?')">
+  @csrf
+  @method('PATCH')
+  <input type="hidden" name="rejection_reason" value="Order rejected by tailor.">
+  <button type="submit" class="btn-sm-custom btn-reject">
+    <i class="fas fa-times me-1"></i> Reject
+  </button>
+</form>
+
+
+
+
       </div>
     </div>
     @empty
