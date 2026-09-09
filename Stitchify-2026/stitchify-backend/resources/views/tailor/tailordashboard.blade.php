@@ -246,31 +246,42 @@
       </div>
 
       <div class="order-actions">
-        @if($order->status === 'accepted')
-          <button class="btn-sm-custom btn-complete"
-                  onclick="updateStatus({{ $order->id }}, 'in_progress', this)">
-            <i class="fas fa-cut me-1"></i> Start Stitching
-          </button>
+        
+      
+        
+        @if(in_array($order->status, ['accepted', 'in_progress', 'ready', 'dispatched']))
+  <form method="POST"
+        action="{{ route('tailor.orders.status', $order->id) }}"
+        style="display:inline;"
+        onsubmit="return confirm('Update status?')">
+    @csrf
+    @method('PATCH')
 
-        @elseif($order->status === 'in_progress')
-          <button class="btn-sm-custom btn-complete"
-                  onclick="updateStatus({{ $order->id }}, 'ready', this)">
-            <i class="fas fa-check me-1"></i> Mark Ready
-          </button>
+    @if($order->status === 'accepted')
+      <button type="submit" class="btn-sm-custom btn-complete">
+        <i class="fas fa-cut me-1"></i> Start Stitching
+      </button>
 
-        @elseif($order->status === 'ready')
-          <button class="btn-sm-custom btn-complete"
-                  onclick="updateStatus({{ $order->id }}, 'dispatched', this)">
-            <i class="fas fa-truck me-1"></i> Mark Dispatched
-          </button>
+      @elseif($order->status === 'in_progress')
+      <button type="submit" class="btn-sm-custom btn-complete">
+        <i class="fas fa-check me-1"></i> Mark Ready
+      </button>
 
-        @elseif($order->status === 'dispatched')
-          <button class="btn-sm-custom btn-complete"
-                  onclick="updateStatus({{ $order->id }}, 'delivered', this)">
-            <i class="fas fa-check-double me-1"></i> Mark Delivered
-          </button>
-        @endif
+      @elseif($order->status === 'ready')
+      <button type="submit" class="btn-sm-custom btn-complete">
+        <i class="fas fa-truck me-1"></i> Mark Dispatched
+      </button>
 
+      @elseif($order->status === 'dispatched')
+      <button type="submit" class="btn-sm-custom btn-complete">
+        <i class="fas fa-check-double me-1"></i> Mark Delivered
+      </button>
+      @endif
+
+       </form>
+    @endif
+        
+        
         <button class="btn-sm-custom btn-view"
                 onclick="viewDetail({{ $order->id }})">
           <i class="fas fa-eye me-1"></i> View Details
