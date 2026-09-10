@@ -14,15 +14,11 @@ class Customer extends Model
         'user_id', 'address', 'city', 'date_of_birth', 'gender'
     ];
 
-    // ===== RELATIONSHIPS =====
-
-    // Customer ek User hai
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // Customer ke bahut saare orders hain
     public function orders()
     {
         return $this->hasMany(Order::class);

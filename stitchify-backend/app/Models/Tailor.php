@@ -20,6 +20,8 @@ class Tailor extends Model
         'max_slots',
         'available_slots',
         'status',
+        'base_max_slots',
+        'last_slot_reset_at',
         'specialization',
         'base_price',
     ];
@@ -56,5 +58,22 @@ class Tailor extends Model
         if ($this->available_slots < $this->max_slots) {
             $this->increment('available_slots');
         }
+    }
+    
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function averageRating()
+    {
+        return $this->reviews()->avg('rating') ?? 0;
+    }
+
+    public function resetSlotsToBase()
+    {
+        $this->available_slots = $this->base_max_slots;
+        $this->last_slot_reset_at = now();
+        $this->save();
     }
 }

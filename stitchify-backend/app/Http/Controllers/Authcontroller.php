@@ -6,18 +6,21 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use App\Models\Tailor;  //  YEH ADD KARO
-use App\Models\Customer; //  YEH ADD KARO (customer ke liye)
+use App\Models\Customer;
+use App\Models\Tailor;
 
 class AuthController extends Controller
 {
-    // Show register form
     public function showRegister()
     {
         return view('auth.register');
     }
 
-    // Register process
+    public function showLogin()
+    {
+        return view('auth.login');
+    }
+
     public function register(Request $request)
     {
         $request->validate([
@@ -30,10 +33,10 @@ class AuthController extends Controller
             'category'      => 'required_if:role,tailor|nullable|string',
             'slot_capacity' => 'required_if:role,tailor|nullable|integer|min:1',
         ], [
-            'email.unique'              => 'email is already registered.',
-            'address.required_if'       => 'Address is compulsory.',
-            'category.required_if'      => 'Specialization is compulsory.',
-            'slot_capacity.required_if' => 'Slot is compulsory',
+            'email.unique' => 'Email already registered.',
+            'address.required_if' => 'Address is required for tailors.',
+            'category.required_if' => 'Specialization is required for tailors.',
+            'slot_capacity.required_if' => 'Slot capacity is required for tailors.',
         ]);
 
         $user = User::create([
@@ -45,55 +48,38 @@ class AuthController extends Controller
             'address'       => $request->role === 'tailor' ? $request->address : null,
             'category'      => $request->role === 'tailor' ? $request->category : null,
             'slot_capacity' => $request->role === 'tailor' ? $request->slot_capacity : null,
+            'is_active'     => true,
         ]);
 
-        //  YEH PART ADD KARO - TAILOR/CUSTOMER RECORD CREATE KARO 
-        if ($request->role === 'tailor') {
-            Tailor::create([
-                'user_id' => $user->id,
-                'shop_name' => $request->name . "'s Shop",
-                'city' => 'Lahore', // Ya request se lo
-                'address' => $request->address,
-                'specialization' => $request->category,
-                'experience_years' => $request->experience_years ?? 0,
-                'max_slots' => $request->slot_capacity,
-                'available_slots' => $request->slot_capacity,
-                'status' => 'approved',
-            ]);
+        if ($user->role === 'customer') {
+            Customer::create(['user_id' => $user->id]);
         }
 
-        if ($request->role === 'customer') {
-            Customer::create([
-                'user_id' => $user->id,
-                'phone' => $request->phone,
-                'city' => 'Lahore',
-                'address' => $request->address ?? '',
+        if ($user->role === 'tailor') {
+            Tailor::create([
+                'user_id'         => $user->id,
+                'address'         => $request->address,
+                'specialization'  => $request->category,
+                'max_slots'       => $request->slot_capacity ?? 5,
+                'available_slots' => $request->slot_capacity ?? 5,
+                'status'          => 'pending',
             ]);
         }
 
         Auth::login($user);
-
-        // Role ke hisaab se redirect
-        if ($user->role === 'tailor') {
-            return redirect('/tailor/dashboard');
-        }
-        return redirect('/customer/dashboard');
+        $request->session()->regenerate();
+        $user->sendEmailVerificationNotification();
+         return redirect()->route('verification.notice')
+        ->with('info', 'Account created! Please check your email to verify.');
     }
 
-    // Show login form
-    public function showLogin()
-    {
-        return view('auth.login');
-    }
-
-    // Login process
     public function login(Request $request)
     {
-        $request->validate([
+        $credentials = $request->validate([
             'email'    => 'required|email',
             'password' => 'required',
         ]);
-        
+
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
@@ -103,36 +89,44 @@ class AuthController extends Controller
             ], 401);
         }
 
-        if (Auth::attempt([
-            'email'    => $request->email,
-            'password' => $request->password
-        ])) {
-            $request->session()->regenerate();
-
-            $role = Auth::user()->role;
-
-            $redirect = $role === 'tailor' 
-                ? '/tailor/dashboard' 
-                : '/customer/dashboard';
-
+        if (!$user->is_active) {
             return response()->json([
-                'success'  => true,
-                'redirect' => $redirect,
-            ]);
+                'success' => false,
+                'message' => 'Your account has been blocked. Contact support.',
+            ], 403);
         }
 
-        return response()->json([
-            'success' => false,
-            'message' => 'Email or password is incorrect.',
-        ], 401);
+        if (Auth::attempt([
+    'email'    => $request->email,
+    'password' => $request->password,
+])) {
+    $request->session()->regenerate();
+    $user = auth()->user();
+
+    $redirect = match($user->role) {
+        'admin'    => route('admin.dashboard'),
+        'tailor'   => route('tailor.dashboard'),
+        'customer' => redirect()->intended(route('customer.dashboard'))->getTargetUrl(),
+        default    => '/',
+    };
+
+    return response()->json([
+        'success'  => true,
+        'redirect' => $redirect,
+    ]);
+}
+
+return response()->json([
+    'success' => false,
+    'message' => 'Invalid credentials.',
+], 401);
     }
 
-    // Logout
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/login');
+        return redirect('/');
     }
 }

@@ -18,7 +18,11 @@ class Measurement extends Model
     'trouser_waist',
     'neck',
     'additional_notes',
+    'details',
 ];
+    protected $casts = [
+        'details' => 'array',
+    ];
 
     public function order()
     {

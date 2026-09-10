@@ -1,5 +1,5 @@
 <?php
-// app/Models/Order.php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,12 +10,30 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-        'order_number', 'customer_id', 'tailor_id', 'dress_type',
-        'special_instructions', 'fabric_provided_by', 'fabric_details',
-        'price', 'advance_paid', 'expected_delivery_date',
-        'actual_delivery_date', 'status', 'payment_status',
-        'delivery_type', 'tracking_id', 'delivery_days', 'rejection_reason',
-        'design_image', 'accepted_at', 'rejected_at',
+        'order_number',
+        'customer_id',
+        'tailor_id', 
+        'recipient_name',
+        'recipient_phone',
+        'recipient_address',
+        'recipient_city',
+        'dress_type',
+        'special_instructions',
+        'fabric_provided_by',
+        'fabric_details',
+        'price',
+        'advance_paid',
+        'expected_delivery_date',
+        'actual_delivery_date',
+        'status',
+        'payment_status',
+        'delivery_type',
+        'tracking_id',
+        'delivery_days',
+        'rejection_reason',
+        'design_image',
+        'accepted_at',
+        'rejected_at',
     ];
 
     protected $casts = [
@@ -25,39 +43,50 @@ class Order extends Model
     'rejected_at' => 'datetime',
     ];
 
-    // ===== RELATIONSHIPS =====
-
-    // Order Customer ka hai
     public function customer()
     {
         return $this->belongsTo(Customer::class);
     }
 
-    // Order Tailor ka hai
     public function tailor()
     {
         return $this->belongsTo(Tailor::class);
     }
 
-    // Order ki measurements
     public function measurement()
     {
         return $this->hasOne(Measurement::class);
     }
 
-    // Order ke payments
     public function payments()
     {
         return $this->hasMany(Payment::class);
     }
 
 
-    // Unique order number generate karo
-    public static function generateOrderNumber(): string
+   public static function generateOrderNumber(): string
+{
+    $year = date('Y');
+    $last = self::whereYear('created_at', $year)
+                ->orderBy('id', 'desc')
+                ->first();
+    
+    if ($last) {
+        $lastNumber = (int) substr($last->order_number, -4);
+        $newNumber  = $lastNumber + 1;
+    } else {
+        $newNumber = 1;
+    }
+    
+    return 'ORD-' . $year . '-' . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
+}
+    public function delivery()
     {
-        $year = date('Y');
-        $count = self::whereYear('created_at', $year)->count() + 1;
-        return 'ORD-' . $year . '-' . str_pad($count, 4, '0', STR_PAD_LEFT);
-        // Result: ORD-2025-0001, ORD-2025-0002, etc.
+    return $this->hasOne(Delivery::class);
+    }
+
+    public function review()
+    {
+    return $this->hasOne(Review::class);
     }
 }

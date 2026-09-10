@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Storage;
 
 class CustomerOrderController extends Controller
 {
-    // ✅ Order Form Dikhao - Yeh /customer/orders/create ko handle karega
     public function showForm(Request $request)
     {
         $tailor_id = $request->query('tailor_id');
@@ -25,13 +24,12 @@ class CustomerOrderController extends Controller
         $tailor = Tailor::with('user')->findOrFail($tailor_id);
 
         if (!$tailor->hasAvailableSlot() || $tailor->status !== 'approved') {
-            return back()->with('error', 'Is tailor ke paas abhi slots available nahi hain.');
+            return back()->with('error', 'slots are not available for this tailor. Please select another tailor.')->withInput();
         }
 
         return view('customer.order-form', compact('tailor'));
     }
 
-    // ✅ Order Submit Karo
     public function placeOrder(Request $request)
     {
         $request->validate([
@@ -43,18 +41,19 @@ class CustomerOrderController extends Controller
             'delivery_type' => 'required|in:pickup,home_delivery',
             'special_instructions' => 'nullable|string|max:1000',
             'design_image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
-            'measurement_method' => 'required|in:manual,appointment',
-            'chest' => 'required_if:measurement_method,manual|numeric|min:1|max:100',
-            'waist' => 'required_if:measurement_method,manual|numeric|min:1|max:100',
-            'shoulder' => 'required_if:measurement_method,manual|numeric|min:1|max:100',
-            'sleeve_length' => 'required_if:measurement_method,manual|numeric|min:1|max:100',
-            'shirt_length' => 'required_if:measurement_method,manual|numeric|min:1|max:100',
+            'measurement_method' => 'required|in:manual',
+            'chest' => 'nullable|numeric|min:1|max:100',
+            'waist' => 'nullable|numeric|min:1|max:100',
+            'shoulder' => 'nullable|numeric|min:1|max:100',
+            'sleeve_length' => 'nullable|numeric|min:1|max:100',
+            'shirt_length' => 'nullable|numeric|min:1|max:100',
+            'measurements' => 'nullable|array',
         ]);
 
         $tailor = Tailor::with('user')->findOrFail($request->tailor_id);
 
         if (!$tailor->hasAvailableSlot() || $tailor->status !== 'approved') {
-            return back()->with('error', 'Is tailor ke paas slots available nahi hain.')->withInput();
+            return back()->with('error', 'slots are not available for this tailor. Please select another tailor.')->withInput();
         }
 
         $customer = auth()->user()->customer;
@@ -66,11 +65,16 @@ class CustomerOrderController extends Controller
         if ($request->hasFile('design_image')) {
             $designImagePath = $request->file('design_image')->store('designs', 'public');
         }
+        $order = null;
 
         try {
-            DB::transaction(function () use ($request, $tailor, $customer, $designImagePath) {
+            DB::transaction(function () use ($request, $tailor, $customer, $designImagePath, &$order) {
                 
                 $order = Order::create([
+                    'recipient_name'    => $request->recipient_name,
+                    'recipient_phone'   => $request->recipient_phone,
+                    'recipient_address' => $request->recipient_address,
+                    'recipient_city'    => $request->recipient_city,
                     'order_number' => Order::generateOrderNumber(),
                     'customer_id' => $customer->id,
                     'tailor_id' => $tailor->id,
@@ -97,41 +101,43 @@ class CustomerOrderController extends Controller
                         'trouser_waist' => $request->trouser_waist ?? null,
                         'neck' => $request->neck ?? null,
                         'additional_notes' => $request->special_instructions,
+                        'details' => $request->measurements,
                     ]);
-                } else {
-                    Measurement::create([
-                        'order_id' => $order->id,
-                        'additional_notes' => 'Appointment: ' . ($request->appointment_date ?? '') . ' at ' . ($request->appointment_time ?? ''),
-                    ]);
-                }
+                } 
 
                 Notification::create([
                     'user_id' => $tailor->user_id,
                     'type' => 'new_order',
-                    'title' => '🎁 New Order Received!',
-                    'message' => auth()->user()->name . ' ne naya order place kiya. Order #' . $order->order_number,
+                    'title' => 'New Order Received!',
+                    'message' => auth()->user()->name . ' place a new order. order #' . $order->order_number,
                     'order_id' => $order->id,
                     'is_read' => false,
                 ]);
             });
 
-            return redirect()->route('customer.dashboard')->with('success', '✅ Order placed successfully!');
+     return response()->json([
+        'success'      => true,
+        'order_number' => $order->order_number,
+        'message'      => 'Order placed successfully!',
+]);
 
         } catch (\Exception $e) {
             \Log::error('Order failed: ' . $e->getMessage());
             if ($designImagePath && Storage::disk('public')->exists($designImagePath)) {
                 Storage::disk('public')->delete($designImagePath);
             }
-            return back()->with('error', 'Order place karne mein error aaya.')->withInput();
+       return response()->json([
+        'success' => false,
+        'message' => 'Failed to place order.',
+        ], 500);
         }
     }
 
-    // ✅ Customer Dashboard - Orders List
     public function myOrders()
     {
         $customer = auth()->user()->customer;
         if (!$customer) {
-            return redirect()->route('home')->with('error', 'Profile complete karein.');
+            return redirect()->route('home')->with('error', 'Complete your profile to place an order.');
         }
 
         $orders = $customer->orders()
@@ -149,7 +155,6 @@ class CustomerOrderController extends Controller
         return view('customer.customerdashboard', compact('orders', 'stats'));
     }
 
-    // ✅ Single Order Detail
     public function showOrder(Order $order)
     {
         if ($order->customer->user_id !== auth()->id()) {
@@ -159,11 +164,10 @@ class CustomerOrderController extends Controller
         return view('customer.order-detail', compact('order'));
     }
 
-    // ✅ Cancel Order
     public function cancelOrder(Request $request, Order $order)
     {
         if ($order->customer->user_id !== auth()->id() || $order->status !== 'pending') {
-            return back()->with('error', 'Yeh order cancel nahi ho sakta.');
+            return back()->with('error', 'This order cannot be cancelled.');
         }
 
         $order->update(['status' => 'cancelled', 'cancelled_at' => now()]);
@@ -171,7 +175,7 @@ class CustomerOrderController extends Controller
         Notification::create([
             'user_id' => $order->tailor->user_id,
             'type' => 'order_cancelled',
-            'title' => '❌ Order Cancelled',
+            'title' => 'Order Cancelled',
             'message' => "Order #{$order->order_number} cancelled by customer.",
             'order_id' => $order->id,
         ]);
@@ -179,7 +183,6 @@ class CustomerOrderController extends Controller
         return back()->with('success', 'Order cancelled.');
     }
 
-    // ✅ Live Status for AJAX
     public function liveStatus()
     {
         $customer = auth()->user()->customer;

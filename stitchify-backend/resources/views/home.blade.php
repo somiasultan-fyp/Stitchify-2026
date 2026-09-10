@@ -3,28 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <title>Stitchify - Online Tailoring Service</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
     <style>
-        /* --- Color Variables based on your request --- */
         :root {
-            --primary-bg: #212529;       /* Dark Background */
-            --accent-color: #1B2A4A;     /* Buttons/Highlights */
-            --copyright-bg: #575a5b;     /* Copyright Footer */
+            --primary-bg: #212529;      
+            --accent-color: #1B2A4A;  
+            --copyright-bg: #575a5b;    
             --text-white: #ffffff;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa; /* Light body bg, sections will override */
+            background-color: #f8f9fa; 
         }
 
-        /* --- Reusable Custom Classes --- */
-        
-        /* Custom Button Style */
         .btn-stitchify {
             background-color: var(--accent-color);
             color: var(--text-white);
@@ -34,7 +32,7 @@
         }
         
         .btn-stitchify:hover {
-            background-color: #1a2c55; /* Slightly lighter for hover effect */
+            background-color: #1a2c55;
             color: var(--text-white);
         }
 
@@ -47,7 +45,6 @@
             color: var(--accent-color);
         }
 
-        /* --- Header / Navbar --- */
         .navbar {
             background-color: var(--primary-bg) !important;
         }
@@ -57,11 +54,9 @@
             color: var(--text-white) !important;
         }
 
-        /* --- Hero Section --- */
         .hero-section 
         {
             background-color: var(--primary-bg);
-            /* Overlay color + Background Image */
             background: linear-gradient(rgba(33, 37, 41, 0.4), rgba(33, 37, 41, 0.4)), url({{ asset('images/background.png') }});
             background-size: cover;
             background-position: center;
@@ -70,7 +65,6 @@
             text-align: center;
         }
 
-        /* --- How It Works (Circles) --- */
         .step-circle {
             width: 150px;
             height: 150px;
@@ -87,7 +81,6 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
-        /* --- Reviews Section --- */
         .review-card {
             background-color: var(--primary-bg);
             color: var(--text-white);
@@ -95,46 +88,92 @@
             padding: 20px;
             border-radius: 10px;
         }
+        .card-title {
+            font-size: 16px !important;
+            margin-bottom: 5px !important;
+        }
+
         .carousel-indicators [data-bs-target] {
             background-color: var(--accent-color);
         }
-        /* --- Review Slider Customization --- */
-
-        /* 1. The Left/Right Arrow Backgrounds */
          .carousel-control-prev-icon,
          .carousel-control-next-icon {
-            background-color: var(--primary-bgr);  /* Uses #0e1830 from root */
+            background-color: var(--primary-bgr); 
             border-radius: 50%;
             width: 3rem;
             height: 3rem;
             background-size: 50%;
         }
-
-         /* 2. The Bottom Indicators (Dots) */
          .carousel-indicators [data-bs-target] {
             background-color: var(--primary-bg) !important;
             opacity: 0.8;
         }
-
-         /* Active Dot */
          .carousel-indicators .active {
            background-color: var(--accent-color) !important;
             opacity: 1;
         }
         .stars i {
-            color: var(--text-white); /* Review stars color */
+            color: var(--text-white); 
         }
 
-        /* --- Featured Tailors --- */
         .tailor-card {
             background-color: var(--primary-bg);
             color: var(--text-white);
             border: none;
             border-radius: 10px;
             overflow: hidden;
+            position: relative;
+            padding: 20px !important;
         }
 
-        /* --- Services --- */
+        .tailor-card-header {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .rating-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
+            color: white;
+            padding: 5px 8px !important;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+            font-size: 11px !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+
+        .rating-badge i {
+            color: #fbbf24;
+            font-size: 10px !important;
+        }
+
+        .rating-badge small {
+            font-size: 11px;
+            opacity: 0.9;
+        }
+
+        .tailor-avatar img {
+            width: 80px !important;
+            height: 80px !important;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #334155;
+            margin-bottom: 10px !important;
+        }
+
+        .tailor-category {
+            color: #94a3b8;
+            font-size: 13px !important;
+            margin-bottom: 8px !important;
+            text-transform: capitalize;
+        }
+
         .service-img {
             height: 250px;
             object-fit: cover;
@@ -142,7 +181,6 @@
             border-radius: 8px;
         }
 
-        /* --- FAQs Customization --- */
         .accordion-item {
             border: none;
             margin-bottom: 10px;
@@ -152,11 +190,9 @@
             color: var(--text-white) !important;
             font-weight: bold;
         }
-        /* Remove default blue outline on focus */
         .accordion-button:focus {
             box-shadow: none;
         }
-        /* The arrow icon color filter (making it white) */
         .accordion-button::after {
             filter: invert(1); 
         }
@@ -167,7 +203,6 @@
             color: var(--text-white);
         }
 
-        /* --- Footer --- */
         footer {
             background-color: var(--primary-bg);
             color: var(--text-white);
@@ -186,7 +221,6 @@
             color: var(--text-white);
         }
 
-        /* --- Chatbot --- */
         .chatbot-container {
             position: fixed;
             bottom: 30px;
@@ -228,7 +262,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="#">
+             <a class="navbar-brand" href="/">
         <img src="{{ asset('images/logo.png') }}" alt="Stitchify Logo" height="55">
              </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -236,10 +270,20 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item"><a class="nav-link" href="aboutus.html">About Us</a></li>
-                    <li class="nav-item"><a class="nav-link" href="contactus.html">Contact Us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('about') }}">About Us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('contact') }}">Contact Us</a></li>
                     <li class="nav-item ms-lg-3">
-                       <a href="{{ route('login.form') }}" class="btn btn-stitchify">Login</a>
+                        @auth
+                            @if(auth()->user()->role === 'customer')
+                                <a href="/customer/dashboard" class="btn btn-stitchify">Dashboard</a>
+                            @elseif(auth()->user()->role === 'tailor')
+                                <a href="/tailor/dashboard" class="btn btn-stitchify">Dashboard</a>
+                            @elseif(auth()->user()->role === 'admin')
+                                <a href="/admin/dashboard" class="btn btn-stitchify">Dashboard</a>
+                            @endif
+                        @else
+                            <a href="/login" class="btn btn-stitchify">Login</a>
+                        @endauth
                     </li>
                 </ul>
             </div>
@@ -250,7 +294,7 @@
         <div class="container">
             <h1 class="display-3 fw-bold mb-4">Your Style, Our Stitch</h1>
             <p class="lead mb-5">Experience the future of online tailoring. Custom designs, expert tailors, and doorstep delivery.</p>
-            <button onclick="window.location.href='/tailors'">Explore Now</button>
+           <a href="/tailors" class="btn btn-stitchify btn-lg">Explore Now</a>
         </div>
     </section>
 
@@ -295,38 +339,45 @@
     </section>
 
     <section id="categories" class="py-5" style="background-color: #f0f0f0;">
-        <div class="container text-center">
-            <h2 class="mb-5" style="color: var(--primary-bg);">Browse Categories</h2>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">Men's Wear</h5>
-                            <a href="#" class="btn btn-stitchify">View Collection</a>
-                        </div>
+    <div class="container text-center">
+        <h2 class="mb-5" style="color: var(--primary-bg);">Browse Categories</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Men's Wear</h5>
+                        <a href="{{ route('tailors.category', 'men') }}" class="btn btn-stitchify">
+                            View Category
+                        </a>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">Women's Wear</h5>
-                            <a href="#" class="btn btn-stitchify">View Collection</a>
-                        </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Women's Wear</h5>
+                        <a href="{{ route('tailors.category', 'women') }}" class="btn btn-stitchify">
+                            View Category
+                        </a>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">Kids' Wear</h5>
-                            <a href="#" class="btn btn-stitchify">View Collection</a>
-                        </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Kids' Wear</h5>
+                        <a href="{{ route('tailors.category', 'kids') }}" class="btn btn-stitchify">
+                            View Category
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+           
 
-    <section class="py-5">
+<section class="py-5">
     <div class="container">
         <div class="row align-items-center">
             
@@ -361,47 +412,53 @@
 </div>
 
     <section class="py-5 bg-light">
-        <div class="container">
-            <h2 class="text-center mb-5" style="color: var(--primary-bg);">Featured Tailors</h2>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card tailor-card h-100 p-3">
-                        <div class="text-center">
-                             <i class="fa-solid fa-user-tie fa-4x mb-3 text-white"></i>
-                        </div>
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Ahmed</h5>
-                            <p class="card-text">Specialist in Men's Suiting</p>
-                            <a href="#" class="btn btn-stitchify">Contact</a>
+    <div class="container">
+        <h2 class="text-center mb-5" style="color: var(--primary-bg);">Professional Tailors</h2>
+        <div class="row g-4">
+            @forelse($topTailors as $tailor)
+            @php
+                $averageRating = $tailor->reviews()->avg('rating') ?? 0;
+                $totalReviews = $tailor->reviews()->count();
+            @endphp
+            <div class="col-md-4">
+                <div class="card tailor-card h-100 p-3">
+                    <div class="tailor-card-header text-center">
+                        @if($tailor->user->profile_image)
+                            <img src="{{ Storage::url($tailor->user->profile_image) }}"
+                                 alt="{{ $tailor->user->name }}"
+                                 class="tailor-avatar">
+                        @else
+                            <i class="fa-solid fa-user-tie fa-4x mb-3 text-white"></i>
+                        @endif
+                        
+                        <div class="rating-badge">
+                            <i class="fas fa-star"></i>
+                            <span>{{ number_format($averageRating, 1) }}</span>
+                            <small>({{ $totalReviews }})</small>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card tailor-card h-100 p-3">
-                        <div class="text-center">
-                             <i class="fa-solid fa-user-circle fa-4x mb-3 text-white"></i>
-                        </div>
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Sara</h5>
-                            <p class="card-text">Expert in Bridal Wear</p>
-                            <a href="#" class="btn btn-stitchify">Contact</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card tailor-card h-100 p-3">
-                        <div class="text-center">
-                             <i class="fa-solid fa-user-tie fa-4x mb-3 text-white"></i>
-                        </div>
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Rizwan Ahmed</h5>
-                            <p class="card-text">Alteration Master</p>
-                            <a href="#" class="btn btn-stitchify">Contact</a>
-                        </div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ $tailor->user->name }}</h5>
+                        <p class="tailor-category">{{ ucfirst($tailor->specialization ?? 'General Tailoring') }}</p>
+                        <p class="card-text small">
+                            <i class="fas fa-star me-1"></i>{{ $tailor->experience_years ?? 0 }} yrs experience
+                            &nbsp;|&nbsp;
+                            <i class="fas fa-check-circle me-1"></i>{{ $tailor->orders()->where('status','delivered')->count() }} completed
+                        </p>
+                        @if($tailor->city)
+                            <p class="card-text small"><i class="fas fa-map-marker-alt me-1"></i>{{ $tailor->city }}</p>
+                        @endif
+                        <a href="{{ route('tailors.show', $tailor->id) }}" class="btn btn-stitchify">View Profile</a>
                     </div>
                 </div>
             </div>
+            @empty
+            <div class="col-12 text-center text-muted">
+                <p>No tailors available right now.</p>
+            </div>
+            @endforelse
         </div>
+    </div>
     </section>
 
     <section class="py-5">
@@ -437,32 +494,27 @@
     </section>
 
     <section class="py-5 bg-white">
-        <div class="container">
-            <h2 class="text-center mb-5" style="color: var(--primary-bg);">Customer Reviews</h2>
+      <div class="container">
+        <h2 class="text-center mb-5" style="color: var(--primary-bg);">Customer Reviews</h2>
+
+        @if($reviews->count() > 0)
             <div id="reviewsCarousel" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <div class="d-flex justify-content-center">
-                            <div class="review-card col-md-8 text-center">
-                                <div class="stars mb-3">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    @foreach($reviews as $index => $review)
+                        <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                            <div class="d-flex justify-content-center">
+                                <div class="review-card col-md-8 text-center">
+                                    <div class="stars mb-3">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <i class="fas fa-star{{ $i <= $review->rating ? '' : '-o' }}"></i>
+                                        @endfor
+                                    </div>
+                                    <p>"{{ $review->comment }}"</p>
+                                    <h6 class="mt-3">- {{ $review->user->name }}</h6>
                                 </div>
-                                <p>"Amazing service! Stitchify made it so easy to get my suit stitched without leaving home."</p>
-                                <h6 class="mt-3">- Ali Hassan</h6>
                             </div>
                         </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="d-flex justify-content-center">
-                            <div class="review-card col-md-8 text-center">
-                                <div class="stars mb-3">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-                                </div>
-                                <p>"The fabric pickup and delivery were on time. Great craftsmanship."</p>
-                                <h6 class="mt-3">- Iqra</h6>
-                            </div>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#reviewsCarousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon bg-dark rounded-circle" aria-hidden="true"></span>
@@ -471,6 +523,12 @@
                     <span class="carousel-control-next-icon bg-dark rounded-circle" aria-hidden="true"></span>
                 </button>
             </div>
+        @else
+            <div class="text-center text-muted py-4">
+                <i class="fas fa-comment-slash fa-3x mb-3 d-block" style="opacity:0.3;"></i>
+                <p>No reviews yet. Be the first to share your experience!</p>
+            </div>
+        @endif
         </div>
     </section>
 
@@ -532,16 +590,16 @@
                 <div class="col-md-4 mb-4">
                     <h5 class="text-white mb-3">Quick Links</h5>
                     <ul class="list-unstyled">
-                        <li><a href="aboutus.html">About Us</a></li>
-                        <li><a href="contactus.html">Contact Us</a></li>
-                        <li><a href="privacypolicy.html">Privacy Policy</a></li>
-                        <li><a href="termsandconditions.html">Terms & Conditions</a></li>
+                        <li><a href="{{ route('about') }}">About Us</a></li>
+                        <li><a href="{{ route('contact') }}">Contact Us</a></li>
+                        <li><a href="{{ route('privacy') }}">Privacy Policy</a></li>
+                        <li><a href="{{ route('terms') }}">Terms & Conditions</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 mb-4">
                     <h5 class="text-white mb-3">Contact Info</h5>
-                    <p class="text-white-50"><i class="fas fa-envelope me-2"></i> support@stitchify.com</p>
-                    <p class="text-white-50"><i class="fas fa-phone me-2"></i> +123 456 7890</p>
+                    <p class="text-white-50"><i class="fas fa-envelope me-2"></i> stitchify2026@gmail.com</p>
+                    <p class="text-white-50"><i class="fas fa-phone me-2"></i> +92 3249788408</p>
                 </div>
             </div>
         </div>
@@ -552,15 +610,154 @@
         </div>
     </footer>
 
-    <div class="chatbot-container">
-        <div class="chatbot-bubble">
-            Hi, I'm a chatbot
-        </div>
-        <div class="chatbot-icon">
-            <i class="fa-solid fa-robot"></i>
-        </div>
-    </div>
+<button id="chatToggle"
+    style="position:fixed; bottom:24px; right:24px; z-index:9999;
+           width:56px; height:56px; border-radius:50%; border:none;
+           background:linear-gradient(135deg,#1B2A4A,#212529);
+           color:white; font-size:22px; cursor:pointer;
+           box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+  <i class="fas fa-robot" id="chatIcon"></i>
+</button>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<div id="chatWindow"
+     style="display:none; position:fixed; bottom:90px; right:24px;
+            z-index:9998; width:340px; height:480px;
+            background:white; border-radius:16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            flex-direction:column; overflow:hidden;">
+
+  <div style="background:linear-gradient(135deg,#1B2A4A,#212529);
+              padding:16px; color:white; display:flex;
+              align-items:center; justify-content:space-between;">
+    <div style="display:flex; align-items:center; gap:10px">
+      <div style="width:36px;height:36px;border-radius:50%;
+                  background:rgba(255,255,255,0.2);
+                  display:flex;align-items:center;justify-content:center">
+        <i class="fas fa-robot"></i>
+      </div>
+      <div>
+        <div style="font-weight:600; font-size:14px">Stitch </div>
+        <div style="font-size:11px; opacity:0.8">Always here to help</div>
+      </div>
+    </div>
+    <button onclick="toggleChat()"
+            style="background:none;border:none;color:white;font-size:18px;cursor:pointer;">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <div id="chatMessages"
+       style="flex:1; overflow-y:auto; padding:16px;
+              display:flex; flex-direction:column; gap:10px;
+              background:#f8f9fa;">
+    <div style="display:flex; gap:8px; align-items:flex-start">
+      <div style="width:28px;height:28px;border-radius:50%;
+                  background:#1B2A4A;display:flex;align-items:center;
+                  justify-content:center;flex-shrink:0">
+        <i class="fas fa-robot text-white" style="font-size:12px"></i>
+      </div>
+      <div style="background:white; padding:10px 14px;
+                  border-radius:0 12px 12px 12px;
+                  font-size:13px; max-width:80%;
+                  box-shadow:0 1px 3px rgba(0,0,0,0.1)">
+        Hi! I'm Stitch, your Stitchify assistant  How can I help you today?
+      </div>
+    </div>
+  </div>
+
+  <div style="padding:12px; border-top:1px solid #e0e0e0;
+              background:white; display:flex; gap:8px">
+    <input type="text" id="chatInput"
+           placeholder="Type your message..."
+           style="flex:1; border:2px solid #e0e0e0; border-radius:20px;
+                  padding:8px 14px; font-size:13px; outline:none;"
+           onkeypress="if(event.key==='Enter') sendMessage()">
+    <button onclick="sendMessage()"
+            style="width:38px;height:38px;border-radius:50%;
+                   background:linear-gradient(135deg,#1B2A4A,#212529);
+                   border:none;color:white;cursor:pointer;
+                   display:flex;align-items:center;justify-content:center"
+            id="sendBtn">
+      <i class="fas fa-paper-plane" style="font-size:14px"></i>
+    </button>
+  </div>
+</div>
+
+<script>
+let chatOpen = false;
+
+function toggleChat() {
+  chatOpen = !chatOpen;
+  const win  = document.getElementById('chatWindow');
+  const icon = document.getElementById('chatIcon');
+  win.style.display  = chatOpen ? 'flex' : 'none';
+  icon.className     = chatOpen ? 'fas fa-times' : 'fas fa-robot';
+}
+
+document.getElementById('chatToggle').addEventListener('click', toggleChat);
+
+function addMessage(text, isUser) {
+  const msgs = document.getElementById('chatMessages');
+  const wrapper = document.createElement('div');
+  wrapper.style.cssText = `display:flex;gap:8px;align-items:flex-start;${isUser ? 'flex-direction:row-reverse' : ''}`;
+
+  const avatar = document.createElement('div');
+  avatar.style.cssText = `width:28px;height:28px;border-radius:50%;background:${isUser ? '#e0e0e0' : '#1B2A4A'};display:flex;align-items:center;justify-content:center;flex-shrink:0`;
+  avatar.innerHTML = isUser
+    ? '<i class="fas fa-user" style="font-size:12px;color:#555"></i>'
+    : '<i class="fas fa-robot text-white" style="font-size:12px"></i>';
+
+  const bubble = document.createElement('div');
+  bubble.style.cssText = `background:${isUser ? 'linear-gradient(135deg,#1B2A4A,#212529)' : 'white'};color:${isUser ? 'white' : '#212529'};padding:10px 14px;border-radius:${isUser ? '12px 0 12px 12px' : '0 12px 12px 12px'};font-size:13px;max-width:80%;box-shadow:0 1px 3px rgba(0,0,0,0.1);line-height:1.5;`;
+  bubble.textContent = text;
+
+  wrapper.appendChild(avatar);
+  wrapper.appendChild(bubble);
+  msgs.appendChild(wrapper);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+async function sendMessage() {
+  const input   = document.getElementById('chatInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const message = input.value.trim();
+  if (!message) return;
+
+  addMessage(message, true);
+  input.value = '';
+  sendBtn.disabled = true;
+
+  try {
+    const response = await fetch('/chatbot', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+      },
+      body: JSON.stringify({ message }),
+    });
+    const data = await response.json();
+    addMessage(data.reply || 'Sorry, try again!', false);
+  } catch (err) {
+    addMessage('Sorry, something went wrong. Please try again.', false);
+  } finally {
+    sendBtn.disabled = false;
+  }
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  const videoModal = document.getElementById('videoModal');
+  const measurementVideo = videoModal.querySelector('video');
+
+  videoModal.addEventListener('hidden.bs.modal', function () {
+    measurementVideo.pause();
+    measurementVideo.currentTime = 0;
+  });
+
+</script>
+
 </body>
 </html>

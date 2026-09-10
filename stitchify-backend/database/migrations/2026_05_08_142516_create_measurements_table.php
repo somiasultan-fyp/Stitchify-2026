@@ -12,10 +12,8 @@ return new class extends Migration
         Schema::create('measurements', function (Blueprint $table) {
             $table->id();
             
-            // order se link — ek order ki ek measurement hogi
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
             
-            // basic measurements (inches mein)
             $table->decimal('chest', 5, 2)->nullable();
             $table->decimal('waist', 5, 2)->nullable();
             $table->decimal('hips', 5, 2)->nullable();
@@ -26,7 +24,6 @@ return new class extends Migration
             $table->decimal('trouser_waist', 5, 2)->nullable();
             $table->decimal('neck', 5, 2)->nullable();
             
-            // extra notes
             $table->text('additional_notes')->nullable();
             
             $table->timestamps();
