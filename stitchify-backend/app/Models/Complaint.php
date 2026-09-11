@@ -1,5 +1,5 @@
 <?php
-// app/Models/Complaint.php
+
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 

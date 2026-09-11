@@ -183,6 +183,40 @@ class CustomerOrderController extends Controller
         return back()->with('success', 'Order cancelled.');
     }
 
+    public function storeReview(Request $request, $orderId)
+{
+    $request->validate([
+        'rating' => 'required|integer|min:1|max:5',
+        'comment' => 'required|string|min:10|max:1000',
+        'tailor_id' => 'required|exists:tailors,id',
+    ]);
+
+    $order = Order::where('id', $orderId)
+                  ->where('customer_id', Auth::id())
+                  ->firstOrFail();
+
+    $existingReview = Review::where('order_id', $order->id)->first();
+    if ($existingReview) {
+        return response()->json([
+            'success' => false,
+            'message' => 'You have already reviewed this order'
+        ], 422);
+    }
+
+    Review::create([
+        'order_id' => $order->id,
+        'tailor_id' => $request->tailor_id,
+        'customer_id' => Auth::id(),
+        'rating' => $request->rating,
+        'comment' => $request->comment,
+    ]);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Review submitted successfully!'
+    ]);
+}
+
     public function liveStatus()
     {
         $customer = auth()->user()->customer;

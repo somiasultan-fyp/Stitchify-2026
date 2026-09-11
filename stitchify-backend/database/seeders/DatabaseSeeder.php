@@ -1,5 +1,4 @@
 <?php
-// database/seeders/DatabaseSeeder.php — update karo
 
 namespace Database\Seeders;
 use Illuminate\Database\Seeder;

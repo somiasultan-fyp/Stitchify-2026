@@ -35,7 +35,6 @@ class PaymentController extends Controller
             compact('order', 'stripeKey'));
     }
 
-    //Payment Process 
     public function process(Request $request, Order $order)
     {
         if ($order->customer->user_id !== auth()->id()) {

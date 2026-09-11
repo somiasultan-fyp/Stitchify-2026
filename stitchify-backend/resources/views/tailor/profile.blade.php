@@ -5,54 +5,13 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <title>My Profile - Stitchify</title>
+    <title>My Profile-Stitchify</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/common.css') }}">
     <link rel="stylesheet" href="{{ asset('css/tailor-dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
-    <style>
-        .portfolio-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .portfolio-item {
-            position: relative;
-            border-radius: 10px;
-            overflow: hidden;
-            border: 2px solid #e0e0e0;
-            aspect-ratio: 1;
-        }
-        .portfolio-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .portfolio-delete-form {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-        }
-        .portfolio-delete-btn {
-            background: rgba(220, 53, 69, 0.9);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .portfolio-delete-btn:hover {
-            background: #dc3545;
-            transform: scale(1.1);
-        }
-    </style>
+    
 </head>
 <body>
 
@@ -329,7 +288,7 @@
                 <div class="portfolio-grid">
                     @forelse($tailor->portfolios as $portfolio)
                         <div class="portfolio-item">
-                            <img src="{{ Storage::url($portfolio->image_path) }}" alt="Portfolio Image">
+                            <img src="{{ Storage::url($portfolio->image_path) }}" alt="Portfolio Image" onerror="this.style.display='none'; this.parentElement.innerHTML+='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:#dc3545;font-size:11px;text-align:center;padding:5px;\'>Image Not Found<br>Check DB & Storage</div>';">
                             <form method="POST" action="{{ route('tailor.portfolio.delete', $portfolio->id) }}" class="portfolio-delete-form">
                                 @csrf
                                 @method('DELETE')

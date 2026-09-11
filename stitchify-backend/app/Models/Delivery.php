@@ -1,5 +1,4 @@
 <?php
-// app/Models/Delivery.php
 
 namespace App\Models;
 

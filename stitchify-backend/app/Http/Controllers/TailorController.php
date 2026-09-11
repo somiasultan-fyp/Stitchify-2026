@@ -243,7 +243,7 @@ class TailorController extends Controller
     public function profile()
     {
         $user   = Auth::user();
-        $tailor = $user->tailor;
+        $tailor = $user->tailor()->with('portfolios')->first();
         return view('tailor.profile', compact('user', 'tailor'));
     }
 

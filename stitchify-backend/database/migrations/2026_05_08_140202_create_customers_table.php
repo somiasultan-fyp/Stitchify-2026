@@ -1,5 +1,4 @@
 <?php
-// database/migrations/xxxx_create_customers_table.php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;

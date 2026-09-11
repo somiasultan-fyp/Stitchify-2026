@@ -99,9 +99,11 @@ body {
   opacity: 0.6;
   font-size: 1.1rem;
   transition: opacity 0.3s ease;
+  z-index: 10;
 }
 
 .password-toggle .toggle-icon:hover {
+  color: var(--accent-color);
   opacity: 1;
 }
 

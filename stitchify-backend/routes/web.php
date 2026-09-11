@@ -14,7 +14,6 @@ use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\PasswordResetController;
 
 
-//Public Routes
 Route::get('/', function () {
 
     $topTailors = \App\Models\Tailor::with('user')
@@ -42,8 +41,6 @@ Route::get('/tailors/{id}', [TailorController::class, 'show'])
 Route::get('/tailors/category/{category}', [TailorController::class, 'byCategory'])
     ->name('tailors.category');
 
-
-//Authentication Routes
 Route::get('/register', [AuthController::class, 'showRegister'])
     ->name('register.form');
 
@@ -59,8 +56,6 @@ Route::post('/login', [AuthController::class, 'login'])
 Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
 
-
-//Static Pages
 Route::get('/aboutus', fn() => view('aboutus'))
     ->name('about');
 
@@ -73,14 +68,11 @@ Route::get('/terms', fn() => view('terms'))
 Route::get('/privacy', fn() => view('privacy'))
     ->name('privacy');
 
-
-//Email Verification
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
 
 })->middleware('auth')
   ->name('verification.notice');
-
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
 
@@ -117,7 +109,6 @@ Route::post('/email/verification-notification', function (Request $request) {
 })->middleware(['auth', 'throttle:6,1'])
   ->name('verification.send');
 
-//Customer Routes
 Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
 
     Route::get('/customer/dashboard',
@@ -131,6 +122,10 @@ Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
     Route::post('/order/store',
         [CustomerOrderController::class, 'placeOrder'])
         ->name('order.store');
+        
+    Route::post('/customer/review/{orderId}/store',
+        [CustomerOrderController::class, 'storeReview'])
+        ->name('customer.review.store');    
 
     Route::get('/customer/order/{order}',
         [CustomerOrderController::class, 'showOrder'])
@@ -144,7 +139,6 @@ Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
         [CustomerOrderController::class, 'liveStatus'])
         ->name('customer.live.status');
 
-    //Payment
     Route::get('/payment/{order}',
         [PaymentController::class, 'show'])
         ->name('payment.show');
@@ -157,8 +151,6 @@ Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
         [PaymentController::class, 'success'])
         ->name('payment.success');
 
-
-    //Delivery Tracking - Customer
     Route::get('/customer/track/{order}',
         [DeliveryController::class, 'track'])
         ->name('delivery.track');
@@ -168,17 +160,11 @@ Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
         ->name('delivery.status');
 });
 
-//Tailor Routes
-
 Route::middleware(['auth', 'verified', 'role:tailor'])->group(function () {
-
-
-    //Tailor Dashboard
     Route::get('/tailor/dashboard',
         [TailorDashboardController::class, 'index'])
         ->name('tailor.dashboard');
 
-    //Tailor Orders
     Route::get('/tailor/orders/{order}',
         [TailorDashboardController::class, 'showOrder'])
         ->name('tailor.orders.show');
@@ -195,12 +181,10 @@ Route::middleware(['auth', 'verified', 'role:tailor'])->group(function () {
         [TailorDashboardController::class, 'updateStatus'])
         ->name('tailor.orders.status');
 
-    //Tailor Delivery Update
     Route::patch('/tailor/delivery/{delivery}/status',
         [DeliveryController::class, 'updateStatus'])
         ->name('tailor.delivery.update');
 
-    //Tailor Profile
     Route::get('/tailor/profile',
         [TailorController::class, 'profile'])
         ->name('tailor.profile');
@@ -209,7 +193,6 @@ Route::middleware(['auth', 'verified', 'role:tailor'])->group(function () {
         [TailorController::class, 'updateProfile'])
         ->name('tailor.profile.update');
 
-    //Tailor Portfolio
     Route::post('/tailor/portfolio/upload',
         [TailorController::class, 'uploadPortfolio'])
         ->name('tailor.portfolio.upload');
@@ -218,8 +201,6 @@ Route::middleware(['auth', 'verified', 'role:tailor'])->group(function () {
         [TailorController::class, 'deletePortfolio'])
         ->name('tailor.portfolio.delete');
 });
-
-//Admin Routes
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
 
@@ -263,44 +244,37 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     })->name('admin.dashboard');
 
-
-    // Admin User Management
     Route::patch('/admin/users/{user}/toggle',
         [\App\Http\Controllers\Admin\AdminController::class, 'toggleUser'])
         ->name('admin.users.toggle');
 
-    //Admin Complaints
     Route::patch('/admin/complaints/{complaint}/respond',
         [\App\Http\Controllers\Admin\AdminController::class, 'respondComplaint'])
         ->name('admin.complaints.respond');
 
-    //Admin Tailor Approval
     Route::patch('/admin/tailors/{user}/approve',
         [\App\Http\Controllers\Admin\AdminController::class, 'approveTailor'])
         ->name('admin.tailors.approve');
 
 });
 
-    //Chatbot
-Route::post('/chatbot',
-    [ChatbotController::class, 'reply'])
-    ->name('chatbot.reply');
+    Route::post('/chatbot',
+        [ChatbotController::class, 'reply'])
+        ->name('chatbot.reply');
 
-//Password Reset
-Route::post('/forgot-password',
-    [PasswordResetController::class, 'sendResetLink'])
-    ->name('password.email');
+    Route::post('/forgot-password',
+        [PasswordResetController::class, 'sendResetLink'])
+         ->name('password.email');
 
-Route::get('/reset-password/{token}',
-    [PasswordResetController::class, 'showResetForm'])
-    ->name('password.reset');
+    Route::get('/reset-password/{token}',
+        [PasswordResetController::class, 'showResetForm'])
+        ->name('password.reset');
 
-Route::post('/reset-password',
-    [PasswordResetController::class, 'reset'])
-    ->name('password.update');
+    Route::post('/reset-password',
+        [PasswordResetController::class, 'reset'])
+        ->name('password.update');
 
-//Notifications
-Route::middleware(['auth'])->group(function () {
+    Route::middleware(['auth'])->group(function () {
 
     Route::get('/notifications',
         [App\Http\Controllers\NotificationController::class, 'index'])

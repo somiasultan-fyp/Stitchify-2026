@@ -35,10 +35,12 @@
         <span id="emailError" class="error-text"></span>
       </div>
 
-      <div class="mb-3 password-toggle">
+      <div class="mb-3">
         <label for="password" class="form-label">Password</label>
+        <div class="password-toggle">
         <input id="password" class="form-control" placeholder="Enter your password" type="password" required>
         <i id="togglePassword" class="fas fa-eye toggle-icon" title="Show/hide password" role="button" aria-label="Toggle password visibility"></i>
+        </div>
         <span id="passwordError" class="error-text"></span>
       </div>
       <div id="loginError" style="display:none; color:red; margin-bottom:10px;"></div>

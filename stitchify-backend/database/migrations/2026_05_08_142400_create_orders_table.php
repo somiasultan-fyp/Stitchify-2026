@@ -1,5 +1,4 @@
 <?php
-// database/migrations/xxxx_create_orders_table.php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -25,7 +24,6 @@ return new class extends Migration
             $table->decimal('price', 8, 2)->nullable();     
             $table->decimal('advance_paid', 8, 2)->default(0); 
             
-            // dates
             $table->date('expected_delivery_date')->nullable(); 
             $table->date('actual_delivery_date')->nullable();  
             

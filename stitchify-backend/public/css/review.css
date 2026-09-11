@@ -1,0 +1,185 @@
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .review-wrapper {
+            max-width: 700px;
+            margin: 50px auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .review-header {
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .review-header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .review-header p {
+            opacity: 0.9;
+            font-size: 15px;
+        }
+
+        .order-summary {
+            background: #f8f9fa;
+            padding: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .order-info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .order-info-row strong {
+            color: var(--primary-bg);
+        }
+
+        .rating-section {
+            padding: 40px;
+        }
+
+        .section-title {
+            color: var(--accent-color);
+            font-weight: 700;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            font-size: 35px;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .star-rating label:hover,
+        .star-rating label:hover ~ label,
+        .star-rating input:checked ~ label {
+            color: #fbbf24;
+        }
+
+        .review-textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        .review-textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(27, 42, 74, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .success-message {
+            display: none;
+            background: #d1e7dd;
+            border: 1px solid #a3cfbb;
+            color: #0a3622;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .error-message {
+            display: none;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .tailor-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .tailor-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent-color);
+        }
+
+        .tailor-details h4 {
+            margin: 0;
+            color: var(--primary-bg);
+            font-size: 18px;
+        }
+
+        .tailor-details p {
+            margin: 5px 0 0;
+            color: var(--copyright-bg);
+            font-size: 14px;
+        }

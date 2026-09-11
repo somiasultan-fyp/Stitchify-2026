@@ -77,6 +77,11 @@
 
     <div class="row g-4" id="tailorGrid">
 
+        @php
+            $defaultAvatarSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#1B2A4A"/><circle cx="50" cy="38" r="18" fill="#ffffff"/><path d="M50 60c-22 0-34 12-34 26v14h68V86c0-14-12-26-34-26z" fill="#ffffff"/></svg>';
+            $defaultAvatarUri = 'data:image/svg+xml;base64,' . base64_encode($defaultAvatarSvg);
+        @endphp
+
         @forelse($tailors as $tailor)
         <div class="col-md-6 col-lg-4 tailor-item"
              data-name="{{ strtolower($tailor->user->name) }}"
@@ -87,11 +92,11 @@
             <div class="tailor-card h-100">
 
                 <div class="card-top">
-                    <img src="{{ $tailor->user->profile_image
-                                ? Storage::url($tailor->user->profile_image)
-                                : asset('images/default-avatar.png') }}"
+                    <img src="{{ $tailor->user->profile_image ? Storage::url($tailor->user->profile_image) : $defaultAvatarUri }}"
+                         data-default="{{ $defaultAvatarUri }}"
                          alt="{{ $tailor->user->name }}"
-                         class="tailor-avatar">
+                         class="tailor-avatar"
+                         onerror="this.src='{{ $defaultAvatarUri }}'">
 
                     <div class="card-top-info">
                         <h5>{{ $tailor->user->name }}</h5>
@@ -116,7 +121,6 @@
 
                 <div class="card-body-custom">
 
-                    {{-- Stats --}}
                     <div class="stats-row">
                         <div class="stat-item">
                             <span class="stat-num">
@@ -126,9 +130,7 @@
                         </div>
                         <div class="stat-item">
                             <span class="stat-num">
-                                {{ $tailor->orders()
-                                          ->where('status','delivered')
-                                          ->count() }}
+                                {{ $tailor->orders()->where('status','delivered')->count() }}
                             </span>
                             <span class="stat-lbl">Completed</span>
                         </div>

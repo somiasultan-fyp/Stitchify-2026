@@ -1,0 +1,243 @@
+.btn-stitchify {
+    background-color: var(--accent-color);
+    color: var(--text-white);
+    border: none;
+    padding: 10px 25px;
+    transition: all 0.3s ease;
+}
+
+.btn-stitchify:hover {
+    background-color: #1a2c55;
+    color: var(--text-white);
+}
+
+.bg-stitchify-dark {
+    background-color: var(--primary-bg) !important;
+    color: var(--text-white);
+}
+
+.text-accent {
+    color: var(--accent-color);
+}
+
+.navbar {
+    background-color: var(--primary-bg) !important;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: var(--text-white) !important;
+}
+
+.hero-section {
+    background-color: var(--primary-bg);
+    background-size: cover;
+    background-position: center;
+    color: var(--text-white);
+    padding: 100px 0;
+    text-align: center;
+}
+
+.step-circle {
+    width: 150px;
+    height: 150px;
+    background-color: var(--accent-color);
+    color: var(--text-white);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 20px auto;
+    text-align: center;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.review-card {
+    background-color: var(--primary-bg);
+    color: var(--text-white);
+    border: none;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.card-title {
+    font-size: 16px !important;
+    margin-bottom: 5px !important;
+}
+
+.carousel-indicators [data-bs-target] {
+    background-color: var(--primary-bg) !important;
+    opacity: 0.8;
+}
+
+.carousel-indicators .active {
+    background-color: var(--accent-color) !important;
+    opacity: 1;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: var(--primary-bg); 
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    background-size: 50%;
+}
+
+.stars i {
+    color: var(--text-white); 
+}
+
+.tailor-card {
+    background-color: var(--primary-bg);
+    color: var(--text-white);
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    padding: 20px !important;
+}
+
+.tailor-card-header {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.rating-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: linear-gradient(135deg, var(--accent-color), var(--primary-bg));
+    color: white;
+    padding: 5px 8px !important;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 600;
+    font-size: 11px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    z-index: 10;
+}
+
+.rating-badge i {
+    color: #fbbf24;
+    font-size: 10px !important;
+}
+
+.rating-badge small {
+    font-size: 11px;
+    opacity: 0.9;
+}
+
+.tailor-avatar img {
+    width: 100px !important;
+    height: 100px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    border: 3px solid #334155;
+    margin-bottom: 10px !important;
+}
+
+.tailor-category {
+    color: #94a3b8;
+    font-size: 13px !important;
+    margin-bottom: 8px !important;
+    text-transform: capitalize;
+}
+
+.service-img {
+    height: 250px;
+    object-fit: cover;
+    width: 100%;
+    border-radius: 8px;
+}
+
+.accordion-item {
+    border: none;
+    margin-bottom: 10px;
+}
+
+.accordion-button {
+    background-color: var(--accent-color) !important;
+    color: var(--text-white) !important;
+    font-weight: bold;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+}
+
+.accordion-button::after {
+    filter: invert(1); 
+}
+
+.accordion-collapse {
+    background-color: var(--primary-bg);
+}
+
+.accordion-body {
+    color: var(--text-white);
+}
+
+footer {
+    background-color: var(--primary-bg);
+    color: var(--text-white);
+    padding-top: 50px;
+}
+
+.footer-copyright {
+    background-color: var(--copyright-bg);
+    padding: 15px 0;
+    text-align: center;
+}
+
+footer a {
+    color: #ccc;
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: var(--text-white);
+}
+
+.chatbot-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+}
+
+.chatbot-bubble {
+    background-color: var(--accent-color);
+    color: var(--text-white);
+    padding: 10px 15px;
+    border-radius: 20px 20px 0 20px;
+    margin-right: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    font-size: 0.9rem;
+}
+
+.chatbot-icon {
+    background-color: var(--accent-color);
+    color: var(--text-white);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.chatbot-icon:hover {
+    transform: scale(1.1);
+}

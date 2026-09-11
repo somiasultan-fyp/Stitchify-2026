@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 
 class DeliveryController extends Controller
 {
-    // Delivery auto-create after payment
     public static function createAfterPayment(Order $order): void
     {
         if ($order->delivery_type !== 'home_delivery') {
@@ -35,7 +34,6 @@ class DeliveryController extends Controller
             'tracking_id' => $delivery->tracking_id
         ]);
 
-        // Customer notification
         Notification::create([
             'user_id'    => $order->customer->user->id,
             'title'      => 'Delivery Scheduled!',
@@ -46,7 +44,6 @@ class DeliveryController extends Controller
             'action_url' => '/customer/dashboard',
         ]);
 
-        // Tailor notification
         Notification::create([
             'user_id'    => $order->tailor->user->id,
             'title'      => 'Fabric Coming Your Way!',
@@ -58,8 +55,6 @@ class DeliveryController extends Controller
         ]);
     }
 
-
-    // Customer tracking page
     public function track(Order $order)
     {
         if ($order->customer->user_id !== auth()->id()) {
@@ -76,15 +71,11 @@ class DeliveryController extends Controller
         return view('customer.tracking', compact('order', 'delivery'));
     }
 
-
-    // Tailor updates delivery status
     public function updateStatus(Request $request, Delivery $delivery)
     {
         $order = $delivery->order;
 
         $tailor = auth()->user()->tailor;
-
-        // Only assigned tailor can update delivery
         if (
             auth()->user()->role !== 'tailor' ||
             !$tailor ||
@@ -103,7 +94,6 @@ class DeliveryController extends Controller
             'notes'  => $request->notes,
         ]);
 
-        // If delivery is completed
         if ($request->status === 'delivered') {
 
             $order->update([
@@ -114,7 +104,6 @@ class DeliveryController extends Controller
             $order->tailor->incrementSlot();
         }
 
-        // Notify customer
         Notification::create([
             'user_id'    => $order->customer->user->id,
             'title'      => 'Delivery Update — ' . $delivery->tracking_id,
@@ -130,8 +119,6 @@ class DeliveryController extends Controller
         ]);
     }
 
-
-    // Customer gets delivery status
     public function getStatus(Order $order)
     {
         if ($order->customer->user_id !== auth()->id()) {

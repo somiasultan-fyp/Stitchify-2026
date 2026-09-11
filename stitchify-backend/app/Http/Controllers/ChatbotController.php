@@ -17,12 +17,8 @@ class ChatbotController extends Controller
 
         $message = $request->message;
         $apiKey  = env('GROQ_API_KEY');
-
-        // ===== DATABASE CONTEXT =====
         $context = $this->buildContext($message);
-
-        // ===== GROQ PROMPT =====
-      $systemPrompt = "You are Stitch, the helpful assistant for Stitchify — an online tailoring platform in Pakistan.
+      $systemPrompt = "You are Stitch, the helpful assistant for Stitchify - an online tailoring platform in Pakistan.
 
 PLATFORM INFO:
 - Customers can browse tailors, place orders, track status, and pay online
@@ -76,18 +72,14 @@ Instructions:
         ]);
     }
 
-    // ===== DATABASE CONTEXT BUILDER =====
     private function buildContext(string $message): string
     {
         $context = '';
         $msg     = strtolower($message);
-
-        // Logged in user ka context
         if (auth()->check()) {
             $user = auth()->user();
             $context .= "Logged in user: {$user->name} (Role: {$user->role})\n";
 
-            // Customer ka orders
             if ($user->role === 'customer' && $user->customer) {
                 $orders = Order::where('customer_id', $user->customer->id)
                     ->with('tailor.user')
@@ -115,7 +107,6 @@ Instructions:
                 }
             }
 
-            // Tailor ka context
             if ($user->role === 'tailor' && $user->tailor) {
                 $tailor        = $user->tailor;
                 $pendingOrders = Order::where('tailor_id', $tailor->id)
@@ -129,7 +120,6 @@ Instructions:
             }
         }
 
-        // General tailor stats
         if (str_contains($msg, 'tailor') || str_contains($msg, 'available')) {
             $availableTailors = Tailor::where('available_slots', '>', 0)
                 ->where('status', 'approved')
