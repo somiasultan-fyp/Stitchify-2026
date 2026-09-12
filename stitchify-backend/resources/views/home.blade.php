@@ -193,6 +193,7 @@
                                     Kids' Wear
                                 @else
                                     {{ ucfirst($tailor->specialization ?? 'General Tailoring') }}
+                                @endif
                                 </p>
                             <p class="card-text small">
                                 <i class="fas fa-star me-1"></i>{{ $tailor->experience_years ?? 0 }} yrs experience
