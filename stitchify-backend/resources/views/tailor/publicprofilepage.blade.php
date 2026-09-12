@@ -61,7 +61,17 @@
 
             <span class="badge-category">
                 <i class="fas fa-tag me-1"></i>
-                {{ $tailor->specialization ?? 'General Tailoring' }}
+                @if($tailor->specialization == 'all')
+                    All Categories
+                @elseif($tailor->specialization == 'men')
+                    Men's Wear
+                @elseif($tailor->specialization == 'women')
+                    Women's Wear
+                @elseif($tailor->specialization == 'kids')
+                    Kids' Wear
+                @else
+                    {{ ucfirst($tailor->specialization ?? 'General Tailoring') }}
+                @endif
             </span>
 
             <div class="profile-hero-stats">

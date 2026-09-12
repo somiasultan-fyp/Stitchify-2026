@@ -182,7 +182,18 @@
                         </div>
                         <div class="card-body text-center">
                             <h5 class="card-title">{{ $tailor->user->name }}</h5>
-                            <p class="tailor-category">{{ ucfirst($tailor->specialization ?? 'General Tailoring') }}</p>
+                            <p class="tailor-category">
+                                @if($tailor->specialization == 'all')
+                                    All Categories
+                                @elseif($tailor->specialization == 'men')
+                                    Men's Wear
+                                @elseif($tailor->specialization == 'women')
+                                    Women's Wear
+                                @elseif($tailor->specialization == 'kids')
+                                    Kids' Wear
+                                @else
+                                    {{ ucfirst($tailor->specialization ?? 'General Tailoring') }}
+                                </p>
                             <p class="card-text small">
                                 <i class="fas fa-star me-1"></i>{{ $tailor->experience_years ?? 0 }} yrs experience
                                 &nbsp;|&nbsp;
