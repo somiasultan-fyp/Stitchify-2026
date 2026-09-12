@@ -45,7 +45,7 @@
     </nav>
 
     <section class="hero-section d-flex align-items-center"
-    style="background: linear-gradient(rgba(33, 37, 41, 0.4), rgba(33, 37, 41, 0.4)), url({{asset('images/background.png')}});">
+    style="background: linear-gradient(rgba(33, 37, 41, 0.4), rgba(33, 37, 41, 0.4)), url({{asset('images/background.png')}}); background-size: cover; background-position: center; min-height: 500px;">
         <div class="container">
             <h1 class="display-3 fw-bold mb-4">Your Style, Our Stitch</h1>
             <p class="lead mb-5">Experience the future of online tailoring. Custom designs, expert tailors, and doorstep delivery.</p>

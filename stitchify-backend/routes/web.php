@@ -122,6 +122,11 @@ Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
     Route::post('/order/store',
         [CustomerOrderController::class, 'placeOrder'])
         ->name('order.store');
+
+    Route::get('/customer/review/{orderId}',
+       [CustomerOrderController::class, 'showReviewPage'])
+       ->name('customer.review.page');
+    
         
     Route::post('/customer/review/{orderId}/store',
         [CustomerOrderController::class, 'storeReview'])

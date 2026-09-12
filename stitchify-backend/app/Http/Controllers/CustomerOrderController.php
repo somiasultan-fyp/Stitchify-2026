@@ -183,6 +183,16 @@ class CustomerOrderController extends Controller
         return back()->with('success', 'Order cancelled.');
     }
 
+    public function showReviewPage($orderId)
+{
+    $order = Order::where('id', $orderId)
+                  ->where('customer_id', Auth::id())
+                  ->with('tailor.user')
+                  ->firstOrFail();
+
+    return view('customer.review', compact('order'));
+}
+
     public function storeReview(Request $request, $orderId)
 {
     $request->validate([
