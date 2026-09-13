@@ -209,7 +209,7 @@ async function viewDetail(orderId) {
               ${o.design_image ? `
                 <tr>
                 <th>Design Image</th>
-                <td><img src="${o.design_image}" style="max-width:150px;border-radius:8px;cursor:pointer;" onclick="window.open('${o.design_image}', '_blank')"></td>
+                <td><img src="/storage${o.design_image}" style="max-width:150px;border-radius:8px;cursor:pointer;" onclick="window.open('/storage/${o.design_image}', '_blank')"></td>
                 </tr>` : ''}
                 <tr><th>Fabric Details</th><td>${o.fabric_details || '—'}</td></tr>
                 <tr><th>Special Notes</th><td>${o.special_instructions || '—'}</td></tr>
