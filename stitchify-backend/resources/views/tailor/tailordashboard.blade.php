@@ -192,6 +192,10 @@
       </div>
       <div class="order-actions">
         
+      <button class="btn-sm-custom btn-view"
+          onclick="viewDetail({{ $order->id }})">
+    <i class="fas fa-eye me-1"></i> View Details
+  </button>
       
 <form method="POST"
       action="{{ route('tailor.orders.accept', $order->id) }}"

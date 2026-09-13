@@ -205,6 +205,14 @@ async function viewDetail(orderId) {
               <tr><th>Price</th><td>${o.price ? 'Rs. ' + o.price : '—'}</td></tr>
               <tr><th>Expected</th><td>${o.expected_delivery_date || '—'}</td></tr>
               <tr><th>Date</th><td>${o.created_at}</td></tr>
+              <tr><th>Date</th><td>${o.created_at}</td></tr>
+              ${o.design_image ? `
+                <tr>
+                <th>Design Image</th>
+                <td><img src="${o.design_image}" style="max-width:150px;border-radius:8px;cursor:pointer;" onclick="window.open('${o.design_image}', '_blank')"></td>
+                </tr>` : ''}
+                <tr><th>Fabric Details</th><td>${o.fabric_details || '—'}</td></tr>
+                <tr><th>Special Notes</th><td>${o.special_instructions || '—'}</td></tr>
             </table>
           </div>
           <div class="col-md-6">
