@@ -95,6 +95,20 @@ function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('active');
 }
 
+document.addEventListener('click', function(e) {
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.querySelector('.menu-toggle');
+    
+    if (window.innerWidth <= 768 &&
+        sidebar &&
+        toggle &&
+        !sidebar.contains(e.target) &&
+        !toggle.contains(e.target) &&
+        sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+    }
+});
+
 function updateNotifBadge() {
     fetch('/notifications/unread-count', {
         headers: { 'Accept': 'application/json' }

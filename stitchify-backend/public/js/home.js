@@ -66,7 +66,7 @@ async function sendMessage() {
 }
 
 function showTyping() {
-    const chatBox = document.getElementById('chatBox');
+    const chatBox = document.getElementById('chatMessages');
     const div = document.createElement('div');
     div.id = 'typing-indicator';
     div.className = 'message bot-message';
