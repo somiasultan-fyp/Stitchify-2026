@@ -42,6 +42,8 @@ async function sendMessage() {
     sendBtn.disabled = true;
 
     try {
+        showTyping();
+        
         const response = await fetch('/chatbot', {
             method: 'POST',
             headers: {
@@ -51,12 +53,36 @@ async function sendMessage() {
             body: JSON.stringify({ message }),
         });
         const data = await response.json();
+        
+        hideTyping();
+        
         addMessage(data.reply || 'Sorry, try again!', false);
     } catch (err) {
+        hideTyping();
         addMessage('Sorry, something went wrong. Please try again.', false);
     } finally {
         sendBtn.disabled = false;
     }
+}
+
+function showTyping() {
+    const chatBox = document.getElementById('chatBox');
+    const div = document.createElement('div');
+    div.id = 'typing-indicator';
+    div.className = 'message bot-message';
+    div.innerHTML = `
+        <div class="typing-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>`;
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function hideTyping() {
+    const el = document.getElementById('typing-indicator');
+    if (el) el.remove();
 }
 
 document.addEventListener('DOMContentLoaded', function() {

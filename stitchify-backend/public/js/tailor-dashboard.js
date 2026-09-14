@@ -337,5 +337,9 @@ function updateNotifBadge() {
     .catch(() => {});
 }
 
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('active');
+}
+
 updateNotifBadge();
 setInterval(updateNotifBadge, 30000);

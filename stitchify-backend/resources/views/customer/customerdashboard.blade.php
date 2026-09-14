@@ -16,6 +16,10 @@
 </head>
 <body>
 
+<button class="menu-toggle" onclick="toggleSidebar()">
+    <i class="fas fa-bars"></i>
+</button>
+
 <div class="sidebar">
     <div class="sidebar-logo">
         <a href="/">

@@ -91,6 +91,10 @@ function markAllRead(e) {
     }).then(() => { updateNotifBadge(); loadNotifications(); });
 }
 
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('active');
+}
+
 function updateNotifBadge() {
     fetch('/notifications/unread-count', {
         headers: { 'Accept': 'application/json' }

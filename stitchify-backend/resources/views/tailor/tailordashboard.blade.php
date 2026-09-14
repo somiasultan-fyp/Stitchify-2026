@@ -16,7 +16,10 @@
 </head>
 <body>
 
-{{-- SIDEBAR --}}
+<button class="menu-toggle" onclick="toggleSidebar()">
+    <i class="fas fa-bars"></i>
+</button>
+
 <div class="sidebar">
   @php
     $defaultAvatarSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#1B2A4A"/><circle cx="50" cy="38" r="18" fill="#ffffff"/><path d="M50 60c-22 0-34 12-34 26v14h68V86c0-14-12-26-34-26z" fill="#ffffff"/></svg>';
@@ -65,7 +68,6 @@
   </div>
 </div>
 
-{{-- MAIN CONTENT --}}
 <div class="main-content">
 
   <div class="top-bar" id="overview">
@@ -102,7 +104,6 @@
     </div>
   </div>
 
-  {{-- SLOT CAPACITY --}}
   <div class="slot-block">
     <div class="slot-block-header">
       <div class="slot-block-title">
@@ -138,7 +139,6 @@
     <div class="slot-bar-label">{{ $usedPct }}% slots in use</div>
   </div>
 
-  {{-- STATS --}}
   <div class="stats-grid">
     <div class="stat-card">
       <div class="stat-icon orange"><i class="fas fa-hourglass-half"></i></div>
@@ -226,10 +226,6 @@
     <i class="fas fa-times me-1"></i> Reject
   </button>
 </form>
-
-
-
-
       </div>
     </div>
     @empty
@@ -273,9 +269,6 @@
       </div>
 
       <div class="order-actions">
-        
-      
-        
         @if(in_array($order->status, ['accepted', 'in_progress', 'ready', 'dispatched']))
   <form method="POST"
         action="{{ route('tailor.orders.status', $order->id) }}"
@@ -307,8 +300,6 @@
 
        </form>
     @endif
-        
-        
         <button class="btn-sm-custom btn-view"
                 onclick="viewDetail({{ $order->id }})">
           <i class="fas fa-eye me-1"></i> View Details

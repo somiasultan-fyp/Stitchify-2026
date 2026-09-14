@@ -68,7 +68,17 @@
                         </div>
                         <h5 class="tailor-name">{{ $tailor->user->name ?? 'N/A' }}</h5>
                         <p class="tailor-specialty">
-                            {{ $tailor->specialization ?? 'General Tailoring' }}
+                            @if($tailor->specialization == 'all')
+                               All Categories
+                            @elseif($tailor->specialization == 'men')
+                               Men's Wear
+                            @elseif($tailor->specialization == 'women')
+                               Women's Wear
+                            @elseif($tailor->specialization == 'kids')
+                               Kids' Wear
+                            @else
+                            {{ ucfirst($tailor->specialization ?? 'General Tailoring') }}
+                            @endif
                         </p>
                         <span class="category-badge">
                             @if($tailor->category === 'all')

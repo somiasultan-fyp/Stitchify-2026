@@ -187,7 +187,7 @@ class CustomerOrderController extends Controller
     public function showReviewPage($orderId)
 {
     $order = Order::where('id', $orderId)
-                  ->where('customer_id', Auth::id())
+                  ->where('customer_id', auth()->user()->customer->id)
                   ->with('tailor.user')
                   ->firstOrFail();
 

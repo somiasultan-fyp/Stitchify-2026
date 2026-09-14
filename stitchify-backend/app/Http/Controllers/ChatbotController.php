@@ -44,7 +44,7 @@ Instructions:
                     'Content-Type'  => 'application/json',
                 ])
                 ->post('https://api.groq.com/openai/v1/chat/completions', [
-                    'model' => 'groq/compound',
+                    'model' => 'llama3-8b-8192',
                     'messages'    => [
                         ['role' => 'system', 'content' => $systemPrompt],
                         ['role' => 'user',   'content' => $message],

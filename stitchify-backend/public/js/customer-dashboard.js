@@ -198,3 +198,7 @@ function escapeHtml(value) {
 
     return div.innerHTML;
 }
+
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('active');
+}
