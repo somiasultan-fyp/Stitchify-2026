@@ -92,7 +92,12 @@ function markAllRead(e) {
 }
 
 function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('active');
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) {
+        sidebar.classList.toggle('active');
+    } else {
+        console.warn('Sidebar element not found in the DOM.');
+    }
 }
 
 document.addEventListener('click', function(e) {

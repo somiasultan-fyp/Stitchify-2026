@@ -20,7 +20,7 @@
     <i class="fas fa-bars"></i>
 </button>
 
-<div class="sidebar">
+<div class="sidebar" id="sidebar">
     <div class="sidebar-logo">
         <a href="/">
             <img src="{{ asset('images/logo.png') }}" alt="Stitchify Logo">

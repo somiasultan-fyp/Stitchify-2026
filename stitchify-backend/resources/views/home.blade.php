@@ -171,7 +171,9 @@
                                      alt="{{ $tailor->user->name }}"
                                      class="tailor-avatar">
                             @else
-                                <i class="fa-solid fa-user-tie fa-4x mb-3 text-white"></i>
+                                <div class="tailor-avatar-circle">
+                                    <i class="fas fa-user-tie"></i>
+                                </div>
                             @endif
                             
                             <div class="rating-badge">

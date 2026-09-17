@@ -20,7 +20,7 @@
     <i class="fas fa-bars"></i>
 </button>
 
-<div class="sidebar">
+<div class="sidebar" id="sidebar">
   @php
     $defaultAvatarSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#1B2A4A"/><circle cx="50" cy="38" r="18" fill="#ffffff"/><path d="M50 60c-22 0-34 12-34 26v14h68V86c0-14-12-26-34-26z" fill="#ffffff"/></svg>';
     $defaultAvatarUri = 'data:image/svg+xml;base64,' . base64_encode($defaultAvatarSvg);
@@ -43,11 +43,11 @@
   </div>
 
   <ul class="sidebar-menu">
-    <li><a href="#overview"       data-section="overview"><i class="fas fa-th-large"></i> Dashboard</a></li>
+    <li><a href="#overview" data-section="overview"><i class="fas fa-th-large"></i> Dashboard</a></li>
     <li><a href="#pending-orders" data-section="pending-orders"><i class="fas fa-hourglass-half"></i> Pending Orders <span class="badge bg-warning text-dark ms-1">{{ $stats['pending'] }}</span></a></li>
-    <li><a href="#active-orders"  data-section="active-orders"><i class="fas fa-tasks"></i> Active Orders</a></li>
-    <li><a href="#performance"    data-section="performance"><i class="fas fa-chart-line"></i> Performance</a></li>
-    <li><a href="#reviews"        data-section="reviews"><i class="fas fa-star"></i> Reviews</a></li>
+    <li><a href="#active-orders" data-section="active-orders"><i class="fas fa-tasks"></i> Active Orders</a></li>
+    <li><a href="#performance" data-section="performance"><i class="fas fa-chart-line"></i> Performance</a></li>
+    <li><a href="#reviews" data-section="reviews"><i class="fas fa-star"></i> Reviews</a></li>
     <li><a href="{{ route('tailor.profile') }}"><i class="fas fa-user"></i> My Profile</a></li>
   </ul>
 
@@ -182,7 +182,7 @@
         <p><strong>Customer:</strong> {{ $order->recipient_name ?? $order->customer->user->name }}</p>
         <p><strong>Phone:</strong> {{ $order->recipient_phone ?? '—' }}</p>
         @if($order->recipient_address || $order->recipient_city)
-          <p><strong>Address:</strong> {{ $order->recipient_address }}, {{ $order->recipient_city }}</p>
+          <p><strong>Address:</strong> {{ $order->recipient_address }}{{ $order->recipient_address && $order->recipient_city ? ', ' : '' }}{{ $order->recipient_city }}</p>
         @endif
         <p><strong>Item:</strong> {{ $order->dress_type }}</p>
         @if($order->special_instructions)
@@ -191,41 +191,22 @@
         <p><strong>Order Date:</strong> {{ $order->created_at->format('M d, Y') }}</p>
       </div>
       <div class="order-actions">
-        
-      <button class="btn-sm-custom btn-view"
-          onclick="viewDetail({{ $order->id }})">
-    <i class="fas fa-eye me-1"></i> View Details
-  </button>
-      
-<form method="POST"
-      action="{{ route('tailor.orders.accept', $order->id) }}"
-      style="display:inline;">
-  @csrf
-  @method('PATCH')
-  <input type="number" name="price"
-         placeholder="Price (Rs.)"
-         style="border:1px solid #ddd;border-radius:6px;padding:5px 10px;font-size:13px;width:130px;"
-         required>
-  <input type="number" name="delivery_days"
-         placeholder="Days"
-         style="border:1px solid #ddd;border-radius:6px;padding:5px 10px;font-size:13px;width:70px;"
-         required>
-  <button type="submit" class="btn-sm-custom btn-accept">
-    <i class="fas fa-check me-1"></i> Accept
-  </button>
-</form>
+        <button class="btn-sm-custom btn-view"
+                onclick="viewDetail({{ $order->id }})">
+          <i class="fas fa-eye me-1"></i> View Details
+        </button>
 
-<form method="POST"
-      action="{{ route('tailor.orders.reject', $order->id) }}"
-      style="display:inline;"
-      onsubmit="return confirm('Reject this order?')">
-  @csrf
-  @method('PATCH')
-  <input type="hidden" name="rejection_reason" value="Order rejected by tailor.">
-  <button type="submit" class="btn-sm-custom btn-reject">
-    <i class="fas fa-times me-1"></i> Reject
-  </button>
-</form>
+        <button type="button"
+                class="btn-sm-custom btn-accept"
+                onclick="openAcceptModal({{ $order->id }}, '{{ $order->order_number }}')">
+          <i class="fas fa-check me-1"></i> Accept
+        </button>
+
+        <button type="button"
+                class="btn-sm-custom btn-reject"
+                onclick="openRejectModal({{ $order->id }}, '{{ $order->order_number }}')">
+          <i class="fas fa-times me-1"></i> Reject
+        </button>
       </div>
     </div>
     @empty
@@ -244,16 +225,17 @@
       <div class="order-header">
         <div class="order-id">#{{ $order->order_number }}</div>
         <span class="order-status
-          {{ $order->status === 'ready'      ? 'status-ready'      :
+          {{ $order->status === 'ready' ? 'status-ready' :
             ($order->status === 'dispatched' ? 'status-dispatched' : 'status-progress') }}">
           {{ ucfirst(str_replace('_', ' ', $order->status)) }}
         </span>
       </div>
+
       <div class="order-details">
         <p><strong>Customer:</strong> {{ $order->recipient_name ?? $order->customer->user->name }}</p>
         <p><strong>Phone:</strong> {{ $order->recipient_phone ?? '—' }}</p>
         @if($order->recipient_address || $order->recipient_city)
-          <p><strong>Address:</strong> {{ $order->recipient_address }}, {{ $order->recipient_city }}</p>
+          <p><strong>Address:</strong> {{ $order->recipient_address }}{{ $order->recipient_address && $order->recipient_city ? ', ' : '' }}{{ $order->recipient_city }}</p>
         @endif
         <p><strong>Item:</strong> {{ $order->dress_type }}</p>
         <p><strong>Price:</strong> Rs. {{ number_format($order->price) }}</p>
@@ -269,37 +251,34 @@
       </div>
 
       <div class="order-actions">
-        @if(in_array($order->status, ['accepted', 'in_progress', 'ready', 'dispatched']))
-  <form method="POST"
-        action="{{ route('tailor.orders.status', $order->id) }}"
-        style="display:inline;"
-        onsubmit="return confirm('Update status?')">
-    @csrf
-    @method('PATCH')
+        @if($order->status === 'accepted')
+          <button type="button"
+                  class="btn-sm-custom btn-complete"
+                  onclick="updateStatus({{ $order->id }}, 'in_progress', this)">
+            <i class="fas fa-cut me-1"></i> Start Stitching
+          </button>
+        @elseif($order->status === 'in_progress')
+          <button type="button"
+                  class="btn-sm-custom btn-complete"
+                  onclick="updateStatus({{ $order->id }}, 'ready', this)">
+            <i class="fas fa-check me-1"></i> Mark Ready
+          </button>
+        @elseif($order->status === 'ready')
+          <button type="button"
+                  class="btn-sm-custom btn-complete"
+                  onclick="updateStatus({{ $order->id }}, 'dispatched', this)">
+            <i class="fas fa-truck me-1"></i> Mark Dispatched
+          </button>
+        @elseif($order->status === 'dispatched')
+          <button type="button"
+                  class="btn-sm-custom btn-complete"
+                  onclick="updateStatus({{ $order->id }}, 'delivered', this)">
+            <i class="fas fa-check-double me-1"></i> Mark Delivered
+          </button>
+        @endif
 
-    @if($order->status === 'accepted')
-      <button type="submit" class="btn-sm-custom btn-complete">
-        <i class="fas fa-cut me-1"></i> Start Stitching
-      </button>
+        <span id="task-complete-{{ $order->id }}" class="d-none"></span>
 
-      @elseif($order->status === 'in_progress')
-      <button type="submit" class="btn-sm-custom btn-complete">
-        <i class="fas fa-check me-1"></i> Mark Ready
-      </button>
-
-      @elseif($order->status === 'ready')
-      <button type="submit" class="btn-sm-custom btn-complete">
-        <i class="fas fa-truck me-1"></i> Mark Dispatched
-      </button>
-
-      @elseif($order->status === 'dispatched')
-      <button type="submit" class="btn-sm-custom btn-complete">
-        <i class="fas fa-check-double me-1"></i> Mark Delivered
-      </button>
-      @endif
-
-       </form>
-    @endif
         <button class="btn-sm-custom btn-view"
                 onclick="viewDetail({{ $order->id }})">
           <i class="fas fa-eye me-1"></i> View Details
@@ -390,7 +369,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-danger" onclick="confirmReject()">
+        <button type="button" class="btn btn-danger" id="confirmRejectBtn" onclick="confirmReject()">
           <i class="fas fa-times me-1"></i> Reject Order
         </button>
       </div>

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Order;
 use App\Models\Tailor;
-use App\Models\User; 
+use App\Models\User;
 use App\Models\Portfolio;
 use App\Models\Notification;
 
@@ -33,35 +33,35 @@ class TailorController extends Controller
 
     public function dashboard()
     {
-        $user   = Auth::user();
+        $user = Auth::user();
         $tailor = $user->tailor;
 
         if (!$tailor) {
             return redirect('/login')->with('error', 'Tailor profile not found.');
         }
 
-        $pendingOrders  = Order::where('tailor_id', $tailor->id)
+        $pendingOrders = Order::where('tailor_id', $tailor->id)
                                ->where('status', 'pending')
                                ->with('customer.user')
                                ->latest()
                                ->get();
 
-        $activeOrders   = Order::where('tailor_id', $tailor->id)
-                               ->whereIn('status', ['accepted', 'in_progress'])
-                               ->with('customer.user')
-                               ->latest()
-                               ->get();
+        $activeOrders = Order::where('tailor_id', $tailor->id)
+                              ->whereIn('status', ['accepted', 'in_progress', 'ready', 'dispatched'])
+                              ->with('customer.user')
+                              ->latest()
+                              ->get();
 
         $completedCount = Order::where('tailor_id', $tailor->id)
                                ->where('status', 'delivered')
                                ->count();
 
         $stats = [
-            'pending'         => $pendingOrders->count(),
-            'active'          => $activeOrders->count(),
-            'completed'       => $completedCount,
+            'pending' => $pendingOrders->count(),
+            'active' => $activeOrders->count(),
+            'completed' => $completedCount,
             'available_slots' => $tailor->available_slots,
-            'max_slots'       => $tailor->max_slots,
+            'max_slots' => $tailor->max_slots,
         ];
 
         return view('tailor.tailordashboard', compact(
@@ -76,33 +76,51 @@ class TailorController extends Controller
     public function acceptOrder(Request $request, $orderId)
     {
         $request->validate([
-            'price'         => 'required|numeric|min:1',
+            'price' => 'required|numeric|min:1',
             'delivery_days' => 'required|integer|min:1|max:60',
         ]);
 
         $tailor = Auth::user()->tailor;
-        $order  = Order::where('id', $orderId)
+
+        if (!$tailor) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tailor profile not found.'
+            ], 404);
+        }
+
+        $order = Order::where('id', $orderId)
                        ->where('tailor_id', $tailor->id)
                        ->where('status', 'pending')
+                       ->with('customer.user')
                        ->firstOrFail();
 
+        if ($tailor->available_slots <= 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No available slots.'
+            ], 422);
+        }
+
+        $deliveryDate = now()->addDays((int) $request->delivery_days);
+
         $order->update([
-            'status' => 'accepted', 
+            'status' => 'accepted',
             'price' => $request->price,
-            'expected_delivery_date' => now()->addDays((int) $request->delivery_days)
+            'expected_delivery_date' => $deliveryDate,
         ]);
 
         $tailor->decrementSlot();
 
         Notification::create([
             'user_id' => $order->customer->user->id,
-            'title'   => 'Order Accepted!',
+            'title' => 'Order Accepted!',
             'message' => 'Tailor accepted order no. #' . $order->order_number .
                          '. Price: Rs. ' . $request->price .
                          '. Expected delivery: ' .
-                         now()->addDays((int) $request->delivery_days)->format('d M Y') .
+                         $deliveryDate->format('d M Y') .
                          '. You can pay now.',
-            'type'       => 'order',
+            'type' => 'order',
             'action_url' => '/customer/dashboard',
         ]);
 
@@ -117,27 +135,35 @@ class TailorController extends Controller
         $request->validate([
             'rejection_reason' => 'required|string|max:500',
         ]);
- 
+
         $tailor = Auth::user()->tailor;
-        $order  = Order::where('id', $orderId)
+
+        if (!$tailor) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tailor profile not found.'
+            ], 404);
+        }
+
+        $order = Order::where('id', $orderId)
                        ->where('tailor_id', $tailor->id)
                        ->where('status', 'pending')
                        ->with('customer.user')
                        ->firstOrFail();
- 
+
         $order->update([
             'status' => 'cancelled',
         ]);
- 
+
         Notification::create([
             'user_id' => $order->customer->user->id,
-            'title'   => 'Order Rejected',
+            'title' => 'Order Rejected',
             'message' => 'Sorry, your order #' . $order->order_number .
                          ' has been rejected. Reason: ' . $request->rejection_reason,
-            'type'       => 'order',
+            'type' => 'order',
             'action_url' => '/customer/dashboard',
         ]);
- 
+
         return response()->json([
             'success' => true,
             'message' => 'Order rejected.',
@@ -150,39 +176,62 @@ class TailorController extends Controller
             'status' => 'required|in:in_progress,ready,dispatched,delivered,cancelled'
         ]);
 
-        $tailor    = Auth::user()->tailor;
-        $order     = Order::where('id', $orderId)
-                          ->where('tailor_id', $tailor->id)
-                          ->firstOrFail();
+        $tailor = Auth::user()->tailor;
+
+        if (!$tailor) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tailor profile not found.'
+            ], 404);
+        }
+
+        $order = Order::where('id', $orderId)
+                       ->where('tailor_id', $tailor->id)
+                       ->with('customer.user')
+                       ->firstOrFail();
 
         $oldStatus = $order->status;
         $newStatus = $request->status;
 
-        $order->update(['status' => $request->status]);
+        $allowedTransitions = [
+            'accepted' => ['in_progress'],
+            'in_progress' => ['ready'],
+            'ready' => ['dispatched'],
+            'dispatched' => ['delivered'],
+            'pending' => ['cancelled'],
+        ];
 
-        if (in_array($request->status, ['delivered', 'cancelled'])
-            && !in_array($oldStatus, ['delivered', 'cancelled'])) {
-            $tailor->incrementSlot();
+        if (!isset($allowedTransitions[$oldStatus]) || !in_array($newStatus, $allowedTransitions[$oldStatus], true)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'This status update is not allowed.'
+            ], 422);
         }
-        
-        if ($newStatus === 'delivered') {
-            $order->update(['actual_delivery_date' => now()]);
+
+        $order->update([
+            'status' => $newStatus,
+            'actual_delivery_date' => $newStatus === 'delivered' ? now() : $order->actual_delivery_date,
+        ]);
+
+        if (in_array($newStatus, ['delivered', 'cancelled'], true)
+            && !in_array($oldStatus, ['delivered', 'cancelled'], true)) {
+            $tailor->incrementSlot();
         }
 
         $messages = [
             'in_progress' => 'Stitching in progress!',
-            'ready'       => 'Your order is ready!',
-            'dispatched'  => 'Your order has been dispatched!',
-            'delivered'   => 'Your order has been delivered!',
-            'cancelled'   => 'Your order has been cancelled.',
+            'ready' => 'Your order is ready!',
+            'dispatched' => 'Your order has been dispatched!',
+            'delivered' => 'Your order has been delivered!',
+            'cancelled' => 'Your order has been cancelled.',
         ];
 
         if (isset($messages[$newStatus])) {
             Notification::create([
-                'user_id'    => $order->customer->user->id,
-                'title'      => 'Order Update — #' . $order->order_number,
-                'message'    => $messages[$newStatus],
-                'type'       => 'order',
+                'user_id' => $order->customer->user->id,
+                'title' => 'Order Update — #' . $order->order_number,
+                'message' => $messages[$newStatus],
+                'type' => 'order',
                 'action_url' => '/customer/dashboard',
             ]);
         }
@@ -190,51 +239,60 @@ class TailorController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Order status updated!',
+            'status' => $newStatus,
         ]);
     }
 
     public function orderDetail($orderId)
     {
         $tailor = Auth::user()->tailor;
-        $order  = Order::where('id', $orderId)
+
+        if (!$tailor) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tailor profile not found.'
+            ], 404);
+        }
+
+        $order = Order::where('id', $orderId)
                        ->where('tailor_id', $tailor->id)
                        ->with(['customer.user', 'measurement'])
                        ->firstOrFail();
 
         return response()->json([
             'success' => true,
-            'order'   => [
-                'id'                   => $order->id,
-                'order_number'         => $order->order_number,
-                'customer_name'        => $order->customer->user->name,
-                'customer_phone'       => $order->customer->user->phone,
-                'dress_type'           => $order->dress_type,
-                'fabric_details'       => $order->fabric_details,
-                'design_image'         => $order->design_image ? Storage::url($order->design_image) : null,
+            'order' => [
+                'id' => $order->id,
+                'order_number' => $order->order_number,
+                'customer_name' => $order->customer->user->name,
+                'customer_phone' => $order->customer->user->phone,
+                'dress_type' => $order->dress_type,
+                'fabric_details' => $order->fabric_details,
+                'design_image' => $order->design_image ? Storage::url($order->design_image) : null,
                 'special_instructions' => $order->special_instructions,
-                'delivery_type'        => $order->delivery_type,
-                'price'                => $order->price,
-                'status'               => $order->status,
+                'delivery_type' => $order->delivery_type,
+                'price' => $order->price,
+                'status' => $order->status,
                 'expected_delivery_date' => $order->expected_delivery_date
                     ? \Carbon\Carbon::parse($order->expected_delivery_date)->format('M d, Y')
                     : null,
-                'created_at'           => $order->created_at->format('M d, Y'),
-                'recipient_name'       => $order->recipient_name ?? $order->customer->user->name,
-                'recipient_phone'      => $order->recipient_phone ?? $order->customer->user->phone,
-                'recipient_address'    => $order->recipient_address,
-                'recipient_city'       => $order->recipient_city,
-                'measurement'          => $order->measurement ? [
-                    'chest'            => $order->measurement->chest,
-                    'waist'            => $order->measurement->waist,
-                    'hips'             => $order->measurement->hips,
-                    'shoulder'         => $order->measurement->shoulder,
-                    'sleeve_length'    => $order->measurement->sleeve_length,
-                    'shirt_length'     => $order->measurement->shirt_length,
-                    'trouser_length'   => $order->measurement->trouser_length,
-                    'trouser_waist'    => $order->measurement->trouser_waist,
-                    'neck'             => $order->measurement->neck,
+                'created_at' => $order->created_at->format('M d, Y'),
+                'recipient_name' => $order->recipient_name ?? $order->customer->user->name,
+                'recipient_phone' => $order->recipient_phone ?? $order->customer->user->phone,
+                'recipient_address' => $order->recipient_address,
+                'recipient_city' => $order->recipient_city,
+                'measurement' => $order->measurement ? [
+                    'chest' => $order->measurement->chest,
+                    'waist' => $order->measurement->waist,
+                    'hips' => $order->measurement->hips,
+                    'shoulder' => $order->measurement->shoulder,
+                    'sleeve_length' => $order->measurement->sleeve_length,
+                    'shirt_length' => $order->measurement->shirt_length,
+                    'trouser_length' => $order->measurement->trouser_length,
+                    'trouser_waist' => $order->measurement->trouser_waist,
+                    'neck' => $order->measurement->neck,
                     'additional_notes' => $order->measurement->additional_notes,
-                    'details'          => $order->measurement->details, 
+                    'details' => $order->measurement->details,
                 ] : null
             ]
         ]);
@@ -242,8 +300,9 @@ class TailorController extends Controller
 
     public function profile()
     {
-        $user   = Auth::user();
+        $user = Auth::user();
         $tailor = $user->tailor()->with('portfolios')->first();
+
         return view('tailor.profile', compact('user', 'tailor'));
     }
 
@@ -279,7 +338,7 @@ class TailorController extends Controller
 
         if ($request->has('max_slots') && $request->max_slots != null) {
             $newMaxSlots = (int) $request->max_slots;
-            
+
             $tailorUpdateData['base_max_slots'] = $newMaxSlots;
             $tailorUpdateData['max_slots'] = $newMaxSlots;
 
@@ -297,6 +356,7 @@ class TailorController extends Controller
             if ($user->profile_image) {
                 Storage::disk('public')->delete($user->profile_image);
             }
+
             $userData['profile_image'] = $request->file('profile_image')->store('profile_images', 'public');
         } elseif ($request->boolean('remove_photo') && $user->profile_image) {
             Storage::disk('public')->delete($user->profile_image);
@@ -346,6 +406,7 @@ class TailorController extends Controller
         }
 
         $portfolio->delete();
+
         return back()->with('success', 'Portfolio image deleted successfully!');
     }
 
@@ -353,9 +414,9 @@ class TailorController extends Controller
     {
         $tailors = Tailor::with('user')
             ->where('status', 'approved')
-            ->where(function($q) use ($category) {
-                $q->where('specialization', $category)  
-                  ->orWhere('specialization', 'all');     
+            ->where(function ($q) use ($category) {
+                $q->where('specialization', $category)
+                  ->orWhere('specialization', 'all');
             })
             ->get();
 

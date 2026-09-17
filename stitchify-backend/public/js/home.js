@@ -35,6 +35,7 @@ async function sendMessage() {
     const input = document.getElementById('chatInput');
     const sendBtn = document.getElementById('sendBtn');
     const message = input.value.trim();
+    
     if (!message) return;
 
     addMessage(message, true);
@@ -42,26 +43,51 @@ async function sendMessage() {
     sendBtn.disabled = true;
 
     try {
+        
         showTyping();
+        
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+        
         
         const response = await fetch('/chatbot', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                'Accept': 'application/json', 
+                'X-CSRF-TOKEN': csrfToken
             },
-            body: JSON.stringify({ message }),
+            body: JSON.stringify({ message: message }),
         });
+
+        
         const data = await response.json();
         
+        console.log("Catbot Raw Response from Server:", data);
+
+       
         hideTyping();
         
-        addMessage(data.reply || 'Sorry, try again!', false);
+        
+        let botReply = 'Sorry, I could not process your request. Please try again.';
+        
+        if (response.ok && data.success === true) {
+            botReply = data.reply || botReply;
+        } else if (data.message) {
+            
+            botReply = data.message;
+        }
+
+        
+        addMessage(botReply, false);
+
     } catch (err) {
+        console.error("Chatbot Fetch Error:", err);
         hideTyping();
-        addMessage('Sorry, something went wrong. Please try again.', false);
+        addMessage('Sorry, a network error occurred. Please try again.', false);
     } finally {
+    
         sendBtn.disabled = false;
+        input.focus();
     }
 }
 
