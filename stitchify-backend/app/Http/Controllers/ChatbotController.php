@@ -17,7 +17,7 @@ public function reply(Request $request)
     ]);
 
     $message = trim($request->message);
-    $apiKey  = env('GROQ_API_KEY');
+    $apiKey = config('services.groq.api_key');
 
     $models = [
         'openai/gpt-oss-20b',
