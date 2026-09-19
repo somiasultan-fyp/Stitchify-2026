@@ -265,7 +265,7 @@
                                             @endfor
                                         </div>
                                         <p>"{{ $review->review_text }}"</p>
-                                        <h6 class="mt-3">- {{ $review->user->name }}</h6>
+                                        <h6 class="mt-3">- {{ optional(optional($review->customer)->user)->name ?? 'Anonymous' }}</h6>
                                     </div>
                                 </div>
                             </div>
