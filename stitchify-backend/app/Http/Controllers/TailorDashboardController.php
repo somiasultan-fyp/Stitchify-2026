@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\Tailor;
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
 class TailorDashboardController extends Controller
@@ -15,7 +16,7 @@ class TailorDashboardController extends Controller
         $tailor = auth()->user()->tailor;
 
         $orders = Order::where('tailor_id', $tailor->id)
-            ->with(['customer.user', 'delivery'])
+            ->with(['customer.user', 'delivery', 'measurement'])
             ->latest()
             ->get()
             ->groupBy('status');
@@ -65,7 +66,9 @@ class TailorDashboardController extends Controller
     if ($request->ajax() || $request->wantsJson()) {
         return response()->json([
             'success' => true,
-            'order'   => $order
+            'order'   => array_merge($order->toArray(), [
+            'design_image' => $order->design_image ? Storage::url($order->design_image) : null,
+            ]),
         ]);
     }
 

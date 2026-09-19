@@ -50,7 +50,19 @@
             @endif
             <div class="tailor-details">
                 <h4>{{ $order->tailor->user->name }}</h4>
-                <p>{{ $order->tailor->specialization ?? 'Professional Tailor' }}</p>
+                <p>
+                  @if($order->tailor->specialization == 'all')
+                     All Categories
+                  @elseif($order->tailor->specialization == 'men')
+                     Men's Wear
+                  @elseif($order->tailor->specialization == 'women')
+                     Women's Wear
+                  @elseif($order->tailor->specialization == 'kids')
+                     Kids' Wear
+                  @else
+                 {{ ucfirst($order->tailor->specialization ?? 'Professional Tailor') }}
+                  @endif
+                </p>
             </div>
         </div>
 
@@ -64,7 +76,7 @@
             <span id="errorText">Something went wrong. Please try again.</span>
         </div>
 
-        <form id="reviewForm">
+        <form id="reviewForm" data-order-id="{{ $order->id }}" data-tailor-id="{{ $order->tailor->id }}">
             <div class="mb-4">
                 <label class="section-title">Your Rating *</label>
                 <div class="star-rating">

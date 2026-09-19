@@ -208,6 +208,72 @@
           <i class="fas fa-times me-1"></i> Reject
         </button>
       </div>
+
+      {{-- Hidden, Blade-rendered detail block. viewDetail() in JS just
+           copies this innerHTML into the modal -- no data is built
+           inside JavaScript, so no XSS surface and no extra request. --}}
+      <div id="detail-content-{{ $order->id }}" class="d-none">
+        @php $m = $order->measurement; @endphp
+        <div class="row g-3">
+          <div class="col-md-6">
+            <h6 class="fw-bold mb-3">Order Info</h6>
+            <table class="table table-borderless table-sm">
+              <tr><th>Order #</th><td>{{ $order->order_number ?? '—' }}</td></tr>
+              <tr><th>Customer</th><td>{{ $order->recipient_name ?? $order->customer->user->name ?? '—' }}</td></tr>
+              <tr><th>Phone</th><td>{{ $order->recipient_phone ?? $order->customer->user->phone ?? '—' }}</td></tr>
+              <tr><th>Address</th><td>{{ $order->recipient_address ?? '—' }}</td></tr>
+              <tr><th>City</th><td>{{ $order->recipient_city ?? '—' }}</td></tr>
+              <tr><th>Dress Type</th><td>{{ $order->dress_type ?? '—' }}</td></tr>
+              <tr><th>Fabric</th><td>{{ $order->fabric_details ?? '—' }}</td></tr>
+              <tr><th>Delivery Type</th><td>{{ $order->delivery_type ?? '—' }}</td></tr>
+              <tr>
+                <th>Status</th>
+                <td><span class="badge bg-warning text-dark">{{ str_replace('_', ' ', $order->status) }}</span></td>
+              </tr>
+              <tr><th>Price</th><td>{{ $order->price ? 'Rs. ' . $order->price : '—' }}</td></tr>
+              <tr>
+                <th>Expected Delivery</th>
+                <td>{{ $order->expected_delivery_date ? \Carbon\Carbon::parse($order->expected_delivery_date)->format('M d, Y') : '—' }}</td>
+              </tr>
+              <tr><th>Order Date</th><td>{{ $order->created_at->format('M d, Y') }}</td></tr>
+
+              @if($order->design_image)
+                <tr>
+                  <th>Design Image</th>
+                  <td>
+                    <img src="{{ \Illuminate\Support\Facades\Storage::url($order->design_image) }}"
+                         style="max-width:150px;border-radius:8px;cursor:pointer;"
+                         onclick="window.open(this.src, '_blank')">
+                  </td>
+                </tr>
+              @endif
+
+              <tr><th>Special Notes</th><td>{{ $order->special_instructions ?? '—' }}</td></tr>
+            </table>
+          </div>
+
+          <div class="col-md-6">
+            <h6 class="fw-bold mb-3">Measurements</h6>
+            @if($m)
+              <table class="table table-borderless table-sm">
+                <tr><th>Chest</th><td>{{ $m->chest ?? '—' }}"</td></tr>
+                <tr><th>Waist</th><td>{{ $m->waist ?? '—' }}"</td></tr>
+                <tr><th>Hips</th><td>{{ $m->hips ?? '—' }}"</td></tr>
+                <tr><th>Shoulder</th><td>{{ $m->shoulder ?? '—' }}"</td></tr>
+                <tr><th>Sleeve Length</th><td>{{ $m->sleeve_length ?? '—' }}"</td></tr>
+                <tr><th>Shirt Length</th><td>{{ $m->shirt_length ?? '—' }}"</td></tr>
+                <tr><th>Trouser Length</th><td>{{ $m->trouser_length ?? '—' }}"</td></tr>
+                <tr><th>Trouser Waist</th><td>{{ $m->trouser_waist ?? '—' }}"</td></tr>
+                <tr><th>Neck</th><td>{{ $m->neck ?? '—' }}"</td></tr>
+                <tr><th>Additional Notes</th><td>{{ $m->additional_notes ?? '—' }}</td></tr>
+                <tr><th>Details</th><td>{{ $m->details ?? '—' }}</td></tr>
+              </table>
+            @else
+              <p class="text-muted">No measurements.</p>
+            @endif
+          </div>
+        </div>
+      </div>
     </div>
     @empty
     <div class="empty-state">
@@ -283,6 +349,70 @@
                 onclick="viewDetail({{ $order->id }})">
           <i class="fas fa-eye me-1"></i> View Details
         </button>
+      </div>
+
+      {{-- Hidden, Blade-rendered detail block (same pattern as pending orders above). --}}
+      <div id="detail-content-{{ $order->id }}" class="d-none">
+        @php $m = $order->measurement; @endphp
+        <div class="row g-3">
+          <div class="col-md-6">
+            <h6 class="fw-bold mb-3">Order Info</h6>
+            <table class="table table-borderless table-sm">
+              <tr><th>Order #</th><td>{{ $order->order_number ?? '—' }}</td></tr>
+              <tr><th>Customer</th><td>{{ $order->recipient_name ?? $order->customer->user->name ?? '—' }}</td></tr>
+              <tr><th>Phone</th><td>{{ $order->recipient_phone ?? $order->customer->user->phone ?? '—' }}</td></tr>
+              <tr><th>Address</th><td>{{ $order->recipient_address ?? '—' }}</td></tr>
+              <tr><th>City</th><td>{{ $order->recipient_city ?? '—' }}</td></tr>
+              <tr><th>Dress Type</th><td>{{ $order->dress_type ?? '—' }}</td></tr>
+              <tr><th>Fabric</th><td>{{ $order->fabric_details ?? '—' }}</td></tr>
+              <tr><th>Delivery Type</th><td>{{ $order->delivery_type ?? '—' }}</td></tr>
+              <tr>
+                <th>Status</th>
+                <td><span class="badge bg-warning text-dark">{{ str_replace('_', ' ', $order->status) }}</span></td>
+              </tr>
+              <tr><th>Price</th><td>{{ $order->price ? 'Rs. ' . $order->price : '—' }}</td></tr>
+              <tr>
+                <th>Expected Delivery</th>
+                <td>{{ $order->expected_delivery_date ? \Carbon\Carbon::parse($order->expected_delivery_date)->format('M d, Y') : '—' }}</td>
+              </tr>
+              <tr><th>Order Date</th><td>{{ $order->created_at->format('M d, Y') }}</td></tr>
+
+              @if($order->design_image)
+                <tr>
+                  <th>Design Image</th>
+                  <td>
+                    <img src="{{ \Illuminate\Support\Facades\Storage::url($order->design_image) }}"
+                         style="max-width:150px;border-radius:8px;cursor:pointer;"
+                         onclick="window.open(this.src, '_blank')">
+                  </td>
+                </tr>
+              @endif
+
+              <tr><th>Special Notes</th><td>{{ $order->special_instructions ?? '—' }}</td></tr>
+            </table>
+          </div>
+
+          <div class="col-md-6">
+            <h6 class="fw-bold mb-3">Measurements</h6>
+            @if($m)
+              <table class="table table-borderless table-sm">
+                <tr><th>Chest</th><td>{{ $m->chest ?? '—' }}"</td></tr>
+                <tr><th>Waist</th><td>{{ $m->waist ?? '—' }}"</td></tr>
+                <tr><th>Hips</th><td>{{ $m->hips ?? '—' }}"</td></tr>
+                <tr><th>Shoulder</th><td>{{ $m->shoulder ?? '—' }}"</td></tr>
+                <tr><th>Sleeve Length</th><td>{{ $m->sleeve_length ?? '—' }}"</td></tr>
+                <tr><th>Shirt Length</th><td>{{ $m->shirt_length ?? '—' }}"</td></tr>
+                <tr><th>Trouser Length</th><td>{{ $m->trouser_length ?? '—' }}"</td></tr>
+                <tr><th>Trouser Waist</th><td>{{ $m->trouser_waist ?? '—' }}"</td></tr>
+                <tr><th>Neck</th><td>{{ $m->neck ?? '—' }}"</td></tr>
+                <tr><th>Additional Notes</th><td>{{ $m->additional_notes ?? '—' }}</td></tr>
+                <tr><th>Details</th><td>{{ $m->details ?? '—' }}</td></tr>
+              </table>
+            @else
+              <p class="text-muted">No measurements.</p>
+            @endif
+          </div>
+        </div>
       </div>
     </div>
     @empty

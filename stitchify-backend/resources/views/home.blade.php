@@ -169,11 +169,9 @@
                             @if($tailor->user->profile_image)
                                 <img src="{{ Storage::url($tailor->user->profile_image) }}"
                                      alt="{{ $tailor->user->name }}"
-                                     class="tailor-avatar">
+                                     class="tailor-avatar-circle">
                             @else
-                                <div class="tailor-avatar-circle">
-                                    <i class="fas fa-user-tie"></i>
-                                </div>
+                                <i class="fas fa-user-tie tailor-avatar-icon"></i>
                             @endif
                             
                             <div class="rating-badge">
