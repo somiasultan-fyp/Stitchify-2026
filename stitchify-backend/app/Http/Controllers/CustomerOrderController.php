@@ -203,7 +203,7 @@ class CustomerOrderController extends Controller
     ]);
 
     $order = Order::where('id', $orderId)
-                  ->where('customer_id', Auth::id())
+                  ->where('customer_id', auth()->user()->customer->id)
                   ->firstOrFail();
 
     $existingReview = Review::where('order_id', $order->id)->first();
@@ -217,9 +217,9 @@ class CustomerOrderController extends Controller
     Review::create([
         'order_id' => $order->id,
         'tailor_id' => $request->tailor_id,
-        'customer_id' => Auth::id(),
+        'customer_id' => auth()->user()->customer->id,
         'rating' => $request->rating,
-        'comment' => $request->comment,
+        'review_text' => $request->comment,
     ]);
 
     return response()->json([

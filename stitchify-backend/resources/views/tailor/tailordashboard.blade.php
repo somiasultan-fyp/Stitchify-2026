@@ -440,11 +440,36 @@
   </div>
 
   <div class="content-section" id="reviews">
-    <h3 class="section-title">Recent Reviews</h3>
+    <h3 class="section-title">Recent Reviews
+      @if($reviews->count() > 0)
+      <span class="badge bg-warning text-dark ms-2" style="font-size:14px">
+        {{ $reviews->count() }}
+      </span>
+      @endif
+    </h3>
+    @forelse($reviews as $review)
+    <div class="order-card">
+    <div class="order-header">
+      <div class="order-id">{{ $review->customer->user->name ?? 'Customer' }}</div>
+      <span class="order-status status-ready">
+        @for($i = 1; $i <= 5; $i++)
+          <i class="fas fa-star{{ $i <= $review->rating ? '' : '-o' }}"></i>
+        @endfor
+      </span>
+    </div>
+    <div class="order-details">
+      <p>{{ $review->review_text ?: 'No comment provided.' }}</p>
+      <p style="font-size:12px;color:#888;margin-bottom:0;">
+        <i class="fas fa-calendar-alt me-1"></i>{{ $review->created_at->format('M d, Y') }}
+      </p>
+    </div>
+  </div>
+    @empty
     <div class="empty-state">
       <i class="fas fa-star"></i>
-      <p>Reviews will be added in a future update.</p>
+      <p>No reviews yet.</p>
     </div>
+    @endforelse
   </div>
 
 </div>

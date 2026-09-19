@@ -39,14 +39,8 @@
   <div class="logout-btn">
     <form method="POST" action="/logout" style="margin:0;">
       @csrf
-      <button type="submit"
-              style="background:none;border:none;padding:12px 15px;
-                     color:#ff6b6b;width:100%;text-align:left;
-                     cursor:pointer;border-radius:8px;font-size:15px;
-                     display:flex;align-items:center;transition:all 0.3s ease;"
-              onmouseover="this.style.backgroundColor='rgba(220,53,69,0.3)'"
-              onmouseout="this.style.backgroundColor='transparent'">
-        <i class="fas fa-sign-out-alt" style="margin-right:12px;width:20px;text-align:center;"></i>
+      <button type="submit" class="logout-link">
+        <i class="fas fa-sign-out-alt"> </i>
         Logout
       </button>
     </form>
@@ -57,49 +51,34 @@
 
   <div class="top-bar" id="overview">
     <h2>
-      <i class="fas fa-shield-alt" style="color:#e74c3c;margin-right:10px;font-size:22px;"></i>
+      <i class="fas fa-shield-alt"> </i>
       Admin Dashboard
     </h2>
-    <div style="display:flex; align-items:center; gap:20px;">
-      <span style="color:#777;font-size:14px;">
-        <i class="fas fa-calendar-alt" style="margin-right:5px;"></i>
+    <div class="top-bar-actions">
+      <span class="top-bar-date">
+        <i class="fas fa-calendar-alt"> </i>
         {{ now()->format('D, d M Y') }}
       </span>
-      <div style="position:relative; display:inline-block;">
-        <button onclick="toggleNotif()"
-                style="background:none; border:none; cursor:pointer;
-                       color:#1b2a4a; font-size:20px; padding:6px 10px;
-                       border-radius:8px; position:relative;">
+      <div class="notif-wrapper">
+        <button onclick="toggleNotif()" class="notif-button-btn">
           <i class="fas fa-bell"></i>
-          <span id="bellBadge"
-                style="position:absolute; top:0; right:0;
-                       background:#e53935; color:white; font-size:10px;
-                       font-weight:700; width:18px; height:18px;
-                       border-radius:50%; display:none;
-                       align-items:center; justify-content:center;
-                       border:2px solid white;">0</span>
+          <span id="bellBadge" class="notif-bell-badge">0</span>
         </button>
-        <div id="notifDropdown"
-             style="display:none; position:absolute; top:45px; right:0;
-                    width:320px; background:white; border-radius:12px;
-                    box-shadow:0 8px 25px rgba(0,0,0,0.15); z-index:9999;">
-          <div style="padding:12px 16px; background:#1b2a4a; color:white;
-                      font-weight:600; font-size:14px; border-radius:12px 12px 0 0;
-                      display:flex; justify-content:space-between; align-items:center;">
+        <div id="notifDropdown" class="notif-dropdown">
+          <div class="notif-dropdown-header">
             <span><i class="fas fa-bell me-2"></i> Notifications</span>
-            <a href="#" onclick="markAllRead(event)"
-               style="color:rgba(255,255,255,0.8); font-size:12px; text-decoration:none;">
+            <a href="#" onclick="markAllRead(event)">
                Mark all read
             </a>
           </div>
           <div id="notifList">
-            <div style="padding:25px; text-align:center; color:#aaa; font-size:13px;">
-              <i class="fas fa-check-circle fa-2x mb-2 d-block" style="color:#ccc"></i>
+            <div class="notif-empty">
+              <i class="fas fa-check-circle fa-2x mb-2 d-block"></i>
               No new notifications
             </div>
           </div>
-          <div style="padding:10px 16px; text-align:center; border-top:1px solid #f0f0f0;">
-            <a href="/notifications" style="color:#1b2a4a; text-decoration:none; font-size:13px;">
+          <div class="notif-dropdown-footer">
+            <a href="/notifications">
               View All Notifications
             </a>
           </div>
@@ -158,7 +137,7 @@
         <option value="0">Blocked</option>
       </select>
     </div>
-    <div style="overflow-x:auto;">
+    <div class="table-scroll">
       <table class="admin-table">
         <thead>
           <tr>
@@ -191,11 +170,11 @@
             </td>
             <td>
               @if($user->email_verified_at)
-                <span style="color:#388e3c;font-size:13px;">
+                <span class="verified-text">
                 <i class="fas fa-check-circle"></i> Verified
                 </span>
                @else
-                <span style="color:#f57c00;font-size:13px;">
+                <span class="unverified-text">
                 <i class="fas fa-clock"></i> Pending
                 </span>
                @endif
@@ -208,7 +187,7 @@
                 <span class="badge-status badge-pending">Pending</span>
               @endif
               @else
-                <span class="text-muted">—</span>
+                <span class="text-muted">-</span>
               @endif
             </td>
             <td>
@@ -231,7 +210,7 @@
               @endif
               <form method="POST"
                     action="{{ route('admin.users.toggle', $user->id) }}"
-                    style="display:inline;">
+                    class="inline-form">
                 @csrf @method('PATCH')
                 @if($user->is_active)
                   <button type="submit" class="btn-action btn-block"
@@ -274,7 +253,7 @@
         <option value="cancelled">Cancelled</option>
       </select>
     </div>
-    <div style="overflow-x:auto;">
+    <div class="table-scroll">
       <table class="admin-table">
         <thead>
           <tr>
@@ -333,13 +312,13 @@
     <h3 class="section-title">System Reports</h3>
     <div class="report-grid">
       <div class="report-card">
-        <h5><i class="fas fa-shopping-bag" style="margin-right:7px;color:#1976d2;"></i>Total Orders</h5>
+        <h5><i class="fas fa-shopping-bag report-icon-blue"></i>Total Orders</h5>
         <p>All orders placed since launch.</p>
         <div class="report-value">{{ $stats['total_orders'] }}</div>
         <div class="report-sub">{{ $stats['pending_orders'] }} pending</div>
       </div>
       <div class="report-card">
-        <h5><i class="fas fa-check-circle" style="margin-right:7px;color:#388e3c;"></i>Completed</h5>
+        <h5><i class="fas fa-check-circle report-icon-green" ></i>Completed</h5>
         <p>Successfully delivered orders.</p>
         <div class="report-value">{{ $stats['completed_orders'] }}</div>
         <div class="report-sub">
@@ -351,13 +330,13 @@
         </div>
       </div>
       <div class="report-card">
-        <h5><i class="fas fa-users" style="margin-right:7px;color:#7b1fa2;"></i>Total Users</h5>
+        <h5><i class="fas fa-users report-icon-purple"></i>Total Users</h5>
         <p>Registered users on platform.</p>
         <div class="report-value">{{ $stats['total_users'] }}</div>
         <div class="report-sub">{{ $stats['total_tailors'] }} tailors, {{ $stats['total_customers'] }} customers</div>
       </div>
       <div class="report-card">
-        <h5><i class="fas fa-ban" style="margin-right:7px;color:#c0392b;"></i>Blocked Accounts</h5>
+        <h5><i class="fas fa-ban report-icon-red"></i>Blocked Accounts</h5>
         <p>Accounts blocked by admin.</p>
         <div class="report-value">{{ $stats['blocked_users'] }}</div>
         <div class="report-sub">Out of {{ $stats['total_users'] }} total users</div>
@@ -379,40 +358,34 @@
       </div>
       <div class="complaint-body">
         <strong>{{ $complaint->subject }}</strong><br>
-        <span style="color:#777">{{ $complaint->message }}</span>
+        <span class="complaint-message">{{ $complaint->message }}</span>
       </div>
       <div class="complaint-meta">
         <i class="fas fa-calendar-alt" style="margin-right:5px;"></i>
         {{ $complaint->created_at->format('d M Y') }}
       </div>
       @if($complaint->admin_response)
-        <div style="background:#e8f5e9;border-radius:8px;padding:10px;margin-top:10px;font-size:13px;">
-          <strong style="color:#388e3c;">Admin Response:</strong>
+        <div class="complaint-response">
+          <strong>Admin Response:</strong>
           {{ $complaint->admin_response }}
         </div>
       @endif
       @if($complaint->status === 'open')
       <form method="POST"
             action="{{ route('admin.complaints.respond', $complaint->id) }}"
-            style="margin-top:12px;">
+            class="complaint-form">
         @csrf @method('PATCH')
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <div class="complaint-form-row">
           <input type="text" name="admin_response"
                  placeholder="Type your response..."
-                 style="flex:1;border:1px solid #ddd;border-radius:8px;
-                        padding:8px 12px;font-size:13px;min-width:200px;"
+                 class="complaint-input"
                  required>
-          <select name="status"
-                  style="border:1px solid #ddd;border-radius:8px;
-                         padding:8px 12px;font-size:13px;">
+          <select name="status" class="complaint-select">
             <option value="in_review">In Review</option>
             <option value="resolved">Resolved</option>
             <option value="closed">Closed</option>
           </select>
-          <button type="submit"
-                  style="background:#27ae60;color:white;border:none;
-                         border-radius:8px;padding:8px 16px;
-                         font-size:13px;font-weight:600;cursor:pointer;">
+          <button type="submit" class="complaint-submit">
             <i class="fas fa-reply me-1"></i> Respond
           </button>
         </div>
@@ -421,7 +394,7 @@
     </div>
     @empty
     <div class="text-center text-muted py-4">
-      <i class="fas fa-check-circle fa-3x mb-3 d-block" style="opacity:0.2;"></i>
+      <i class="fas fa-check-circle fa-3x mb-3 d-block complaints-empty-icon" ></i>
       <p>No complaints found</p>
     </div>
     @endforelse

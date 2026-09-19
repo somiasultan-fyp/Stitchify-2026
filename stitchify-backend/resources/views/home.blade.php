@@ -157,6 +157,10 @@
     <section class="py-5 bg-light">
         <div class="container">
             <h2 class="text-center mb-5" style="color: var(--primary-bg);">Professional Tailors</h2>
+            @php
+              $defaultAvatarSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#1B2A4A"/><circle cx="50" cy="38" r="18" fill="#ffffff"/><path d="M50 60c-22 0-34 12-34 26v14h68V86c0-14-12-26-34-26z" fill="#ffffff"/></svg>';
+              $defaultAvatarUri = 'data:image/svg+xml;base64,' . base64_encode($defaultAvatarSvg);
+            @endphp  
             <div class="row g-4">
                 @forelse($topTailors as $tailor)
                 @php
@@ -166,13 +170,9 @@
                 <div class="col-md-4">
                     <div class="card tailor-card h-100 p-3">
                         <div class="tailor-card-header text-center">
-                            @if($tailor->user->profile_image)
-                                <img src="{{ Storage::url($tailor->user->profile_image) }}"
-                                     alt="{{ $tailor->user->name }}"
-                                     class="tailor-avatar-circle">
-                            @else
-                                <i class="fas fa-user-tie tailor-avatar-icon"></i>
-                            @endif
+                            <img src="{{ $tailor->user->profile_image ? Storage::url($tailor->user->profile_image) : $defaultAvatarUri }}"
+                                alt="{{ $tailor->user->name }}"
+                                class="tailor-avatar-circle">
                             
                             <div class="rating-badge">
                                 <i class="fas fa-star"></i>
@@ -264,7 +264,7 @@
                                                 <i class="fas fa-star{{ $i <= $review->rating ? '' : '-o' }}"></i>
                                             @endfor
                                         </div>
-                                        <p>"{{ $review->comment }}"</p>
+                                        <p>"{{ $review->review_text }}"</p>
                                         <h6 class="mt-3">- {{ $review->user->name }}</h6>
                                     </div>
                                 </div>

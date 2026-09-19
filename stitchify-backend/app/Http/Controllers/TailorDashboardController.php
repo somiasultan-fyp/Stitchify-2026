@@ -21,6 +21,11 @@ class TailorDashboardController extends Controller
             ->get()
             ->groupBy('status');
 
+        $reviews = \App\Models\Review::where('tailor_id', $tailor->id)
+            ->with('customer.user')
+            ->latest()
+            ->get();    
+
         $stats = [
             'pending'         => $orders->get('pending', collect())->count(),
             'in_progress'     => $orders->get('in_progress', collect())->count(),
@@ -54,7 +59,8 @@ class TailorDashboardController extends Controller
             'pendingOrders',
             'activeOrders',
             'completedOrders',
-            'completedCount'
+            'completedCount',
+            'reviews'
         ));
     }
 
@@ -80,10 +86,10 @@ class TailorDashboardController extends Controller
         $this->authorizeTailor($order);
 
         if ($order->status !== 'pending') {
-            return back()->with(
-                'error',
-                'This order cannot be accepted now.'
-            );
+            return response()->json([
+                'success' => false,
+                'message' => 'This order cannot be accepted now.'
+            ], 422);
         }
 
         $request->validate([
@@ -94,10 +100,10 @@ class TailorDashboardController extends Controller
         $tailor = auth()->user()->tailor;
 
         if ($tailor->available_slots <= 0) {
-            return back()->with(
-                'error',
-                'You have no available slots.'
-            );
+            return response()->json([
+                'success' => false,
+                'message' => 'You have no available slots.'
+            ], 422);
         }
 
         $order->update([
@@ -119,10 +125,10 @@ class TailorDashboardController extends Controller
             'message' => "Your order #{$order->id} has been accepted by tailor. Expected delivery: {$order->expected_delivery_date}",
         ]);
 
-        return back()->with(
-            'success',
-            'Order accepted successfully!'
-        );
+        return response()->json([
+            'success' => true,
+            'message' => 'Order accepted successfully!'
+        ]);
     }
 
     public function rejectOrder(Request $request, Order $order)
@@ -130,10 +136,10 @@ class TailorDashboardController extends Controller
         $this->authorizeTailor($order);
 
         if ($order->status !== 'pending') {
-            return back()->with(
-                'error',
-                'This order cannot be rejected.'
-            );
+            return response()->json([
+                'success' => false,
+                'message' => 'This order cannot be rejected.'
+            ], 422);
         }
 
         $request->validate([
@@ -153,10 +159,10 @@ class TailorDashboardController extends Controller
             'message' => "Your order #{$order->id} has been rejected. Reason: {$request->rejection_reason}",
         ]);
 
-        return back()->with(
-            'success',
-            'Order has been rejected.'
-        );
+        return response()->json([
+            'success' => true,
+            'message' => 'Order has been rejected.'
+        ]);
     }
 
     public function updateStatus(Request $request, Order $order)
@@ -173,10 +179,10 @@ class TailorDashboardController extends Controller
         $nextStatus = $allowedTransitions[$order->status] ?? null;
 
         if (!$nextStatus) {
-            return back()->with(
-                'error',
-                'Status update is not possible.'
-            );
+            return response()->json([
+                'success' => false,
+                'message' => 'Status update is not possible.'
+            ], 422);
         }
 
         $order->update([
@@ -214,10 +220,10 @@ class TailorDashboardController extends Controller
         $label = $statusLabels[$nextStatus]
             ?? ucfirst(str_replace('_', ' ', $nextStatus));
 
-        return back()->with(
-            'success',
-            "Status updated to: {$label}"
-        );
+        return response()->json([
+            'success' => true,
+            'message' => "Status updated to: {$label}"
+        ]);
     }
 
     private function authorizeTailor(Order $order): void
