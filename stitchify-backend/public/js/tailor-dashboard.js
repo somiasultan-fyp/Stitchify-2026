@@ -215,7 +215,35 @@ async function confirmReject() {
     }
 }
 
-async function updateStatus(orderId, newStatus, btn) {
+let pendingStatusUpdate = null;
+
+function updateStatus(orderId, newStatus, btn) {
+    if (newStatus === 'in_progress' && btn.dataset.paymentStatus === 'unpaid') {
+        pendingStatusUpdate = { orderId, newStatus, btn };
+        new bootstrap.Modal(
+            document.getElementById('paymentWarningModal')
+        ).show();
+        return;
+    }
+
+    performStatusUpdate(orderId, newStatus, btn);
+}
+
+document.getElementById('confirmPaymentWarningBtn')
+    .addEventListener('click', function () {
+        const modal = bootstrap.Modal.getInstance(
+            document.getElementById('paymentWarningModal')
+        );
+        if (modal) modal.hide();
+
+        if (pendingStatusUpdate) {
+            const { orderId, newStatus, btn } = pendingStatusUpdate;
+            pendingStatusUpdate = null;
+            performStatusUpdate(orderId, newStatus, btn);
+        }
+    });
+
+async function performStatusUpdate(orderId, newStatus, btn) {
     const messages = {
         in_progress: 'Stitching started.',
         ready: 'Order marked as ready.',
@@ -249,20 +277,21 @@ async function updateStatus(orderId, newStatus, btn) {
         const data = await response.json();
 
         if (response.ok && data.success) {
-            btn.classList.add('d-none');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-check me-1"></i> Done';
 
             const completedMessage = document.getElementById(
                 `task-complete-${orderId}`
             );
 
-        if (completedMessage) {
-            completedMessage.textContent =
-           `${messages[newStatus] || 'Task completed.'}`;
-            completedMessage.classList.remove('d-none');
-       }
+            if (completedMessage) {
+                completedMessage.textContent =
+                    `${messages[newStatus] || 'Task completed.'}`;
+                completedMessage.classList.remove('d-none');
+            }
 
-       setTimeout(() => {
-            location.reload();
+            setTimeout(() => {
+                location.reload();
             }, 1500);
         } else {
             showToast(
@@ -284,24 +313,6 @@ async function updateStatus(orderId, newStatus, btn) {
     }
 }
 
-/*
- * viewDetail()
- * -------------------------------------------------------------
- * NOTE FOR EXAMINER / REVIEWER:
- * This function does NOT build any order/customer data as an
- * HTML string in JavaScript. That data is rendered server-side
- * by Blade (see the hidden `#detail-content-{id}` block inside
- * each order card in tailordashboard.blade.php), where Laravel's
- * `{{ }}` syntax auto-escapes everything -> no XSS risk.
- *
- * The only innerHTML usage left here is:
- *   1. A hardcoded loading spinner (static string, no user data)
- *   2. Copying the already-escaped, already-rendered Blade block
- *      from its hidden container into the visible modal.
- * No network request is needed since the data is already on the
- * page when it loads.
- * -------------------------------------------------------------
- */
 function viewDetail(orderId) {
     const detailBody = document.getElementById('detailBody');
     const sourceDiv = document.getElementById(`detail-content-${orderId}`);

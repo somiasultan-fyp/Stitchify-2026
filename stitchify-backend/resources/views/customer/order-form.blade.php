@@ -16,7 +16,7 @@
 
 <div class="registration-wrapper">
   <div class="logo-container">
-    <img src="{{ asset('images/logo.png') }}" alt="Stitchify" class="logo-image" onerror="this.style.display='none'">
+    <img src="{{ asset('images/logo.png') }}" alt="Stitchify" class="logo-image" onerror="this.classList.add('d-none')">
     <h2>Stitchify</h2>
     <p>Place your order below</p>
   </div>
@@ -58,7 +58,7 @@
 
     <div class="toggle-box mb-3">
       <span class="toggle-box-label">
-        <i class="fas fa-truck" style="color:#1B2A4A; font-size:14px;"></i>
+        <i class="fas fa-truck"></i>
         &nbsp;Would you like to use our delivery service? *
       </span>
       <div class="toggle-options">
@@ -101,21 +101,21 @@
     <div class="mb-3">
       <label class="form-label">Special Instructions</label>
       <textarea id="notes" class="form-control" rows="2" placeholder="Design pictures, collar style, pocket type, embroidery detail, etc."></textarea>
-      <div id="imagePreviewBox" style="display:none; margin-top:10px; flex-wrap:wrap; gap:8px;"></div>
-      <label for="designImages" style="display:flex; align-items:center; gap:8px; margin-top:10px; padding:11px 15px; border:1.5px dashed #e0e0e0; border-radius:8px; background:#f8f9fa; cursor:pointer; transition:border-color 0.3s;">
-        <i class="fas fa-image" style="color:#1B2A4A; font-size:18px;"></i>
-        <span style="font-size:14px; color:#575a5b;" id="imageLabel">Upload design pictures (optional)</span>
+      <div id="imagePreviewBox" class="image-preview-box"></div>
+      <label for="designImages" class="upload-label">
+        <i class="fas fa-image"></i>
+        <span id="imageLabel">Upload design pictures (optional)</span>
       </label>
-      <input type="file" id="designImages" accept="image/*" multiple style="display:none;">
+      <input type="file" id="designImages" accept="image/*" multiple class="upload-input">
     </div>
 
     <div class="section-divider"><span>Measurements (inches) *</span></div>
 
-    <div id="measDefault" class="text-center py-3" style="color:#999;">
+    <div id="measDefault" class="text-center py-3 meas-default">
       <i class="fas fa-tshirt me-2"></i>Please select a garment type first
     </div>
 
-    <div id="meas-shalwar-men" class="meas-section" style="display:none;">
+    <div id="meas-shalwar-men" class="meas-section">
       <h6 class="meas-heading">Kameez</h6>
       <div class="meas-grid mb-3">
         <div class="meas-item"><label>Chest *</label><input id="sm_chest" class="form-control" type="number" placeholder="e.g. 40"></div>
@@ -134,7 +134,7 @@
       </div>
     </div>
 
-    <div id="meas-shalwar-women" class="meas-section" style="display:none;">
+    <div id="meas-shalwar-women" class="meas-section">
       <h6 class="meas-heading">Kameez</h6>
       <div class="meas-grid mb-3">
         <div class="meas-item"><label>Chest *</label><input id="sw_chest" class="form-control" type="number" placeholder="e.g. 38"></div>
@@ -155,7 +155,7 @@
       </div>
     </div>
 
-    <div id="meas-kurta" class="meas-section" style="display:none;">
+    <div id="meas-kurta" class="meas-section">
       <div class="meas-grid mb-3">
         <div class="meas-item"><label>Chest *</label><input id="k_chest" class="form-control" type="number" placeholder="e.g. 40"></div>
         <div class="meas-item"><label>Length *</label><input id="k_length" class="form-control" type="number" placeholder="e.g. 42"></div>
@@ -167,7 +167,7 @@
       </div>
     </div>
 
-    <div id="meas-suit" class="meas-section" style="display:none;">
+    <div id="meas-suit" class="meas-section">
       <h6 class="meas-heading">Coat / Blazer</h6>
       <div class="meas-grid mb-3">
         <div class="meas-item"><label>Chest *</label><input id="s_chest" class="form-control" type="number" placeholder="e.g. 42"></div>
@@ -187,7 +187,7 @@
       </div>
     </div>
 
-    <div id="meas-abaya" class="meas-section" style="display:none;">
+    <div id="meas-abaya" class="meas-section">
       <div class="meas-grid mb-3">
         <div class="meas-item"><label>Total Length *</label><input id="a_length" class="form-control" type="number" placeholder="e.g. 56"></div>
         <div class="meas-item"><label>Chest *</label><input id="a_chest" class="form-control" type="number" placeholder="e.g. 40"></div>
@@ -201,7 +201,7 @@
       </div>
     </div>
 
-    <div id="meas-children" class="meas-section" style="display:none;">
+    <div id="meas-children" class="meas-section">
       <div class="meas-grid mb-3">
         <div class="meas-item"><label>Age / Size *</label><input id="c_age" class="form-control" type="text" placeholder="e.g. 5 years / 20"></div>
         <div class="meas-item"><label>Chest *</label><input id="c_chest" class="form-control" type="number" placeholder="e.g. 26"></div>
@@ -212,7 +212,7 @@
       </div>
     </div>
 
-    <div id="meas-other" class="meas-section" style="display:none;">
+    <div id="meas-other" class="meas-section">
       <div class="meas-grid mb-3">
         <div class="meas-item"><label>Chest *</label><input id="o_chest" class="form-control" type="number" placeholder="e.g. 40"></div>
         <div class="meas-item"><label>Waist *</label><input id="o_waist" class="form-control" type="number" placeholder="e.g. 36"></div>
@@ -227,7 +227,7 @@
       </div>
     </div>
 
-    <span class="error-text" id="measErr" style="text-align: center; display: none; margin-bottom: 10px; font-weight: 600;"></span>
+    <span class="error-text meas-error" id="measErr"></span>
 
     <div class="section-divider"><span>Fabric Details</span></div>
 

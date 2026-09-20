@@ -228,12 +228,19 @@
                                    value="{{ old('experience_years', $tailor->experience_years) }}"
                                    min="0" placeholder="e.g. 5">
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Base Price (Rs.)</label>
-                            <input type="number" name="base_price"
+                        <div class="col-md-3">
+                             <label class="form-label">Price From (Rs.)</label>
+                             <input type="number" name="price_min"
+                                    class="form-control"
+                                    value="{{ old('price_min', $tailor->price_min) }}"
+                                    min="0" placeholder="e.g. 1500">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Price To (Rs.)</label>
+                            <input type="number" name="price_max"
                                    class="form-control"
-                                   value="{{ old('base_price', $tailor->base_price) }}"
-                                   min="0" placeholder="e.g. 1500">
+                                   value="{{ old('price_max', $tailor->price_max) }}"
+                                   min="0" placeholder="e.g. 3000">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Max Slots</label>

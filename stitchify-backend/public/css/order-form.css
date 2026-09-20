@@ -303,3 +303,57 @@ body {
   .form-row, .meas-grid { grid-template-columns: 1fr; }
   .form-body { padding: 30px 20px; }
 }
+
+.toggle-box-label i {
+  color: #1B2A4A;
+  font-size: 14px;
+}
+
+.image-preview-box {
+  display: none;
+  margin-top: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.upload-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 11px 15px;
+  border: 1.5px dashed #e0e0e0;
+  border-radius: 8px;
+  background: #f8f9fa;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.upload-label i {
+  color: #1B2A4A;
+  font-size: 18px;
+}
+
+.upload-label span {
+  font-size: 14px;
+  color: #575a5b;
+}
+
+.upload-input {
+  display: none;
+}
+
+.meas-default {
+  color: #999;
+}
+
+.meas-section {
+  display: none;
+}
+
+.error-text.meas-error {
+  text-align: center;
+  display: none;
+  margin-bottom: 10px;
+  font-weight: 600;
+}

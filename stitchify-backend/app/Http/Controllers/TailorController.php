@@ -97,7 +97,8 @@ class TailorController extends Controller
             'address' => 'nullable|string|max:500',
             'experience_years' => 'nullable|integer|min:0',
             'specialization' => 'nullable|string|max:255',
-            'base_price' => 'nullable|numeric|min:0',
+            'price_min' => 'nullable|numeric|min:0',
+            'price_max' => 'nullable|numeric|min:0|gte:price_min',
             'max_slots' => 'nullable|integer|min:1|max:100',
         ]);
 
@@ -108,7 +109,8 @@ class TailorController extends Controller
             'address' => $request->address,
             'experience_years' => $request->experience_years,
             'specialization' => $request->specialization,
-            'base_price' => $request->base_price,
+            'price_min' => $request->price_min,
+            'price_max' => $request->price_max,
         ];
 
         if ($request->has('max_slots') && $request->max_slots != null) {

@@ -26,9 +26,9 @@
     $defaultAvatarUri = 'data:image/svg+xml;base64,' . base64_encode($defaultAvatarSvg);
   @endphp
   <div class="sidebar-logo">
-    <a href="/" style="text-decoration:none;">
+    <a href="/">
       <img src="{{ asset('images/logo.png') }}" alt="Stitchify Logo">
-      <h3 style="color:white;">Stitchify</h3>
+      <h3>Stitchify</h3>
     </a>
   </div>
 
@@ -52,16 +52,10 @@
   </ul>
 
   <div class="logout-btn">
-    <form method="POST" action="/logout" style="margin:0;">
+    <form method="POST" action="/logout" class="logout-form">
       @csrf
-      <button type="submit"
-              style="background:none;border:none;padding:12px 15px;
-                     color:#ff6b6b;width:100%;text-align:left;
-                     cursor:pointer;border-radius:8px;font-size:15px;
-                     display:flex;align-items:center;transition:all 0.3s ease;"
-              onmouseover="this.style.backgroundColor='rgba(220,53,69,0.3)'"
-              onmouseout="this.style.backgroundColor='transparent'">
-        <i class="fas fa-sign-out-alt" style="margin-right:12px;width:20px;text-align:center;"></i>
+      <button type="submit" class="logout-link">
+        <i class="fas fa-sign-out-alt"></i>
         Logout
       </button>
     </form>
@@ -84,7 +78,7 @@
         </div>
         <div id="notifList">
           <div class="notif-empty">
-            <i class="fas fa-check-circle fa-2x mb-2 d-block" style="color:#ccc"></i>
+            <i class="fas fa-check-circle fa-2x mb-2 d-block"></i>
             No new notifications
           </div>
         </div>
@@ -127,13 +121,8 @@
           ? round((($stats['max_slots'] - $stats['available_slots']) / $stats['max_slots']) * 100)
           : 0;
       @endphp
-      <div class="slot-bar-fill" id="slotBarFill"
-           style="width: {{ $usedPct }}%;
-                  background: {{ $usedPct < 60
-                    ? 'linear-gradient(90deg,#388e3c,#66bb6a)'
-                    : ($usedPct < 85
-                      ? 'linear-gradient(90deg,#f57c00,#ffb74d)'
-                      : 'linear-gradient(90deg,#c62828,#ef5350)') }}">
+      <div class="slot-bar-fill {{ $usedPct < 60 ? 'slot-bar-low' : ($usedPct < 85 ? 'slot-bar-mid' : 'slot-bar-high') }}" id="slotBarFill"
+           style="width: {{ $usedPct }}%">
       </div>
     </div>
     <div class="slot-bar-label">{{ $usedPct }}% slots in use</div>
@@ -166,7 +155,7 @@
     <h3 class="section-title">
       Pending Orders
       @if($pendingOrders->count() > 0)
-        <span class="badge bg-warning text-dark ms-2" style="font-size:14px">
+        <span class="badge bg-warning text-dark ms-2">
           {{ $pendingOrders->count() }}
         </span>
       @endif
@@ -209,9 +198,6 @@
         </button>
       </div>
 
-      {{-- Hidden, Blade-rendered detail block. viewDetail() in JS just
-           copies this innerHTML into the modal -- no data is built
-           inside JavaScript, so no XSS surface and no extra request. --}}
       <div id="detail-content-{{ $order->id }}" class="d-none">
         @php $m = $order->measurement; @endphp
         <div class="row g-3">
@@ -242,7 +228,7 @@
                   <th>Design Image</th>
                   <td>
                     <img src="{{ \Illuminate\Support\Facades\Storage::url($order->design_image) }}"
-                         style="max-width:150px;border-radius:8px;cursor:pointer;"
+                         class="design-thumb"
                          onclick="window.open(this.src, '_blank')">
                   </td>
                 </tr>
@@ -320,6 +306,7 @@
         @if($order->status === 'accepted')
           <button type="button"
                   class="btn-sm-custom btn-complete"
+                  data-payment-status="{{ $order->payment_status }}"
                   onclick="updateStatus({{ $order->id }}, 'in_progress', this)">
             <i class="fas fa-cut me-1"></i> Start Stitching
           </button>
@@ -351,7 +338,6 @@
         </button>
       </div>
 
-      {{-- Hidden, Blade-rendered detail block (same pattern as pending orders above). --}}
       <div id="detail-content-{{ $order->id }}" class="d-none">
         @php $m = $order->measurement; @endphp
         <div class="row g-3">
@@ -382,7 +368,7 @@
                   <th>Design Image</th>
                   <td>
                     <img src="{{ \Illuminate\Support\Facades\Storage::url($order->design_image) }}"
-                         style="max-width:150px;border-radius:8px;cursor:pointer;"
+                         class="design-thumb"
                          onclick="window.open(this.src, '_blank')">
                   </td>
                 </tr>
@@ -442,7 +428,7 @@
   <div class="content-section" id="reviews">
     <h3 class="section-title">Recent Reviews
       @if($reviews->count() > 0)
-      <span class="badge bg-warning text-dark ms-2" style="font-size:14px">
+      <span class="badge bg-warning text-dark ms-2">
         {{ $reviews->count() }}
       </span>
       @endif
@@ -459,7 +445,7 @@
     </div>
     <div class="order-details">
       <p>{{ $review->review_text ?: 'No comment provided.' }}</p>
-      <p style="font-size:12px;color:#888;margin-bottom:0;">
+      <p class="review-meta">
         <i class="fas fa-calendar-alt me-1"></i>{{ $review->created_at->format('M d, Y') }}
       </p>
     </div>
@@ -543,6 +529,25 @@
         <div class="text-center py-4">
           <div class="spinner-border text-primary"></div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="paymentWarningModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Payment Not Received</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-0">Customer didn't pay yet. Do you still want to start stitching?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        <button type="button" class="btn btn-success" id="confirmPaymentWarningBtn">
+          <i class="fas fa-check me-1"></i> Yes, Continue
+        </button>
       </div>
     </div>
   </div>

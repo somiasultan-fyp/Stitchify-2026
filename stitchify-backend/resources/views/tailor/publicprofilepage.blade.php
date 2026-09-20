@@ -148,12 +148,20 @@
             </div>
         </div>
 
-        @if($tailor->base_price)
+        @if($tailor->price_min || $tailor->price_max)
         <div class="detail-row">
             <div class="detail-icon"><i class="fas fa-tag"></i></div>
             <div>
-                <div class="detail-label">Starting Price</div>
-                <div class="detail-value">Rs. {{ number_format($tailor->base_price) }}</div>
+                <div class="detail-label">Price Range</div>
+                <div class="detail-value">
+                    @if($tailor->price_min && $tailor->price_max)
+                        Rs. {{ number_format($tailor->price_min) }} - {{ number_format($tailor->price_max) }}
+                    @elseif($tailor->price_min)
+                        From Rs. {{ number_format($tailor->price_min) }}
+                    @else
+                        Up to Rs. {{ number_format($tailor->price_max) }}
+                    @endif
+                </div>
             </div>
         </div>
         @endif
