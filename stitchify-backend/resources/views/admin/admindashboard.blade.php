@@ -350,7 +350,7 @@
     <div class="complaint-card {{ $complaint->status !== 'open' ? 'resolved' : '' }}">
       <div class="complaint-header">
         <div class="complaint-id">
-          #{{ $complaint->id }} — {{ $complaint->user->name }}
+          #{{ $complaint->id }} — {{optional($complaint->user)->name ?? 'Unknown User'}}
         </div>
         <span class="badge-status {{ $complaint->status === 'open' ? 'badge-pending' : 'badge-completed' }}">
           {{ ucfirst($complaint->status) }}
