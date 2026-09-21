@@ -86,7 +86,7 @@ class PaymentController extends Controller
                     'title'      => 'Payment Received!',
                     'message'    => 'Customer order #' .
                                    $order->order_number .
-                                   ' has been paid by the customer. Please start stitching.',
+                                   ' has been paid by the customer.',
                     'type'       => 'payment',
                     'action_url' => '/tailor/dashboard',
                 ]);
