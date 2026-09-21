@@ -210,7 +210,7 @@ document.getElementById('submitBtn').addEventListener('click', async () => {
         </div>
         <h3 style="color:#1B2A4A;font-weight:700;font-size:22px;margin-bottom:8px;">Order Submitted!</h3>
         <p style="color:#575a5b;font-size:14px;margin-bottom:4px;"><strong>Order Number:</strong> ${result.order_number}</p>
-        <p style="color:#575a5b;font-size:14px;margin-bottom:20px;">Your order has been sent to the tailor. Payment will be unlocked after acceptance.</p>
+        <p style="color:#575a5b;font-size:14px;margin-bottom:20px;">${result.message}</p>
         <div style="background:#f8f9fa;border-radius:12px;padding:16px;text-align:left;border:2px solid #e0e0e0;margin-bottom:14px;">
           <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Name:</strong> ${customerName}</p>
           <p style="font-size:13px;color:#212529;margin-bottom:6px;"><strong>Phone:</strong> ${customerPhone}</p>

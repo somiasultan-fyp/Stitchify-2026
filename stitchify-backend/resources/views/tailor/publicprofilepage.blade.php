@@ -223,17 +223,13 @@
 
         @auth
             @if(auth()->user()->role === 'customer')
-                @if($tailor->available_slots > 0)
                     <a href="{{ route('customer.order.form') }}?tailor_id={{ $tailor->id }}" class="btn-order">
                         <i class="fas fa-shopping-bag"></i> Place Order Now
                     </a>
-                @else
-                    <button class="btn-order-disabled" disabled>
-                        <i class="fas fa-times-circle me-2"></i>
-                        Tailor is Currently Full
-                    </button>
+                @if($tailor->available_slots <= 0)    
                     <p class="mt-3 mb-0" style="color:rgba(255,255,255,0.6);font-size:0.85rem">
-                        This tailor has no available slots right now. Please check back later.
+                    <i class="fas fa-info-circle me-1"></i>
+                        This tailor is fully booked. Your order will be reviewed once new slots open.
                     </p>
                 @endif
             @elseif(auth()->user()->role === 'tailor')

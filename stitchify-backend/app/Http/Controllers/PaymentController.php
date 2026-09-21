@@ -18,7 +18,7 @@ class PaymentController extends Controller
             abort(403);
         }
 
-        if ($order->status !== 'accepted') {
+        if (in_array($order->status, ['pending', 'cancelled'])) {
             return redirect('/customer/dashboard')
                 ->with('error', 'Order has not been accepted yet.');
         }

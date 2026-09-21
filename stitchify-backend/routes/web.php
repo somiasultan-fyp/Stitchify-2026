@@ -9,6 +9,7 @@ use App\Http\Controllers\TailorDashboardController;
 use App\Http\Controllers\CustomerOrderController;
 use App\Http\Controllers\TailorController;
 use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\PasswordResetController;
@@ -266,6 +267,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/chatbot',
         [ChatbotController::class, 'reply'])
         ->name('chatbot.reply');
+
+    Route::post('/contact/submit', 
+        [ContactController::class, 'submit'])
+        ->name('contact.submit');
 
     Route::post('/forgot-password',
         [PasswordResetController::class, 'sendResetLink'])

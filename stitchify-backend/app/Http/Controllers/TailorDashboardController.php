@@ -191,8 +191,6 @@ class TailorDashboardController extends Controller
 
         if ($nextStatus === 'delivered') {
 
-            auth()->user()->tailor->increment('available_slots');
-
             Notification::create([
                 'user_id'  => $order->customer->user_id,
                 'type'     => 'order_dispatched',

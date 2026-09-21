@@ -6,6 +6,7 @@
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <meta name="tailor-id" content="{{ $tailor->id }}">
+<meta name="slots-full" content="{{ $slotsFull ? '1' : '0' }}">
 <title>Order Form Stitchify</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -26,6 +27,12 @@
       <h2>New Order</h2>
       <p>Fill in all details to place your order</p>
     </div>
+    @if($slotsFull)
+     <div class="note-block warning" style="margin-bottom:20px;">
+     <p><i class="fas fa-exclamation-triangle"></i> &nbsp;<strong>Note:</strong>
+         This tailor is currently fully booked for this month. You can still place your order it will be reviewed once new slots open (usually next month).</p>
+     </div>
+    @endif
 
     <div class="section-divider"><span>Contact & Delivery</span></div>
 

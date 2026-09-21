@@ -100,8 +100,6 @@ class DeliveryController extends Controller
                 'status'               => 'delivered',
                 'actual_delivery_date' => now(),
             ]);
-
-            $order->tailor->incrementSlot();
         }
 
         Notification::create([

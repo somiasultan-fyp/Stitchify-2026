@@ -25,11 +25,13 @@ class CustomerOrderController extends Controller
         
         $tailor = Tailor::with('user')->findOrFail($tailor_id);
 
-        if (!$tailor->hasAvailableSlot() || $tailor->status !== 'approved') {
-            return back()->with('error', 'slots are not available for this tailor. Please select another tailor.')->withInput();
+        if ($tailor->status !== 'approved') {
+            return back()->with('error', 'This tailor is not available right now. Please select another tailor.')->withInput();
         }
 
-        return view('customer.order-form', compact('tailor'));
+        $slotFull = !$tailor->hasAvailableSlot();
+
+        return view('customer.order-form', compact('tailor', 'slotFull'));
     }
 
     public function placeOrder(Request $request)
@@ -53,10 +55,14 @@ class CustomerOrderController extends Controller
         ]);
 
         $tailor = Tailor::with('user')->findOrFail($request->tailor_id);
+        if ($tailor->status !== 'approved') {
+        return response()->json([
+        'success' => false,
+        'message' => 'This tailor is not available right now.',
+       ], 422);
+       }
 
-        if (!$tailor->hasAvailableSlot() || $tailor->status !== 'approved') {
-            return back()->with('error', 'slots are not available for this tailor. Please select another tailor.')->withInput();
-        }
+       $slotsFull = !$tailor->hasAvailableSlot();
 
         $customer = auth()->user()->customer;
         if (!$customer) {
@@ -120,7 +126,10 @@ class CustomerOrderController extends Controller
      return response()->json([
         'success'      => true,
         'order_number' => $order->order_number,
-        'message'      => 'Order placed successfully!',
+        'slots_full'    => $slotsFull,
+        'message'      => $slotsFull
+        ? 'Order placed successfully! This tailor is currently fully booked, so your order will be reviewed once new slots open (usually next month), or sooner if a slot frees up earlier.'
+        : 'Order placed successfully!',
 ]);
 
         } catch (\Exception $e) {
