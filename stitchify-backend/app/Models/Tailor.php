@@ -24,6 +24,8 @@ class Tailor extends Model
         'last_slot_reset_at',
         'specialization',
         'base_price',
+        'price_min',
+        'price_max',
     ];
 
     public function user()

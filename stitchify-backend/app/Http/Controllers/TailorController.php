@@ -16,7 +16,7 @@ class TailorController extends Controller
     public function index()
     {
         $tailors = Tailor::with('user')
-                         ->where('available_slots', '>', 0)
+                         ->where('status', 'approved')
                          ->get();
 
         return view('tailors.index', compact('tailors'));

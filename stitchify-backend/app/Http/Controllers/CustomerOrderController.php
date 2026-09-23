@@ -29,9 +29,9 @@ class CustomerOrderController extends Controller
             return back()->with('error', 'This tailor is not available right now. Please select another tailor.')->withInput();
         }
 
-        $slotFull = !$tailor->hasAvailableSlot();
+        $slotsFull = !$tailor->hasAvailableSlot();
 
-        return view('customer.order-form', compact('tailor', 'slotFull'));
+        return view('customer.order-form', compact('tailor', 'slotsFull'));
     }
 
     public function placeOrder(Request $request)
@@ -193,6 +193,32 @@ class CustomerOrderController extends Controller
 
         return back()->with('success', 'Order cancelled.');
     }
+
+    public function markReceived(Request $request, Order $order)
+{
+    if ($order->customer->user_id !== auth()->id()) {
+        abort(403, 'Unauthorized');
+    }
+
+    if ($order->delivery_type !== 'pickup' || $order->status !== 'ready') {
+        return back()->with('error', 'This order cannot be marked as received.');
+    }
+
+    $order->update([
+        'status'               => 'delivered',
+        'actual_delivery_date' => now(),
+    ]);
+
+    Notification::create([
+        'user_id' => $order->tailor->user_id,
+        'type'    => 'order_picked_up',
+        'title'   => 'Order Picked Up',
+        'message' => "Customer confirmed pickup for order #{$order->order_number}.",
+        'order_id' => $order->id,
+    ]);
+
+    return back()->with('success', 'Order marked as received. Thank you!');
+}
 
     public function showReviewPage($orderId)
 {

@@ -248,6 +248,7 @@ async function performStatusUpdate(orderId, newStatus, btn) {
         in_progress: 'Stitching started.',
         ready: 'Order marked as ready.',
         dispatched: 'Order dispatched.',
+        on_the_way: 'Order is on the way.',
         delivered: 'Order delivered.'
     };
 

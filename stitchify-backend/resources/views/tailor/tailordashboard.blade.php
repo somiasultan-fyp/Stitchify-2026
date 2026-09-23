@@ -278,7 +278,8 @@
         <div class="order-id">#{{ $order->order_number }}</div>
         <span class="order-status
           {{ $order->status === 'ready' ? 'status-ready' :
-            ($order->status === 'dispatched' ? 'status-dispatched' : 'status-progress') }}">
+            (&order->status === 'dispatched' ? 'status-dispatched' :
+            ($order->status === 'on_the_way' ? 'status-dispatched' : 'status-progress') }}">
           {{ ucfirst(str_replace('_', ' ', $order->status)) }}
         </span>
       </div>
@@ -304,29 +305,34 @@
 
       <div class="order-actions">
         @if($order->status === 'accepted')
-          <button type="button"
-                  class="btn-sm-custom btn-complete"
+          <button type="button" class="btn-sm-custom btn-complete"
                   data-payment-status="{{ $order->payment_status }}"
                   onclick="updateStatus({{ $order->id }}, 'in_progress', this)">
             <i class="fas fa-cut me-1"></i> Start Stitching
           </button>
         @elseif($order->status === 'in_progress')
-          <button type="button"
-                  class="btn-sm-custom btn-complete"
+          <button type="button" class="btn-sm-custom btn-complete"
                   onclick="updateStatus({{ $order->id }}, 'ready', this)">
             <i class="fas fa-check me-1"></i> Mark Ready
           </button>
         @elseif($order->status === 'ready')
-          <button type="button"
-                  class="btn-sm-custom btn-complete"
+          <button type="button" class="btn-sm-custom btn-complete"
                   onclick="updateStatus({{ $order->id }}, 'dispatched', this)">
             <i class="fas fa-truck me-1"></i> Mark Dispatched
           </button>
+        @else
+          <span class="order-status status-progress">
+           <i class="fas fa-hand-holding me-1"></i> Waiting for customer pickup
+          </span>  
         @elseif($order->status === 'dispatched')
-          <button type="button"
-                  class="btn-sm-custom btn-complete"
+          <button type="button" class="btn-sm-custom btn-complete"
+                  onclick="updateStatus({{ $order->id }}, 'on_the_way', this)">
+            <i class="fas fa-check-double me-1"></i> Mark On the Way
+          </button>
+        @elseif($order->status === 'on_the_way')
+          <button type="button" class="btn-sm-custom btn-complete"
                   onclick="updateStatus({{ $order->id }}, 'delivered', this)">
-            <i class="fas fa-check-double me-1"></i> Mark Delivered
+         <i class="fas fa-check-double me-1"></i> Mark Delivered
           </button>
         @endif
 

@@ -122,7 +122,7 @@
             </div>
 
             <h3 class="stat-number">
-                {{ $orders->whereIn('status', ['accepted', 'in_progress', 'ready', 'dispatched'])->count() }}
+                {{ $orders->whereIn('status', ['accepted', 'in_progress', 'ready', 'dispatched', 'on-the-way'])->count() }}
             </h3>
 
             <p class="stat-label">Active Orders</p>
@@ -174,7 +174,8 @@
                 'accepted',
                 'in_progress',
                 'ready',
-                'dispatched'
+                'dispatched',
+                'on-the-way'
             ]);
         @endphp
 
@@ -222,6 +223,20 @@
                         </span>
 
                     @else
+
+                    @if($order->delivery_type === 'pickup' && $order->status === 'ready')
+                       <div class="alert alert-info py-2 px-3 mb-2" style="font-size:13px;">
+                       <i class="fas fa-store me-1"></i>
+                          Your order is ready! Please collect it from the tailor.
+                       </div>
+                       <form method="POST" action="{{ route('customer.order.mark-received', $order->id) }}"
+                             onsubmit="return confirm('Confirm that you have received your order?');">
+                        @csrf 
+                        <button type="submit" class="pay-btn" style="background-color:#388e3c;">
+                         <i class="fas fa-check-circle me-1"></i> Mark as Received
+                        </button>
+                       </form>
+                    @endif
 
                         @if($order->price)
                             <p>

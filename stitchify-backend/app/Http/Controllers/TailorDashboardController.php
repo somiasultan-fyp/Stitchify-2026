@@ -169,11 +169,19 @@ class TailorDashboardController extends Controller
     {
         $this->authorizeTailor($order);
 
+        if ($order->delivery_type === 'pickup' && $order->status === 'ready') {
+            return response()->json([
+                'success' => false,
+                'message' => 'This order is self-pickup. The customer will mark it as received once they collect it.'
+            ], 422);
+        }
+
         $allowedTransitions = [
             'accepted'    => 'in_progress',
             'in_progress' => 'ready',
             'ready'       => 'dispatched',
-            'dispatched'  => 'delivered',
+            'dispatched'  => 'on_the_way',
+            'on_the_way'  => 'delivered',
         ];
 
         $nextStatus = $allowedTransitions[$order->status] ?? null;
@@ -185,9 +193,23 @@ class TailorDashboardController extends Controller
             ], 422);
         }
 
-        $order->update([
-            'status' => $nextStatus
-        ]);
+        $order->update(['status' => $nextStatus]);
+
+        if ($order->delivery) {
+        $deliveryStatusMap = [
+            'in_progress' => 'stitching_in_progress',
+            'ready'       => 'picked_up_from_tailor',
+            'dispatched'  => 'out_for_delivery',
+            'on_the_way'  => 'out_for_delivery',
+            'delivered'   => 'delivered',
+        ];
+
+        if (isset($deliveryStatusMap[$nextStatus])) {
+            $order->delivery->update([
+                'status' => $deliveryStatusMap[$nextStatus],
+            ]);
+        }
+        }
 
         if ($nextStatus === 'delivered') {
 
@@ -212,15 +234,16 @@ class TailorDashboardController extends Controller
             'in_progress' => 'In Progress',
             'ready'       => 'Ready',
             'dispatched'  => 'Dispatched',
+            'on_the_way'  => 'On the Way',
             'delivered'   => 'Delivered',
         ];
 
-        $label = $statusLabels[$nextStatus]
-            ?? ucfirst(str_replace('_', ' ', $nextStatus));
+        $label = $statusLabels[$nextStatus] ?? ucfirst(str_replace('_', ' ', $nextStatus));
 
         return response()->json([
             'success' => true,
-            'message' => "Status updated to: {$label}"
+            'message' => "Status updated to: {$label}",
+            'status'  => $nextStatus,
         ]);
     }
 

@@ -71,42 +71,33 @@ Route::get('/privacy', fn() => view('privacy'))
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
-
 })->middleware('auth')
   ->name('verification.notice');
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-
     $request->fulfill();
 
     $user = auth()->user();
-
     if ($user->role === 'admin') {
-
         return redirect('/admin/dashboard')
             ->with('success', 'Email verified!');
 
     } elseif ($user->role === 'tailor') {
-
         return redirect('/tailor/dashboard')
             ->with('success', 'Email verified!');
 
     } else {
-
         return redirect('/customer/dashboard')
             ->with('success', 'Email verified!');
     }
-
 })->middleware(['auth', 'signed'])
   ->name('verification.verify');
-
 
 Route::post('/email/verification-notification', function (Request $request) {
 
     $request->user()->sendEmailVerificationNotification();
 
     return back()->with('status', 'Verification link sent!');
-
 })->middleware(['auth', 'throttle:6,1'])
   ->name('verification.send');
 
@@ -128,7 +119,6 @@ Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
        [CustomerOrderController::class, 'showReviewPage'])
        ->name('customer.review.page');
     
-        
     Route::post('/customer/review/{orderId}/store',
         [CustomerOrderController::class, 'storeReview'])
         ->name('customer.review.store');    
@@ -140,6 +130,10 @@ Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
     Route::post('/customer/order/{order}/cancel',
         [CustomerOrderController::class, 'cancelOrder'])
         ->name('customer.order.cancel');
+
+    Route::post('/customer/order/{order}/mark-received',
+        [CustomerOrderController::class, 'markReceived'])
+    ->name('customer.order.mark-received');
 
     Route::get('/customer/live-status',
         [CustomerOrderController::class, 'liveStatus'])
