@@ -128,7 +128,7 @@ class CustomerOrderController extends Controller
         'order_number' => $order->order_number,
         'slots_full'    => $slotsFull,
         'message'      => $slotsFull
-        ? 'Order placed successfully! This tailor is currently fully booked, so your order will be reviewed once new slots open (usually next month), or sooner if a slot frees up earlier.'
+        ? 'Order placed successfully! This tailor is currently fully booked, so your order will be reviewed once new slots open (usually next month).'
         : 'Order placed successfully!',
 ]);
 

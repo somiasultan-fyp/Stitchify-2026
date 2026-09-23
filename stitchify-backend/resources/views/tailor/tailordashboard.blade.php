@@ -279,7 +279,7 @@
         <span class="order-status
           {{ $order->status === 'ready' ? 'status-ready' :
             ($order->status === 'dispatched' ? 'status-dispatched' :
-            ($order->status === 'on_the_way' ? 'status-dispatched' : 'status-progress') }}">
+            ($order->status === 'on_the_way' ? 'status-dispatched' : 'status-progress')) }}">
           {{ ucfirst(str_replace('_', ' ', $order->status)) }}
         </span>
       </div>

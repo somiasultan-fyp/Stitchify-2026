@@ -224,6 +224,20 @@
 
                     @else
 
+                    @if($order->price)
+                            <p>
+                                <strong>Price:</strong>
+                                PKR {{ number_format($order->price) }}
+                            </p>
+                    @endif
+
+                    @if($order->expected_delivery_date)
+                            <p>
+                                <strong>Expected Delivery:</strong>
+                                {{ \Carbon\Carbon::parse($order->expected_delivery_date)->format('M d, Y') }}
+                            </p>
+                    @endif
+
                     @if($order->delivery_type === 'pickup' && $order->status === 'ready')
                        <div class="alert alert-info py-2 px-3 mb-2" style="font-size:13px;">
                        <i class="fas fa-store me-1"></i>
@@ -237,20 +251,6 @@
                         </button>
                        </form>
                     @endif
-
-                        @if($order->price)
-                            <p>
-                                <strong>Price:</strong>
-                                PKR {{ number_format($order->price) }}
-                            </p>
-                        @endif
-
-                        @if($order->expected_delivery_date)
-                            <p>
-                                <strong>Expected Delivery:</strong>
-                                {{ \Carbon\Carbon::parse($order->expected_delivery_date)->format('M d, Y') }}
-                            </p>
-                        @endif
 
                         @if($order->payment_status === 'unpaid')
                             <p>
