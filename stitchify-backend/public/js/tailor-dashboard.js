@@ -215,49 +215,27 @@ async function confirmReject() {
     }
 }
 
-let pendingStatusUpdate = null;
-
-function updateStatus(orderId, newStatus, btn) {
-    if (newStatus === 'in_progress' && btn.dataset.paymentStatus === 'unpaid') {
-        pendingStatusUpdate = { orderId, newStatus, btn };
-        new bootstrap.Modal(
-            document.getElementById('paymentWarningModal')
-        ).show();
-        return;
-    }
-
+function updateStatus(orderId, newStatus, btn) { 
     performStatusUpdate(orderId, newStatus, btn);
+
 }
-
-document.getElementById('confirmPaymentWarningBtn')
-    .addEventListener('click', function () {
-        const modal = bootstrap.Modal.getInstance(
-            document.getElementById('paymentWarningModal')
-        );
-        if (modal) modal.hide();
-
-        if (pendingStatusUpdate) {
-            const { orderId, newStatus, btn } = pendingStatusUpdate;
-            pendingStatusUpdate = null;
-            performStatusUpdate(orderId, newStatus, btn);
-        }
-    });
 
 async function performStatusUpdate(orderId, newStatus, btn) {
     const messages = {
+        fabric_received: 'Fabric marked as received. Customer can now pay.',
         in_progress: 'Stitching started.',
         ready: 'Order marked as ready.',
         dispatched: 'Order dispatched.',
         on_the_way: 'Order is on the way.',
         delivered: 'Order delivered.'
     };
-
+ 
     const originalHtml = btn.innerHTML;
-
+ 
     btn.disabled = true;
     btn.innerHTML =
         '<span class="spinner-border spinner-border-sm"></span>';
-
+ 
     try {
         const response = await fetch(
             `/tailor/orders/${orderId}/status`,
@@ -274,23 +252,27 @@ async function performStatusUpdate(orderId, newStatus, btn) {
                 })
             }
         );
-
+ 
         const data = await response.json();
-
         if (response.ok && data.success) {
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-check me-1"></i> Done';
-
+ 
             const completedMessage = document.getElementById(
                 `task-complete-${orderId}`
             );
-
+ 
             if (completedMessage) {
                 completedMessage.textContent =
                     `${messages[newStatus] || 'Task completed.'}`;
                 completedMessage.classList.remove('d-none');
             }
-
+ 
+            showToast(
+                messages[newStatus] || 'Task completed.',
+                'success'
+            );
+ 
             setTimeout(() => {
                 location.reload();
             }, 1500);
@@ -299,7 +281,7 @@ async function performStatusUpdate(orderId, newStatus, btn) {
                 data.message || 'Unable to update status.',
                 'danger'
             );
-
+ 
             btn.disabled = false;
             btn.innerHTML = originalHtml;
         }
@@ -308,7 +290,7 @@ async function performStatusUpdate(orderId, newStatus, btn) {
             'Server error. Please try again.',
             'danger'
         );
-
+ 
         btn.disabled = false;
         btn.innerHTML = originalHtml;
     }

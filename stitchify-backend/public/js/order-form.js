@@ -156,7 +156,6 @@ document.getElementById('submitBtn').addEventListener('click', async () => {
   formData.append('dress_type', document.getElementById('garment').value);
   formData.append('fabric_name', document.getElementById('fabricName').value.trim());
   formData.append('fabric_color', document.getElementById('fabricColorText').value.trim());
-  formData.append('fabric_provided_by', 'customer');
   formData.append('special_instructions', document.getElementById('notes').value.trim());
   formData.append('delivery_type', deliveryChoice === 'yes' ? 'home_delivery' : 'pickup');
   formData.append('measurement_method', 'manual');

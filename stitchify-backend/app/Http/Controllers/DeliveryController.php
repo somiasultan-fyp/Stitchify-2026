@@ -5,18 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\Delivery;
 use App\Models\Notification;
+use App\Services\CommissionService;
 use Illuminate\Http\Request;
 
 class DeliveryController extends Controller
 {
-    public static function createAfterPayment(Order $order): void
+    public static function createForOrder(Order $order): ?Delivery
     {
         if ($order->delivery_type !== 'home_delivery') {
-            return;
+            return null;
         }
 
-        if ($order->delivery()->exists()) {
-            return;
+        $existing = $order->delivery()->first();
+
+        if ($existing) {
+            return $existing;
         }
 
         $delivery = Delivery::create([
@@ -24,35 +27,17 @@ class DeliveryController extends Controller
             'tracking_id'      => Delivery::generateTrackingId(),
             'type'             => 'home_delivery',
             'status'           => 'scheduled',
-            'courier_name'     => 'Leopards Courier',
-            'pickup_address'   => $order->customer->address ?? 'Customer Address',
+            'courier_name'     => 'Tailor Arranged Delivery',
+            'pickup_address'   => $order->recipient_address ?? $order->customer->address ?? 'Customer Address',
             'delivery_address' => $order->tailor->address ?? 'Tailor Address',
-            'estimated_date'   => now()->addDays(2),
+            'estimated_date'   => $order->expected_delivery_date ?? now()->addDays(2),
         ]);
 
         $order->update([
             'tracking_id' => $delivery->tracking_id
         ]);
 
-        Notification::create([
-            'user_id'    => $order->customer->user->id,
-            'title'      => 'Delivery Scheduled!',
-            'message'    => 'Your fabric pickup has been scheduled. Tracking ID: ' .
-                            $delivery->tracking_id .
-                            '. Our courier will contact you shortly.',
-            'type'       => 'delivery',
-            'action_url' => '/customer/dashboard',
-        ]);
-
-        Notification::create([
-            'user_id'    => $order->tailor->user->id,
-            'title'      => 'Fabric Coming Your Way!',
-            'message'    => 'Fabric for order #' . $order->order_number .
-                            ' will be delivered to you soon. Tracking: ' .
-                            $delivery->tracking_id,
-            'type'       => 'delivery',
-            'action_url' => '/tailor/dashboard',
-        ]);
+        return $delivery;
     }
 
     public function track(Order $order)
@@ -100,6 +85,8 @@ class DeliveryController extends Controller
                 'status'               => 'delivered',
                 'actual_delivery_date' => now(),
             ]);
+
+            CommissionService::releaseForOrder($order);
         }
 
         Notification::create([

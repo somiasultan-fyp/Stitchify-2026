@@ -33,6 +33,7 @@
     <li><a href="#overview"     data-section="overview">    <i class="fas fa-th-large"></i>    Dashboard</a></li>
     <li><a href="#manage-users" data-section="manage-users"><i class="fas fa-users"></i>        Manage Users</a></li>
     <li><a href="#all-orders"   data-section="all-orders">  <i class="fas fa-shopping-bag"></i> All Orders</a></li>
+    <li><a href="#commission"   data-section="commission">  <i class="fas fa-coins"></i>        Commission</a></li>
     <li><a href="#reports"      data-section="reports">     <i class="fas fa-chart-bar"></i>    Reports</a></li>
     <li><a href="#complaints"   data-section="complaints">  <i class="fas fa-comments"></i>     Complaints</a></li>
   </ul>
@@ -60,7 +61,7 @@
         {{ now()->format('D, d M Y') }}
       </span>
       <div class="notif-wrapper">
-        <button onclick="toggleNotif()" class="notif-button-btn">
+        <button onclick="toggleNotif()" class="notif-bell-btn">
           <i class="fas fa-bell"></i>
           <span id="bellBadge" class="notif-bell-badge">0</span>
         </button>
@@ -117,6 +118,11 @@
       <div class="stat-icon teal"><i class="fas fa-clock"></i></div>
       <h3 class="stat-number">{{ $stats['pending_orders'] }}</h3>
       <p class="stat-label">Pending Orders</p>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green"><i class="fas fa-coins"></i></div>
+      <h3 class="stat-number">Rs. {{ number_format($stats['commission_earned'], 2) }}</h3>
+      <p class="stat-label">Commission Earned</p>
     </div>
   </div>
 
@@ -247,8 +253,11 @@
         <option value="">All Statuses</option>
         <option value="pending">Pending</option>
         <option value="accepted">Accepted</option>
+        <option value="fabric_received">Fabric Received</option>
         <option value="in_progress">In Progress</option>
         <option value="ready">Ready</option>
+        <option value="dispatched">Dispatched</option>
+        <option value="on_the_way">On the Way</option>
         <option value="delivered">Delivered</option>
         <option value="cancelled">Cancelled</option>
       </select>
@@ -271,12 +280,15 @@
           @forelse($orders as $order)
           @php
             $badgeClass = [
-              'pending'     => 'badge-pending',
-              'accepted'    => 'badge-progress',
-              'in_progress' => 'badge-progress',
-              'ready'       => 'badge-completed',
-              'delivered'   => 'badge-completed',
-              'cancelled'   => 'badge-rejected',
+              'pending'         => 'badge-pending',
+              'accepted'        => 'badge-progress',
+              'fabric_received' => 'badge-progress',
+              'in_progress'     => 'badge-progress',
+              'ready'           => 'badge-completed',
+              'dispatched'      => 'badge-progress',
+              'on_the_way'      => 'badge-progress',
+              'delivered'       => 'badge-completed',
+              'cancelled'       => 'badge-rejected',
             ][$order->status] ?? 'badge-pending';
           @endphp
           <tr class="order-row"
@@ -294,8 +306,7 @@
                 {{ ucfirst(str_replace('_', ' ', $order->status)) }}
               </span>
             </td>
-            <td>
-            </td>
+            <td>{{ $order->delivery_type === 'home_delivery' ? 'Delivery Service' : 'Self Pickup' }}</td>
           </tr>
           @empty
           <tr>
@@ -306,6 +317,99 @@
       </table>
     </div>
     <div class="mt-3">{{ $orders->links() }}</div>
+  </div>
+
+  <div class="content-section" id="commission">
+    <h3 class="section-title">Commission &amp; Payouts</h3>
+    <div class="report-grid">
+      <div class="report-card">
+        <h5><i class="fas fa-coins report-icon-green"></i>Commission Earned</h5>
+        <p>Commission from delivered orders.</p>
+        <div class="report-value">Rs. {{ number_format($stats['commission_earned'], 2) }}</div>
+        <div class="report-sub">This month: Rs. {{ number_format($stats['commission_month'], 2) }}</div>
+      </div>
+      <div class="report-card">
+        <h5><i class="fas fa-hourglass-half report-icon-purple"></i>Commission on Hold</h5>
+        <p>Released when the order is delivered.</p>
+        <div class="report-value">Rs. {{ number_format($stats['commission_held'], 2) }}</div>
+        <div class="report-sub">Orders still in progress</div>
+      </div>
+      <div class="report-card">
+        <h5><i class="fas fa-wallet report-icon-blue"></i>Payable to Tailors</h5>
+        <p>Delivered orders waiting for payout.</p>
+        <div class="report-value">Rs. {{ number_format($stats['payable_to_tailors'], 2) }}</div>
+        <div class="report-sub">After commission</div>
+      </div>
+      <div class="report-card">
+        <h5><i class="fas fa-check-double report-icon-green"></i>Paid to Tailors</h5>
+        <p>Payouts already marked as paid.</p>
+        <div class="report-value">Rs. {{ number_format($stats['paid_to_tailors'], 2) }}</div>
+        <div class="report-sub">Total payouts done</div>
+      </div>
+    </div>
+
+    <div class="table-scroll mt-4">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Order #</th>
+            <th>Tailor</th>
+            <th>Amount Paid</th>
+            <th>Commission</th>
+            <th>Tailor Share</th>
+            <th>Payout</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @forelse($commissionOrders as $order)
+            @php
+              $payment = $order->payments->where('status', 'completed')->first();
+              $payoutBadge = [
+                'held'    => ['badge-pending', 'On hold'],
+                'payable' => ['badge-progress', 'Payable'],
+                'paid'    => ['badge-completed', 'Paid'],
+              ][$payment->payout_status ?? 'held'] ?? ['badge-pending', 'On hold'];
+            @endphp
+            @if($payment)
+            <tr>
+              <td><strong>{{ $order->order_number }}</strong></td>
+              <td>{{ $order->tailor->user->name ?? '—' }}</td>
+              <td>Rs. {{ number_format($payment->amount, 2) }}</td>
+              <td>
+                Rs. {{ number_format($payment->commission_amount ?? 0, 2) }}
+                ({{ rtrim(rtrim(number_format($payment->commission_rate ?? 0, 2), '0'), '.') }}%)
+              </td>
+              <td>Rs. {{ number_format($payment->tailor_amount ?? 0, 2) }}</td>
+              <td>
+                <span class="badge-status {{ $payoutBadge[0] }}">{{ $payoutBadge[1] }}</span>
+              </td>
+              <td>
+                @if($payment->payout_status === 'payable')
+                  <form method="POST"
+                        action="{{ route('admin.payouts.pay', $order->id) }}"
+                        class="inline-form">
+                    @csrf @method('PATCH')
+                    <button type="submit" class="btn-action btn-unblock"
+                            onclick="return confirm('Mark this payout as paid to the tailor?')">
+                      <i class="fas fa-check"></i> Mark as Paid
+                    </button>
+                  </form>
+                @else
+                  <span class="text-muted">-</span>
+                @endif
+              </td>
+            </tr>
+            @endif
+          @empty
+          <tr>
+            <td colspan="7" class="text-center text-muted py-4">No payments yet</td>
+          </tr>
+          @endforelse
+        </tbody>
+      </table>
+    </div>
+    <div class="mt-3">{{ $commissionOrders->links() }}</div>
   </div>
 
   <div class="content-section" id="reports">
@@ -403,11 +507,17 @@
 </div>
 
 <div class="toast-container" id="toastContainer"></div>
-
 @if(session('success'))
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    showToast('{{ session('success') }}', 'success');
+    showToast(@json(session('success')), 'success');
+  });
+</script>
+@endif
+@if(session('error'))
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    showToast(@json(session('error')), 'danger');
   });
 </script>
 @endif

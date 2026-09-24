@@ -40,7 +40,7 @@
             <span class="value">
                 {{ $order->expected_delivery_date
                     ? \Carbon\Carbon::parse($order->expected_delivery_date)->format('d M Y')
-                    : '—' }}
+                    : '-' }}
             </span>
         </div>
 
@@ -75,7 +75,7 @@
 
         <div class="security-badge">
             <i class="fas fa-shield-alt"></i>
-            Secured by Stripe — Your card info is safe
+            Secured by Stripe - Your card info is safe
         </div>
     </div>
 </div>

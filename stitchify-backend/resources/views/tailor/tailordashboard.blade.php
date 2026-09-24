@@ -174,6 +174,7 @@
           <p><strong>Address:</strong> {{ $order->recipient_address }}{{ $order->recipient_address && $order->recipient_city ? ', ' : '' }}{{ $order->recipient_city }}</p>
         @endif
         <p><strong>Item:</strong> {{ $order->dress_type }}</p>
+        <p><strong>Delivery:</strong> {{ $order->delivery_type === 'home_delivery' ? 'Delivery Service' : 'Self Pickup & Drop' }}</p>
         @if($order->special_instructions)
           <p><strong>Note:</strong> {{ $order->special_instructions }}</p>
         @endif
@@ -211,7 +212,7 @@
               <tr><th>City</th><td>{{ $order->recipient_city ?? '—' }}</td></tr>
               <tr><th>Dress Type</th><td>{{ $order->dress_type ?? '—' }}</td></tr>
               <tr><th>Fabric</th><td>{{ $order->fabric_details ?? '—' }}</td></tr>
-              <tr><th>Delivery Type</th><td>{{ $order->delivery_type ?? '—' }}</td></tr>
+              <tr><th>Delivery Type</th><td>{{ $order->delivery_type === 'home_delivery' ? 'Delivery Service' : 'Self Pickup & Drop' }}</td></tr>
               <tr>
                 <th>Status</th>
                 <td><span class="badge bg-warning text-dark">{{ str_replace('_', ' ', $order->status) }}</span></td>
@@ -291,7 +292,9 @@
           <p><strong>Address:</strong> {{ $order->recipient_address }}{{ $order->recipient_address && $order->recipient_city ? ', ' : '' }}{{ $order->recipient_city }}</p>
         @endif
         <p><strong>Item:</strong> {{ $order->dress_type }}</p>
+        <p><strong>Delivery:</strong> {{ $order->delivery_type === 'home_delivery' ? 'Delivery Service' : 'Self Pickup & Drop' }}</p>
         <p><strong>Price:</strong> Rs. {{ number_format($order->price) }}</p>
+        <p><strong>Payment:</strong> {{ $order->payment_status === 'unpaid' ? 'Not paid yet' : 'Paid' }}</p>
         @if($order->expected_delivery_date)
           <p><strong>Expected Delivery:</strong>
             {{ \Carbon\Carbon::parse($order->expected_delivery_date)->format('M d, Y') }}
@@ -305,34 +308,59 @@
 
       <div class="order-actions">
         @if($order->status === 'accepted')
+          <span class="order-status status-progress">
+            <i class="fas fa-truck-loading me-1"></i>
+            {{ $order->delivery_type === 'home_delivery' ? 'Courier is on the way to pick up the fabric' : 'Waiting for the customer to hand over the fabric' }}
+          </span>
           <button type="button" class="btn-sm-custom btn-complete"
-                  data-payment-status="{{ $order->payment_status }}"
-                  onclick="updateStatus({{ $order->id }}, 'in_progress', this)">
-            <i class="fas fa-cut me-1"></i> Start Stitching
+                  onclick="updateStatus({{ $order->id }}, 'fabric_received', this)">
+            <i class="fas fa-box-open me-1"></i> Fabric Received
           </button>
+
+        @elseif($order->status === 'fabric_received')
+          @if($order->payment_status === 'unpaid')
+            <span class="order-status status-progress">
+              <i class="fas fa-hourglass-half me-1"></i> Waiting for customer payment
+            </span>
+          @else
+            <button type="button" class="btn-sm-custom btn-complete"
+                    onclick="updateStatus({{ $order->id }}, 'in_progress', this)">
+              <i class="fas fa-cut me-1"></i> Start Stitching
+            </button>
+          @endif
+
         @elseif($order->status === 'in_progress')
           <button type="button" class="btn-sm-custom btn-complete"
                   onclick="updateStatus({{ $order->id }}, 'ready', this)">
             <i class="fas fa-check me-1"></i> Mark Ready
           </button>
+
         @elseif($order->status === 'ready')
-          <button type="button" class="btn-sm-custom btn-complete"
-                  onclick="updateStatus({{ $order->id }}, 'dispatched', this)">
-            <i class="fas fa-truck me-1"></i> Mark Dispatched
-          </button>
-        @else
-          <span class="order-status status-progress">
-           <i class="fas fa-hand-holding me-1"></i> Waiting for customer pickup
-          </span>  
+          @if($order->delivery_type === 'home_delivery')
+            <button type="button" class="btn-sm-custom btn-complete"
+                    onclick="updateStatus({{ $order->id }}, 'dispatched', this)">
+              <i class="fas fa-truck me-1"></i> Mark Dispatched
+            </button>
+          @else
+            <span class="order-status status-progress">
+              <i class="fas fa-hand-holding me-1"></i> Waiting for customer pickup
+            </span>
+            <button type="button" class="btn-sm-custom btn-complete"
+                    onclick="updateStatus({{ $order->id }}, 'delivered', this)">
+              <i class="fas fa-check-double me-1"></i> Mark Delivered
+            </button>
+          @endif
+
         @elseif($order->status === 'dispatched')
           <button type="button" class="btn-sm-custom btn-complete"
                   onclick="updateStatus({{ $order->id }}, 'on_the_way', this)">
-            <i class="fas fa-check-double me-1"></i> Mark On the Way
+            <i class="fas fa-route me-1"></i> Mark On the Way
           </button>
+
         @elseif($order->status === 'on_the_way')
           <button type="button" class="btn-sm-custom btn-complete"
                   onclick="updateStatus({{ $order->id }}, 'delivered', this)">
-         <i class="fas fa-check-double me-1"></i> Mark Delivered
+            <i class="fas fa-check-double me-1"></i> Mark Delivered
           </button>
         @endif
 
@@ -357,7 +385,7 @@
               <tr><th>City</th><td>{{ $order->recipient_city ?? '—' }}</td></tr>
               <tr><th>Dress Type</th><td>{{ $order->dress_type ?? '—' }}</td></tr>
               <tr><th>Fabric</th><td>{{ $order->fabric_details ?? '—' }}</td></tr>
-              <tr><th>Delivery Type</th><td>{{ $order->delivery_type ?? '—' }}</td></tr>
+              <tr><th>Delivery Type</th><td>{{ $order->delivery_type === 'home_delivery' ? 'Delivery Service' : 'Self Pickup & Drop' }}</td></tr>
               <tr>
                 <th>Status</th>
                 <td><span class="badge bg-warning text-dark">{{ str_replace('_', ' ', $order->status) }}</span></td>
@@ -429,6 +457,21 @@
       <span class="performance-label">Active Orders</span>
       <span class="performance-value">{{ $stats['active'] }}</span>
     </div>
+    <div class="performance-stat">
+      <span class="performance-label">Earnings on Hold (until delivery)</span>
+      <span class="performance-value">Rs. {{ number_format($earnings['held'], 2) }}</span>
+    </div>
+    <div class="performance-stat">
+      <span class="performance-label">Payable (delivered, payout pending)</span>
+      <span class="performance-value">Rs. {{ number_format($earnings['payable'], 2) }}</span>
+    </div>
+    <div class="performance-stat">
+      <span class="performance-label">Received</span>
+      <span class="performance-value">Rs. {{ number_format($earnings['paid'], 2) }}</span>
+    </div>
+    <p class="review-meta">
+      Earnings are shown after the {{ rtrim(rtrim(number_format(config('stitchify.commission_rate', 4), 2), '0'), '.') }}% platform commission.
+    </p>
   </div>
 
   <div class="content-section" id="reviews">
@@ -535,25 +578,6 @@
         <div class="text-center py-4">
           <div class="spinner-border text-primary"></div>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="modal fade" id="paymentWarningModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Payment Not Received</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <p class="mb-0">Customer didn't pay yet. Do you still want to start stitching?</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-        <button type="button" class="btn btn-success" id="confirmPaymentWarningBtn">
-          <i class="fas fa-check me-1"></i> Yes, Continue
-        </button>
       </div>
     </div>
   </div>

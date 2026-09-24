@@ -19,7 +19,7 @@ class ContactController extends Controller
 
         Complaint::create([
             'user_id'        => auth()->check() ? auth()->id() : null,
-            'subject'        => $request->subject . ' — ' . $request->name . ' (' . $request->email . ', ' . $request->phone . ')',
+            'subject'        => $request->subject . ' - ' . $request->name . ' (' . $request->email . ', ' . $request->phone . ')',
             'message'        => $request->message,
             'status'         => 'open',
         ]);

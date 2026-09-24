@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Order;
+use App\Models\Payment;
 use App\Models\Tailor;
 use App\Models\Customer;
 use App\Models\Complaint;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -20,16 +22,44 @@ class AdminController extends Controller
             'total_tailors'   => User::where('role', 'tailor')->count(),
             'total_orders'    => Order::count(),
             'pending_orders'  => Order::where('status', 'pending')->count(),
-            'active_orders'   => Order::whereIn('status',['accepted', 'in_progress', 'ready'])->count(),
+            'active_orders'   => Order::whereIn('status',['accepted', 'fabric_received', 'in_progress', 'ready', 'dispatched', 'on_the_way'])->count(),
             'completed_orders'=> Order::where('status', 'delivered')->count(),
             'total_revenue'   => Order::where('payment_status', '!=', 'unpaid')->sum('advance_paid'),
             'open_complaints' => Complaint::where('status', 'open')->count(),
             'blocked_users'   => User::where('is_active', false)->count(),
         ];
 
+        $completedPayments = fn () => Payment::where('status', 'completed');
+
+        $stats['commission_earned'] = $completedPayments()
+            ->whereIn('payout_status', ['payable', 'paid'])
+            ->sum('commission_amount');
+
+        $stats['commission_month'] = $completedPayments()
+            ->whereIn('payout_status', ['payable', 'paid'])
+            ->whereBetween('released_at', [now()->startOfMonth(), now()->endOfMonth()])
+            ->sum('commission_amount');
+
+        $stats['commission_held'] = $completedPayments()
+            ->where('payout_status', 'held')
+            ->sum('commission_amount');
+
+        $stats['payable_to_tailors'] = $completedPayments()
+            ->where('payout_status', 'payable')
+            ->sum('tailor_amount');
+
+        $stats['paid_to_tailors'] = $completedPayments()
+            ->where('payout_status', 'paid')
+            ->sum('tailor_amount');
+
         $users = User::where('role', '!=', 'admin')->with('tailor')->latest()->paginate(15);
         $orders = Order::with(['customer.user', 'tailor.user'])->latest()->paginate(15);
         $complaints = Complaint::with('user')->latest()->get();
+
+        $commissionOrders = Order::with(['payments', 'tailor.user'])
+            ->whereHas('payments', fn ($query) => $query->where('status', 'completed'))
+            ->latest()
+            ->paginate(10, ['*'], 'commission_page');
 
         $recentOrders = Order::with(['customer.user', 'tailor.user'])
             ->latest()
@@ -42,7 +72,7 @@ class AdminController extends Controller
             ->get();
 
         return view('admin.admindashboard',
-            compact('stats','users', 'orders', 'complaints' , 'recentOrders' , 'recentUsers'));
+            compact('stats','users', 'orders', 'complaints' , 'recentOrders' , 'recentUsers', 'commissionOrders'));
     }
 
     public function users()
@@ -129,5 +159,33 @@ class AdminController extends Controller
     $user->tailor->update(['status' => 'approved']);
 
     return back()->with('success', "{$user->name} has been approved and can now receive orders.");
+    }
+
+    public function markPayoutPaid(Order $order)
+    {
+        $payment = $order->payments()
+            ->where('status', 'completed')
+            ->where('payout_status', 'payable')
+            ->first();
+
+        if (!$payment) {
+            return back()->with('error', 'This payout is not available.');
+        }
+
+        $payment->forceFill([
+            'payout_status' => 'paid',
+            'paid_out_at'   => now(),
+        ])->save();
+
+        Notification::create([
+            'user_id'  => $order->tailor->user_id,
+            'type'     => 'payment',
+            'title'    => 'Payout Sent',
+            'message'  => 'Your payout of Rs. ' . number_format((float) $payment->tailor_amount, 2) .
+                          ' for order #' . $order->order_number . ' has been sent.',
+            'order_id' => $order->id,
+        ]);
+
+        return back()->with('success', 'Payout marked as paid.');
     }
 }

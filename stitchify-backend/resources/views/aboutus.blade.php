@@ -17,6 +17,12 @@
           <img src="{{ asset('images/logo.png') }}" alt="Logo" class="logo-img">
          </a>
       </div>
+
+      <input type="checkbox" id="navToggle" class="nav-toggle-checkbox">
+      <label for="navToggle" class="nav-toggle-btn">
+        <i class="fas fa-bars"></i>
+      </label>
+
       <nav>
         <ul class="nav-menu">
           <li><a href="{{ route('home') }}">Home</a></li>

@@ -74,6 +74,21 @@ body {
   color: #a8d5ff;
 }
 
+.nav-toggle-checkbox {
+  display: none;
+}
+
+.nav-toggle-btn {
+  display: none;
+  background: none;
+  border: 2px solid rgba(255,255,255,0.4);
+  color: var(--text-white);
+  font-size: 20px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
 .main-content {
   max-width: 1000px;
   margin: 40px auto;
@@ -228,25 +243,30 @@ body {
 
 @media (max-width: 768px) {
   .header .container {
-    flex-direction: column;
-    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .nav-toggle-btn {
+    display: block;
   }
 
   .nav-menu {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    gap: 0;
+    margin-top: 15px;
   }
 
-  .content-card {
-    padding: 30px 20px;
+  .nav-menu li {
+    width: 100%;
+    text-align: center;
+    padding: 12px 0;
+    border-top: 1px solid rgba(255,255,255,0.15);
   }
 
-  .page-title {
-    font-size: 32px;
-  }
-
-  .section-title {
-    font-size: 24px;
+  .nav-toggle-checkbox:checked ~ nav .nav-menu {
+    display: flex;
   }
 }

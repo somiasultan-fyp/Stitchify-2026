@@ -6,12 +6,12 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Notification;
+use App\Services\CommissionService;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
-use App\Http\Controllers\DeliveryController;
 
 class PaymentController extends Controller
-{ 
+{
     public function show(Order $order)
     {
         if ($order->customer->user_id != auth()->id()) {
@@ -23,7 +23,11 @@ class PaymentController extends Controller
                 ->with('error', 'Order has not been accepted yet.');
         }
 
-        
+        if ($order->status === 'accepted') {
+            return redirect('/customer/dashboard')
+                ->with('error', 'Payment opens after the tailor confirms that your fabric has been received.');
+        }
+
         if ($order->payment_status !== 'unpaid') {
             return redirect('/customer/dashboard')
                 ->with('error', 'Payment has already been made.');
@@ -39,6 +43,20 @@ class PaymentController extends Controller
     {
         if ($order->customer->user_id !== auth()->id()) {
             abort(403);
+        }
+
+        if (in_array($order->status, ['pending', 'accepted', 'cancelled'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Payment is not available for this order yet.',
+            ], 422);
+        }
+
+        if ($order->payment_status !== 'unpaid') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Payment has already been made.',
+            ], 422);
         }
 
         $request->validate([
@@ -60,7 +78,7 @@ class PaymentController extends Controller
             ]);
 
             if ($paymentIntent->status === 'succeeded') { 
-                Payment::create([
+                $payment = Payment::create([
                     'order_id'          => $order->id,
                     'stripe_payment_id' => $paymentIntent->id,
                     'amount'            => $order->price,
@@ -69,12 +87,14 @@ class PaymentController extends Controller
                     'payment_type'      => 'advance',
                 ]);
 
-                $order->update([
-                    'payment_status' => 'advance_paid',
-                    'advance_paid'   => $order->price,
-                ]);
+                $split = CommissionService::split((float) $order->price);
 
-                DeliveryController::createAfterPayment($order);
+                $payment->forceFill([
+                    'commission_rate'   => $split['rate'],
+                    'commission_amount' => $split['commission'],
+                    'tailor_amount'     => $split['tailor'],
+                    'payout_status'     => 'held',
+                ])->save();
 
                 $order->update([
                     'payment_status' => 'advance_paid',
@@ -84,10 +104,11 @@ class PaymentController extends Controller
                 Notification::create([
                     'user_id'    => $order->tailor->user->id,
                     'title'      => 'Payment Received!',
-                    'message'    => 'Customer order #' .
+                    'message'    => 'Order #' .
                                    $order->order_number .
-                                   ' has been paid by the customer.',
+                                   ' has been paid by the customer. You can start stitching now.',
                     'type'       => 'payment',
+                    'order_id'   => $order->id,
                     'action_url' => '/tailor/dashboard',
                 ]);
 

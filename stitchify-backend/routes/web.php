@@ -131,10 +131,6 @@ Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
         [CustomerOrderController::class, 'cancelOrder'])
         ->name('customer.order.cancel');
 
-    Route::post('/customer/order/{order}/mark-received',
-        [CustomerOrderController::class, 'markReceived'])
-    ->name('customer.order.mark-received');
-
     Route::get('/customer/live-status',
         [CustomerOrderController::class, 'liveStatus'])
         ->name('customer.live.status');
@@ -204,58 +200,25 @@ Route::middleware(['auth', 'verified', 'role:tailor'])->group(function () {
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
 
-    Route::get('/admin/dashboard', function () {
-
-        $stats = [
-            'total_users'      => \App\Models\User::count(),
-            'total_orders'     => \App\Models\Order::count(),
-            'total_tailors'    => \App\Models\Tailor::count(),
-            'total_customers'  => \App\Models\Customer::count(),
-            'completed_orders' => \App\Models\Order::where('status', 'completed')->count(),
-            'pending_orders'   => \App\Models\Order::where('status', 'pending')->count(),
-            'blocked_users'    => \App\Models\User::where('is_active', false)->count(),
-        ];
-
-        $users = \App\Models\User::whereIn('role', [
-            'customer',
-            'tailor'
-        ])->paginate(10);
-
-        $orders = \App\Models\Order::with([
-            'customer.user',
-            'tailor.user'
-        ])
-        ->latest()
-        ->paginate(10);
-
-        $complaints = \App\Models\Complaint::with('user')
-            ->latest()
-            ->get();
-
-        return view(
-            'admin.admindashboard',
-            compact(
-                'stats',
-                'users',
-                'orders',
-                'complaints'
-            )
-        );
-
-    })->name('admin.dashboard');
+    Route::get('/admin/dashboard',
+        [\App\Http\Controllers\Admin\AdminController::class, 'dashboard'])
+        ->name('admin.dashboard');
 
     Route::patch('/admin/users/{user}/toggle',
         [\App\Http\Controllers\Admin\AdminController::class, 'toggleUser'])
-        ->name('admin.users.toggle');
+         ->name('admin.users.toggle');
 
     Route::patch('/admin/complaints/{complaint}/respond',
         [\App\Http\Controllers\Admin\AdminController::class, 'respondComplaint'])
         ->name('admin.complaints.respond');
 
     Route::patch('/admin/tailors/{user}/approve',
-        [\App\Http\Controllers\Admin\AdminController::class, 'approveTailor'])
+         [\App\Http\Controllers\Admin\AdminController::class, 'approveTailor'])
         ->name('admin.tailors.approve');
 
+    Route::patch('/admin/orders/{order}/payout',
+        [\App\Http\Controllers\Admin\AdminController::class, 'markPayoutPaid'])
+        ->name('admin.payouts.pay');
 });
 
     Route::post('/chatbot',

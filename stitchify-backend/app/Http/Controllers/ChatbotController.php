@@ -56,7 +56,7 @@ CURRENT DATA FROM DATABASE:
 {$context}
 
 Instructions:
-- Keep responses SHORT — maximum 3-4 lines only
+- Keep responses SHORT - maximum 3-4 lines only
 - No tables, no headers, no bullet lists
 - Talk in a friendly, casual way like a real person
 - Respond in the same language as the user (English/Urdu/Roman Urdu)

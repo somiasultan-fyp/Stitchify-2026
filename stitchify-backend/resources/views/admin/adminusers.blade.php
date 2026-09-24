@@ -111,7 +111,7 @@
             <td>{{ $loop->iteration }}</td>
             <td><strong>{{ $user->name }}</strong></td>
             <td>{{ $user->email }}</td>
-            <td>{{ $user->phone ?? '—' }}</td>
+            <td>{{ $user->phone ?? '-' }}</td>
             <td>
               <span class="badge-status {{ $user->role === 'tailor' ? 'badge-tailor' : 'badge-customer' }}">
                 {{ ucfirst($user->role) }}

@@ -19,7 +19,6 @@ class Order extends Model
         'recipient_city',
         'dress_type',
         'special_instructions',
-        'fabric_provided_by',
         'fabric_details',
         'price',
         'advance_paid',

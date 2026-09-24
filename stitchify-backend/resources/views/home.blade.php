@@ -89,71 +89,6 @@
         </div>
     </section>
 
-    <section id="categories" class="py-5" style="background-color: #f0f0f0;">
-        <div class="container text-center">
-            <h2 class="mb-5" style="color: var(--primary-bg);">Browse Categories</h2>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">Men's Wear</h5>
-                            <a href="{{ route('tailors.category', 'men') }}" class="btn btn-stitchify">View Category</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">Women's Wear</h5>
-                            <a href="{{ route('tailors.category', 'women') }}" class="btn btn-stitchify">View Category</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">Kids' Wear</h5>
-                            <a href="{{ route('tailors.category', 'kids') }}" class="btn btn-stitchify">View Category</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-           
-    <section class="py-5">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <h2 style="color: var(--primary-bg);">How to Measure?</h2>
-                    <p>Watch our step-by-step guide to get the perfect measurements for your outfit.</p>
-                    <button type="button" class="btn btn-stitchify mt-3" data-bs-toggle="modal" data-bs-target="#videoModal">
-                        Watch Video
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content bg-stitchify-dark">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title text-white">How to Measure</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-0">
-                    <div class="ratio ratio-16x9">
-                        <video controls>
-                            <source src="{{ asset('video/measurements.mp4') }}" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <section class="py-5 bg-light">
         <div class="container">
             <h2 class="text-center mb-5" style="color: var(--primary-bg);">Professional Tailors</h2>
@@ -200,6 +135,19 @@
                                 &nbsp;|&nbsp;
                                 <i class="fas fa-check-circle me-1"></i>{{ $tailor->orders()->where('status','delivered')->count() }} completed
                             </p>
+                            @if($tailor->price_min || $tailor->price_max)
+                            <p class="card-text small">
+                                <i class="fas fa-tag me-1"></i>
+                            @if($tailor->price_min && $tailor->price_max)
+                               Rs. {{ number_format($tailor->price_min) }} - {{ number_format($tailor->price_max) }}
+                            @elseif($tailor->price_min)
+                               From Rs. {{ number_format($tailor->price_min) }}
+                            @else
+                                Up to Rs. {{ number_format($tailor->price_max) }}
+                            @endif
+                            </p>
+                            @endif
+
                             @if($tailor->city)
                                 <p class="card-text small"><i class="fas fa-map-marker-alt me-1"></i>{{ $tailor->city }}</p>
                             @endif
@@ -216,7 +164,111 @@
         </div>
     </section>
 
-    <section class="py-5">
+           <section class="py-5 bg-white">
+        <div class="container">
+            <div class="community-card">
+                <div class="row align-items-center g-4">
+                    <div class="col-lg-6">
+                        <h2 class="community-title mb-3">Become a Part of Our Tailor Community</h2>
+                        <p class="mb-4">Are you a skilled tailor? Join Stitchify and reach customers who are looking for quality stitching.</p>
+                        @guest
+                            <a href="{{ route('register.form') }}" class="btn btn-stitchify btn-lg">Register as a Tailor</a>
+                        @endguest
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="community-point">
+                            <div class="community-icon"><i class="fa-solid fa-store"></i></div>
+                            <div>
+                                <h5>Get Orders Online</h5>
+                                <p class="mb-0">Receive new orders from customers without leaving your shop.</p>
+                            </div>
+                        </div>
+                        <div class="community-point">
+                            <div class="community-icon"><i class="fa-solid fa-calendar-check"></i></div>
+                            <div>
+                                <h5>Manage Your Slots</h5>
+                                <p class="mb-0">Decide how many orders you can take and work at your own pace.</p>
+                            </div>
+                        </div>
+                        <div class="community-point">
+                            <div class="community-icon"><i class="fa-solid fa-wallet"></i></div>
+                            <div>
+                                <h5>Secure Payments</h5>
+                                <p class="mb-0">Payments are handled through the platform, so you can focus on stitching.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="categories" class="py-5" style="background-color: #f0f0f0;">
+        <div class="container text-center">
+            <h2 class="mb-5" style="color: var(--primary-bg);">Browse Categories</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Men's Wear</h5>
+                            <a href="{{ route('tailors.category', 'men') }}" class="btn btn-stitchify">View Category</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Women's Wear</h5>
+                            <a href="{{ route('tailors.category', 'women') }}" class="btn btn-stitchify">View Category</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Kids' Wear</h5>
+                            <a href="{{ route('tailors.category', 'kids') }}" class="btn btn-stitchify">View Category</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+           
+    <section class="py-5 bg-white">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h2 style="color: var(--primary-bg);">How to Measure?</h2>
+                    <p>Watch our step-by-step guide to get the perfect measurements for your outfit.</p>
+                    <button type="button" class="btn btn-stitchify mt-3" data-bs-toggle="modal" data-bs-target="#videoModal">
+                        Watch Video
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content bg-stitchify-dark">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title text-white">How to Measure</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="ratio ratio-16x9">
+                        <video controls>
+                            <source src="{{ asset('video/measurements.mp4') }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="py-5 bg-light">
         <div class="container">
             <h2 class="text-center mb-5" style="color: var(--primary-bg);">Our Services</h2>
             <div class="row g-4">

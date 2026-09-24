@@ -39,7 +39,7 @@
             <span class="value">
                 {{ $order->expected_delivery_date
                     ? \Carbon\Carbon::parse($order->expected_delivery_date)->format('d M Y')
-                    : '—' }}
+                    : '-' }}
             </span>
         </div>
         <div class="detail-row">
@@ -54,26 +54,6 @@
                 <i class="fas fa-receipt me-2"></i>Amount Paid
             </span>
             <span class="amount">Rs. {{ number_format($order->price) }}</span>
-        </div>
-
-        <div class="whats-next">
-            <h6><i class="fas fa-list-check me-2"></i>What Happens Next?</h6>
-            <div class="next-step">
-                <div class="step-dot">1</div>
-                <span>Tailor will start stitching your order</span>
-            </div>
-            <div class="next-step">
-                <div class="step-dot">2</div>
-                <span>You'll get updates as status changes</span>
-            </div>
-            <div class="next-step">
-                <div class="step-dot">3</div>
-                <span>Order will be delivered to your address</span>
-            </div>
-            <div class="next-step">
-                <div class="step-dot">4</div>
-                <span>Rate your tailor after delivery</span>
-            </div>
         </div>
 
         <a href="/customer/dashboard" class="btn-dashboard">

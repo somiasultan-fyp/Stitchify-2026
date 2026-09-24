@@ -41,7 +41,6 @@ class CustomerOrderController extends Controller
             'dress_type' => 'required|string|max:100',
             'fabric_name' => 'required|string|max:100',
             'fabric_color' => 'required|string|max:50',
-            'fabric_provided_by' => 'required|in:customer,tailor',
             'delivery_type' => 'required|in:pickup,home_delivery',
             'special_instructions' => 'nullable|string|max:1000',
             'design_image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
@@ -88,7 +87,6 @@ class CustomerOrderController extends Controller
                     'tailor_id' => $tailor->id,
                     'dress_type' => $request->dress_type,
                     'fabric_details' => $request->fabric_name . ' - ' . $request->fabric_color,
-                    'fabric_provided_by' => $request->fabric_provided_by,
                     'special_instructions' => $request->special_instructions,
                     'delivery_type' => $request->delivery_type,
                     'design_image' => $designImagePath,
@@ -193,32 +191,6 @@ class CustomerOrderController extends Controller
 
         return back()->with('success', 'Order cancelled.');
     }
-
-    public function markReceived(Request $request, Order $order)
-{
-    if ($order->customer->user_id !== auth()->id()) {
-        abort(403, 'Unauthorized');
-    }
-
-    if ($order->delivery_type !== 'pickup' || $order->status !== 'ready') {
-        return back()->with('error', 'This order cannot be marked as received.');
-    }
-
-    $order->update([
-        'status'               => 'delivered',
-        'actual_delivery_date' => now(),
-    ]);
-
-    Notification::create([
-        'user_id' => $order->tailor->user_id,
-        'type'    => 'order_picked_up',
-        'title'   => 'Order Picked Up',
-        'message' => "Customer confirmed pickup for order #{$order->order_number}.",
-        'order_id' => $order->id,
-    ]);
-
-    return back()->with('success', 'Order marked as received. Thank you!');
-}
 
     public function showReviewPage($orderId)
 {

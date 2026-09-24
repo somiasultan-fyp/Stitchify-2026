@@ -142,7 +142,7 @@
                 <div class="detail-label">City / Address</div>
                 <div class="detail-value">
                     {{ $tailor->city ?? '' }}
-                    {{ $tailor->city && $tailor->address ? ' — ' : '' }}
+                    {{ $tailor->city && $tailor->address ? ' - ' : '' }}
                     {{ $tailor->address ?? 'Not provided' }}
                 </div>
             </div>
@@ -162,6 +162,10 @@
                         Up to Rs. {{ number_format($tailor->price_max) }}
                     @endif
                 </div>
+                <p style="font-size:12px;color:#94a3b8;margin-top:4px;margin-bottom:0;">
+                   <i class="fas fa-info-circle me-1"></i>
+                    This is an estimated price range of this tailor. Final price will be confirmed by the tailor when they accept your order.
+                </p>
             </div>
         </div>
         @endif

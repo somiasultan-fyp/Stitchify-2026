@@ -63,7 +63,6 @@ class OrderController extends Controller
             'recipient_city'       => $request->customer_city ?? null,
             'dress_type'           => $request->dress_type ?? 'Not specified',
             'special_instructions' => $request->special_instructions ?? null,
-            'fabric_provided_by'   => 'customer',
             'fabric_details'       => ($request->fabric_name ?? 'N/A') . ' - ' . ($request->fabric_color ?? 'N/A'),
             'delivery_type'        => $request->delivery_type ?? 'pickup',
             'status'               => 'pending',
@@ -106,14 +105,6 @@ class OrderController extends Controller
                 'trouser_waist'    => $request->trouser_waist  ?? null,
                 'neck'             => $request->neck           ?? null,
                 'additional_notes' => $request->additional_notes ?? null,
-            ]);
-        } else {
-            Measurement::create([
-                'order_id'         => $order->id,
-                'additional_notes' => 'Appointment: ' .
-                    ($request->appointment_date ?? '') .
-                    ' at ' .
-                    ($request->appointment_time ?? ''),
             ]);
         }
 

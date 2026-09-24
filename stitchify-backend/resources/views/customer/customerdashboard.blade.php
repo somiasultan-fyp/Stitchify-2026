@@ -5,12 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-
     <title>Customer Dashboard - Stitchify</title>
-
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
     <link rel="stylesheet" href="{{ asset('css/common.css') }}">
     <link rel="stylesheet" href="{{ asset('css/customer-dashboard.css') }}">
 </head>
@@ -86,26 +83,22 @@
                 <i class="fas fa-bell"></i>
                 <span class="bell-badge" id="bellBadge">0</span>
             </button>
-
             <div class="notif-dropdown" id="notifDropdown">
                 <div class="notif-dropdown-header">
                     <span>
                         <i class="fas fa-bell me-2"></i>
                         Notifications
                     </span>
-
                     <a href="#" onclick="markAllRead(event)">
                         Mark all read
                     </a>
                 </div>
-
                 <div id="notifList">
                     <div class="notif-empty">
                         <i class="fas fa-check-circle fa-2x mb-2 d-block"></i>
                         No new notifications
                     </div>
                 </div>
-
                 <div class="notif-dropdown-footer">
                     <a href="/notifications">
                         View All Notifications
@@ -122,7 +115,7 @@
             </div>
 
             <h3 class="stat-number">
-                {{ $orders->whereIn('status', ['accepted', 'in_progress', 'ready', 'dispatched', 'on-the-way'])->count() }}
+                {{ $orders->whereIn('status', ['accepted', 'fabric_received', 'in_progress', 'ready', 'dispatched', 'on_the_way'])->count() }}
             </h3>
 
             <p class="stat-label">Active Orders</p>
@@ -172,25 +165,24 @@
             $activeOrders = $orders->whereIn('status', [
                 'pending',
                 'accepted',
+                'fabric_received',
                 'in_progress',
                 'ready',
                 'dispatched',
-                'on-the-way'
+                'on_the_way'
             ]);
         @endphp
 
         @forelse($activeOrders as $order)
             <div class="order-card">
-
                 <div class="order-header">
                     <div class="order-id">
                         #{{ $order->order_number }}
                     </div>
-
                     <span class="order-status
                         @if($order->status === 'pending')
                             status-pending
-                        @elseif($order->status === 'dispatched')
+                        @elseif($order->status === 'dispatched' || $order->status === 'on_the_way')
                             status-completed
                         @else
                             status-progress
@@ -208,6 +200,11 @@
                     <p>
                         <strong>Item:</strong>
                         {{ $order->dress_type }}
+                    </p>
+
+                    <p>
+                        <strong>Delivery:</strong>
+                        {{ $order->delivery_type === 'home_delivery' ? 'Delivery Service' : 'Self Pickup & Drop' }}
                     </p>
 
                     <p>
@@ -238,21 +235,21 @@
                             </p>
                     @endif
 
-                    @if($order->delivery_type === 'pickup' && $order->status === 'ready')
-                       <div class="alert alert-info py-2 px-3 mb-2" style="font-size:13px;">
-                       <i class="fas fa-store me-1"></i>
-                          Your order is ready! Please collect it from the tailor.
-                       </div>
-                       <form method="POST" action="{{ route('customer.order.mark-received', $order->id) }}"
-                             onsubmit="return confirm('Confirm that you have received your order?');">
-                        @csrf 
-                        <button type="submit" class="pay-btn" style="background-color:#388e3c;">
-                         <i class="fas fa-check-circle me-1"></i> Mark as Received
-                        </button>
-                       </form>
-                    @endif
+                        @if($order->status === 'accepted' && $order->payment_status === 'unpaid')
 
-                        @if($order->payment_status === 'unpaid')
+                            <span class="waiting-badge">
+                                <i class="fas fa-truck-loading me-1"></i>
+                                {{ $order->delivery_type === 'home_delivery' ? 'Courier is on the way to pick up your fabric' : 'Please hand over your fabric to the tailor' }}
+                            </span>
+
+                        @elseif($order->payment_status === 'unpaid')
+                            @if($order->status === 'fabric_received')
+                                <p>
+                                    <i class="fas fa-box-open me-1"></i>
+                                    The tailor has received your fabric. Please pay to start stitching.
+                                </p>
+                            @endif
+
                             <p>
                                 <span class="badge bg-danger">
                                     Payment Pending
@@ -281,6 +278,13 @@
                                     Fully Paid
                                 </span>
                             </p>
+                        @endif
+
+                        @if($order->status === 'ready' && $order->delivery_type === 'pickup')
+                            <span class="waiting-badge">
+                                <i class="fas fa-hand-holding me-1"></i>
+                                Your order is ready. Please pick it up from the tailor.
+                            </span>
                         @endif
 
                         @if($order->delivery_type === 'home_delivery' && $order->tracking_id)
@@ -321,7 +325,6 @@
         @forelse($historyOrders as $order)
 
             <div class="order-card">
-
                 <div class="order-header">
                     <div class="order-id">
                         #{{ $order->order_number }}
@@ -334,17 +337,14 @@
                 </div>
 
                 <div class="order-details">
-
                     <p>
                         <strong>Tailor:</strong>
                         {{ optional(optional($order->tailor)->user)->name ?? 'N/A' }}
                     </p>
-
                     <p>
                         <strong>Item:</strong>
                         {{ $order->dress_type }}
                     </p>
-
                     <p>
                         <strong>Order Date:</strong>
                         {{ $order->created_at->format('M d, Y') }}
@@ -372,7 +372,6 @@
                                 <i class="fas fa-star me-1"></i>
                                 Write Review
                             </a>
-
                         @else
 
                             <span class="reviewed-badge">
@@ -381,12 +380,9 @@
                             </span>
 
                         @endif
-
                     @endif
-
                 </div>
             </div>
-
         @empty
 
             <p class="text-muted text-center py-3">
@@ -395,7 +391,6 @@
 
         @endforelse
     </div>
-
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
