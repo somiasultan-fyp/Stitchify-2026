@@ -70,9 +70,10 @@ function goToStep1() {
   document.getElementById('step1Div').style.display = 'block';
 }
 
-function toggleTailorFields() {
+function toggleRoleFields() {
   const role = document.getElementById('role').value;
   document.getElementById('tailorFields').style.display = role === 'tailor' ? 'block' : 'none';
+  document.getElementById('deliveryFields').style.display = role === 'delivery_boy' ? 'block' : 'none';
 }
 
 document.getElementById('registerForm').addEventListener('submit', function(e) {
@@ -80,6 +81,7 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
   document.getElementById('addressError').textContent = '';
   document.getElementById('categoryError').textContent = '';
   document.getElementById('slotError').textContent = '';
+  document.getElementById('areaError').textContent = '';
   document.getElementById('role').classList.remove('is-invalid');
 
   const role = document.getElementById('role').value;
@@ -109,6 +111,16 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
     if (!slot.value || slot.value < 1) {
       document.getElementById('slotError').textContent = 'Slot capacity is required.';
       slot.classList.add('is-invalid');
+      isValid = false;
+    }
+  }
+
+  if (role === 'delivery_boy') {
+    const area = document.getElementById('s2_area');
+
+    if (!area.value.trim()) {
+      document.getElementById('areaError').textContent = 'Delivery area is required.';
+      area.classList.add('is-invalid');
       isValid = false;
     }
   }
