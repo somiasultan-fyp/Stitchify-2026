@@ -81,10 +81,11 @@
 
       <div class="mb-3">
         <label class="form-label">I am a *</label>
-        <select name="role" id="role" class="form-select" required onchange="toggleTailorFields()">
+        <select name="role" id="role" class="form-select" required onchange="toggleRoleFields()">
           <option value="">Select your role</option>
           <option value="customer" {{ old('role') == 'customer' ? 'selected' : '' }}>Customer</option>
           <option value="tailor" {{ old('role') == 'tailor' ? 'selected' : '' }}>Tailor</option>
+          <option value="delivery_boy" {{ old('role') == 'delivery_boy' ? 'selected' : '' }}>Delivery Boy</option>
         </select>
         <span id="roleError" class="error-text"></span>
       </div>
@@ -110,6 +111,14 @@
           <label class="form-label">Slot Capacity *</label>
           <input name="slot_capacity" id="s2_slot" class="form-control" type="number" min="1" max="100" placeholder="e.g. 10" value="{{ old('slot_capacity') }}">
           <span id="slotError" class="error-text"></span>
+        </div>
+      </div>
+
+      <div id="deliveryFields" style="display:none;">
+        <div class="mb-3">
+          <label class="form-label">Delivery Area *</label>
+          <input name="area" id="s2_area" class="form-control" type="text" placeholder="e.g. Gulberg, Lahore" value="{{ old('area') }}">
+          <span id="areaError" class="error-text"></span>
         </div>
       </div>
 

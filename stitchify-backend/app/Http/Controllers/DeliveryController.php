@@ -7,6 +7,7 @@ use App\Models\Delivery;
 use App\Models\Notification;
 use App\Services\CommissionService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DeliveryController extends Controller
 {
@@ -128,5 +129,100 @@ class DeliveryController extends Controller
             'courier'      => $delivery->courier_name,
             'estimated'    => $delivery->estimated_date?->format('d M Y'),
         ]);
+    }
+
+    public function dashboard()
+    {
+        $deliveryBoy = Auth::user();
+
+        $fabricPickups = Delivery::whereNull('delivery_boy_id')
+            ->where('status', 'scheduled')
+            ->whereHas('order', function ($query) use ($deliveryBoy) {
+                $query->where('area', $deliveryBoy->area);
+            })
+            ->latest()
+            ->get();
+
+        $myDeliveries = Delivery::where('delivery_boy_id', $deliveryBoy->id)
+            ->where('status', '!=', 'delivered')
+            ->latest()
+            ->get();
+
+        $completedDeliveries = Delivery::where('delivery_boy_id', $deliveryBoy->id)
+            ->where('status', 'delivered')
+            ->latest()
+            ->get();
+
+        return view('delivery.dashboard', [
+            'fabricPickups'       => $fabricPickups,
+            'myDeliveries'        => $myDeliveries,
+            'completedDeliveries' => $completedDeliveries,
+        ]);
+    }
+
+    public function accept(Delivery $delivery)
+    {
+        if ($delivery->delivery_boy_id !== null) {
+            return back()->with('error', 'This delivery has already been accepted by another delivery boy');
+        }
+
+        $delivery->update([
+            'delivery_boy_id' => Auth::id(),
+            'status'          => 'picked_up_from_customer',
+        ]);
+
+        return redirect()->route('delivery.order.show', $delivery)->with('success', 'Delivery accepted');
+    }
+
+    public function reject(Delivery $delivery)
+    {
+        return redirect()->route('delivery.dashboard')->with('success', 'Delivery skipped');
+    }
+
+    public function show(Delivery $delivery)
+    {
+        if ($delivery->delivery_boy_id !== Auth::id()) {
+            abort(403);
+        }
+
+        return view('delivery.order-detail', [
+            'delivery' => $delivery,
+        ]);
+    }
+
+    public function updateBoyStatus(Request $request, Delivery $delivery)
+    {
+        if ($delivery->delivery_boy_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $request->validate([
+            'status' => 'required|in:delivered_to_tailor,picked_up_from_tailor,out_for_delivery,delivered',
+        ]);
+
+        $delivery->update([
+            'status' => $request->status,
+        ]);
+
+        $order = $delivery->order;
+
+        if ($request->status === 'delivered') {
+            $order->update([
+                'status'               => 'delivered',
+                'actual_delivery_date' => now(),
+            ]);
+
+            CommissionService::releaseForOrder($order);
+        }
+
+        Notification::create([
+            'user_id'    => $order->customer->user->id,
+            'title'      => 'Delivery Update — ' . $delivery->tracking_id,
+            'message'    => 'Your order status: ' . $delivery->status_label,
+            'type'       => 'delivery',
+            'action_url' => '/customer/track/' . $order->id,
+        ]);
+
+        return back()->with('success', 'Status updated');
     }
 }

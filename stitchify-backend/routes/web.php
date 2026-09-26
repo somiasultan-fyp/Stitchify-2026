@@ -86,6 +86,10 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
         return redirect('/tailor/dashboard')
             ->with('success', 'Email verified!');
 
+    } elseif ($user->role === 'delivery_boy') {
+        return redirect('/delivery/dashboard')
+            ->with('success', 'Email verified!');
+
     } else {
         return redirect('/customer/dashboard')
             ->with('success', 'Email verified!');
@@ -258,4 +262,20 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::patch('/notifications/read-all',
         [App\Http\Controllers\NotificationController::class, 'markAllRead'])
         ->name('notifications.readAll');
+        
+});
+Route::middleware(['auth', 'role:delivery_boy'])->prefix('delivery')->name('delivery.')->group(function () {
+    Route::get('/dashboard', [DeliveryController::class, 'dashboard'])->name('dashboard');
+    Route::post('/order/{delivery}/accept',
+       [DeliveryController::class, 'accept'])
+       ->name('order.accept');
+    Route::post('/order/{delivery}/reject', 
+       [DeliveryController::class, 'reject'])
+       ->name('order.reject');
+    Route::get('/order/{delivery}', 
+        [DeliveryController::class, 'show'])
+        ->name('order.show');
+    Route::patch('/order/{delivery}/status', 
+         [DeliveryController::class, 'updateBoyStatus'])
+         ->name('order.status');
 });
