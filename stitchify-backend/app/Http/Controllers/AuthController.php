@@ -28,15 +28,17 @@ class AuthController extends Controller
             'email'         => 'required|email|unique:users,email',
             'phone'         => 'required|string|max:20',
             'password'      => 'required|min:8',
-            'role'          => 'required|in:customer,tailor',
+            'role'          => 'required|in:customer,tailor,delivery_boy',
             'address'       => 'required_if:role,tailor|nullable|string',
             'category'      => 'required_if:role,tailor|nullable|string',
             'slot_capacity' => 'required_if:role,tailor|nullable|integer|min:1',
+            'area'          => 'required_if:role,delivery_boy|nullable|string|max:255',
         ], [
             'email.unique' => 'Email already registered.',
             'address.required_if' => 'Address is required for tailors.',
             'category.required_if' => 'Specialization is required for tailors.',
             'slot_capacity.required_if' => 'Slot capacity is required for tailors.',
+            'area.required_if' => 'Delivery area is required for delivery boys.',
         ]);
 
         $user = User::create([
@@ -48,6 +50,7 @@ class AuthController extends Controller
             'address'       => $request->role === 'tailor' ? $request->address : null,
             'category'      => $request->role === 'tailor' ? $request->category : null,
             'slot_capacity' => $request->role === 'tailor' ? $request->slot_capacity : null,
+            'area'          => $request->role === 'delivery_boy' ? $request->area : null,
             'is_active'     => true,
         ]);
 
@@ -104,10 +107,11 @@ class AuthController extends Controller
     $user = auth()->user();
 
     $redirect = match($user->role) {
-        'admin'    => route('admin.dashboard'),
-        'tailor'   => route('tailor.dashboard'),
-        'customer' => redirect()->intended(route('customer.dashboard'))->getTargetUrl(),
-        default    => '/',
+        'admin'        => route('admin.dashboard'),
+        'tailor'       => route('tailor.dashboard'),
+        'customer'     => redirect()->intended(route('customer.dashboard'))->getTargetUrl(),
+        'delivery_boy' => route('delivery.dashboard'),
+        default        => '/',
     };
 
     return response()->json([

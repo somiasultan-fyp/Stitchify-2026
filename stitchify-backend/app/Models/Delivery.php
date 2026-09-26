@@ -8,6 +8,7 @@ class Delivery extends Model
 {
     protected $fillable = [
         'order_id',
+        'delivery_boy_id',
         'tracking_id',
         'type',
         'status',
