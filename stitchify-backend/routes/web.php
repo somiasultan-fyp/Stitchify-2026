@@ -266,16 +266,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 });
 Route::middleware(['auth', 'role:delivery_boy'])->prefix('delivery')->name('delivery.')->group(function () {
     Route::get('/dashboard', [DeliveryController::class, 'dashboard'])->name('dashboard');
-    Route::post('/order/{delivery}/accept',
-       [DeliveryController::class, 'accept'])
-       ->name('order.accept');
-    Route::post('/order/{delivery}/reject', 
-       [DeliveryController::class, 'reject'])
-       ->name('order.reject');
-    Route::get('/order/{delivery}', 
-        [DeliveryController::class, 'show'])
-        ->name('order.show');
-    Route::patch('/order/{delivery}/status', 
-         [DeliveryController::class, 'updateBoyStatus'])
-         ->name('order.status');
+    Route::post('/order/{order}/accept', [DeliveryController::class, 'accept'])->name('order.accept');
+    Route::post('/order/{order}/reject', [DeliveryController::class, 'reject'])->name('order.reject');
+    Route::post('/order/{order}/on-the-way', [DeliveryController::class, 'onTheWay'])->name('order.on-the-way');
+    Route::post('/order/{order}/delivered', [DeliveryController::class, 'delivered'])->name('order.delivered');
+    Route::get('/order/{order}', [DeliveryController::class, 'show'])->name('order.show');
+    Route::patch('/order/{order}/status', [DeliveryController::class, 'updateStatus'])->name('order.status');
 });

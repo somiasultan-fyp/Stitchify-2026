@@ -135,33 +135,29 @@ class DeliveryController extends Controller
     {
         $deliveryBoy = Auth::user();
 
-        $fabricPickups = Delivery::whereNull('delivery_boy_id')
-            ->where('status', 'scheduled')
-            ->whereHas('order', function ($query) use ($deliveryBoy) {
-                $query->where('area', $deliveryBoy->area);
+        $availableOrders = Order::where('status', 'scheduled')
+            ->where('area', $deliveryBoy->area)
+            ->whereDoesntHave('delivery', function ($query) {
+                $query->whereNotNull('delivery_boy_id');
             })
-            ->latest()
+            ->orderBy('created_at', 'desc')
             ->get();
 
-        $myDeliveries = Delivery::where('delivery_boy_id', $deliveryBoy->id)
-            ->where('status', '!=', 'delivered')
-            ->latest()
-            ->get();
+        $myOrders = Order::whereHas('delivery', function ($query) use ($deliveryBoy) {
+            $query->where('delivery_boy_id', $deliveryBoy->id);
+        })->get();
 
-        $completedDeliveries = Delivery::where('delivery_boy_id', $deliveryBoy->id)
-            ->where('status', 'delivered')
-            ->latest()
-            ->get();
-
-        return view('Delivery.dashboard', [
-            'fabricPickups'       => $fabricPickups,
-            'myDeliveries'        => $myDeliveries,
-            'completedDeliveries' => $completedDeliveries,
-        ]);
+        return view('delivery.dashboard', compact('availableOrders', 'myOrders'));
     }
 
-    public function accept(Delivery $delivery)
+    public function accept(Order $order)
     {
+        $delivery = $order->delivery;
+
+        if (!$delivery) {
+            return back()->with('error', 'No delivery record found for this order.');
+        }
+
         if ($delivery->delivery_boy_id !== null) {
             return back()->with('error', 'This delivery has already been accepted by another delivery boy');
         }
@@ -171,12 +167,57 @@ class DeliveryController extends Controller
             'status'          => 'picked_up_from_customer',
         ]);
 
-        return redirect()->route('delivery.order.show', $delivery)->with('success', 'Delivery accepted');
+        return redirect()->route('delivery.dashboard')->with('success', 'Delivery accepted');
     }
 
-    public function reject(Delivery $delivery)
+    public function reject(Order $order)
     {
         return redirect()->route('delivery.dashboard')->with('success', 'Delivery skipped');
+    }
+
+    public function onTheWay(Order $order)
+    {
+        $delivery = $order->delivery;
+
+        if (!$delivery || $delivery->delivery_boy_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $delivery->update([
+            'status' => 'out_for_delivery',
+        ]);
+
+        return redirect()->route('delivery.dashboard')->with('success', 'Marked as on the way');
+    }
+
+    public function delivered(Order $order)
+    {
+        $delivery = $order->delivery;
+
+        if (!$delivery || $delivery->delivery_boy_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $delivery->update([
+            'status' => 'delivered',
+        ]);
+
+        $order->update([
+            'status'               => 'delivered',
+            'actual_delivery_date' => now(),
+        ]);
+
+        CommissionService::releaseForOrder($order);
+
+        Notification::create([
+            'user_id'    => $order->customer->user->id,
+            'title'      => 'Delivery Update — ' . $delivery->tracking_id,
+            'message'    => 'Your order status: ' . $delivery->status_label,
+            'type'       => 'delivery',
+            'action_url' => '/customer/track/' . $order->id,
+        ]);
+
+        return redirect()->route('delivery.dashboard')->with('success', 'Order marked as delivered');
     }
 
     public function show(Delivery $delivery)
