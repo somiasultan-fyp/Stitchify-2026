@@ -20,6 +20,7 @@ use Illuminate\Notifications\Notifiable;
         'profile_image',
         'is_active', 
         'email_verified_at' ,
+        'area',
     ];
 
     protected $hidden = [
@@ -56,6 +57,11 @@ use Illuminate\Notifications\Notifiable;
         return $this->hasMany(Complaint::class);
     }
 
+    public function deliveries()
+    {
+        return $this->hasMany(Delivery::class, 'delivery_boy_id');
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
@@ -69,5 +75,10 @@ use Illuminate\Notifications\Notifiable;
     public function isCustomer(): bool
     {
         return $this->role === 'customer';
+    }
+
+    public function isDeliveryBoy(): bool
+    {
+        return $this->role === 'delivery_boy';
     }
 }
