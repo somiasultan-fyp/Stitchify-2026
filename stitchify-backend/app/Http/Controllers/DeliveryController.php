@@ -153,7 +153,7 @@ class DeliveryController extends Controller
             ->latest()
             ->get();
 
-        return view('delivery.dashboard', [
+        return view('Delivery.dashboard', [
             'fabricPickups'       => $fabricPickups,
             'myDeliveries'        => $myDeliveries,
             'completedDeliveries' => $completedDeliveries,
