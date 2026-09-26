@@ -15,6 +15,7 @@ class Delivery extends Model
         'courier_name',
         'courier_tracking_ref',
         'pickup_address',
+        'area',
         'delivery_address',
         'estimated_date',
         'notes',
