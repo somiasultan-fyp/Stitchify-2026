@@ -1,5 +1,21 @@
 let deliveryChoice = null;
 
+document.querySelectorAll('input[type="number"]').forEach(input => {
+  input.setAttribute('min', '0');
+
+  input.addEventListener('keydown', function (e) {
+    if (e.key === '-' || e.key === 'Subtract') {
+      e.preventDefault();
+    }
+  });
+
+  input.addEventListener('input', function () {
+    if (this.value !== '' && parseFloat(this.value) < 0) {
+      this.value = '';
+    }
+  });
+});
+
 function selectDelivery(val) {
   deliveryChoice = val;
   document.getElementById('deliveryChoiceErr').textContent = '';
@@ -113,13 +129,14 @@ function validate() {
   if (visibleMeasSection) {
     const measInputs = visibleMeasSection.querySelectorAll('input[type="number"], input[type="text"]');
     let measOk = true;
-    measInputs.forEach(input => {
-      if (!input.value.trim()) {
-        input.classList.add('is-invalid');
-        measOk = false;
-      } else {
-        input.classList.remove('is-invalid');
-      }
+      measInputs.forEach(input => {
+     const isNegative = input.type === 'number' && parseFloat(input.value) < 0;
+     if (!input.value.trim() || isNegative) {
+    input.classList.add('is-invalid');
+    measOk = false;
+     } else {
+    input.classList.remove('is-invalid');
+    }
     });
     if (!measOk) {
       measErrEl.textContent = 'Please fill in all measurement fields marked with *';

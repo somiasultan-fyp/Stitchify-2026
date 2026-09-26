@@ -61,6 +61,7 @@ class OrderController extends Controller
             'recipient_phone'      => $request->customer_phone ?? null,
             'recipient_address'    => $request->customer_address ?? null,
             'recipient_city'       => $request->customer_city ?? null,
+            'area'                 => $request->customer_city ?? null,
             'dress_type'           => $request->dress_type ?? 'Not specified',
             'special_instructions' => $request->special_instructions ?? null,
             'fabric_details'       => ($request->fabric_name ?? 'N/A') . ' - ' . ($request->fabric_color ?? 'N/A'),
@@ -109,6 +110,8 @@ class OrderController extends Controller
         }
 
         $tailor->decrementSlot();
+
+        DeliveryController::createForOrder($order);
 
         Notification::create([
             'user_id'    => $tailor->user->id,
