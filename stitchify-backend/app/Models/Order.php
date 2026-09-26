@@ -18,6 +18,7 @@ class Order extends Model
         'recipient_phone',
         'recipient_address',
         'recipient_city',
+        'area',
         'dress_type',
         'special_instructions',
         'fabric_details',
