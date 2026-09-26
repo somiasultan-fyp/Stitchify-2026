@@ -147,7 +147,7 @@ class DeliveryController extends Controller
             $query->where('delivery_boy_id', $deliveryBoy->id);
         })->get();
 
-        return view('delivery.dashboard', compact('availableOrders', 'myOrders'));
+        return view('Delivery.dashboard', compact('availableOrders', 'myOrders'));
     }
 
     public function accept(Order $order)
