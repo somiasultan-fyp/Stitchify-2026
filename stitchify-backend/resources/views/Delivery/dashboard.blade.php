@@ -186,7 +186,7 @@
                     </p>
 
                     <div class="order-card-actions">
-                        <form action="{{ route('delivery-boy.order.accept', $order) }}" method="POST">
+                        <form action="{{ route('delivery.order.accept', $order) }}" method="POST">
                             @csrf
                             <button type="submit" class="accept-btn">
                                 <i class="fas fa-check me-1"></i>
@@ -194,7 +194,7 @@
                             </button>
                         </form>
 
-                        <form action="{{ route('delivery-boy.order.reject', $order) }}" method="POST">
+                        <form action="{{ route('delivery.order.reject', $order) }}" method="POST">
                             @csrf
                             <button type="submit" class="reject-btn">
                                 <i class="fas fa-times me-1"></i>
@@ -242,7 +242,7 @@
                     </p>
 
                     @if($order->status === 'dispatched')
-                        <form action="{{ route('delivery-boy.order.on-the-way', $order) }}" method="POST">
+                        <form action="{{ route('delivery.order.on-the-way', $order) }}" method="POST">
                             @csrf
                             <button type="submit" class="track-btn">
                                 <i class="fas fa-route me-1"></i>
@@ -250,7 +250,7 @@
                             </button>
                         </form>
                     @elseif($order->status === 'on_the_way')
-                        <form action="{{ route('delivery-boy.order.delivered', $order) }}" method="POST">
+                        <form action="{{ route('delivery.order.delivered', $order) }}" method="POST">
                             @csrf
                             <button type="submit" class="pay-btn">
                                 <i class="fas fa-flag-checkered me-1"></i>

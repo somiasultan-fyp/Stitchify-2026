@@ -131,44 +131,46 @@ class DeliveryController extends Controller
         ]);
     }
 
-    public function dashboard()
-    {
-        $deliveryBoy = Auth::user();
+   public function dashboard()
+{
+    $deliveryBoy = Auth::user();
 
-        $availableOrders = Order::where('status', 'scheduled')
-            ->where('area', $deliveryBoy->area)
-            ->whereDoesntHave('delivery', function ($query) {
-                $query->whereNotNull('delivery_boy_id');
-            })
-            ->orderBy('created_at', 'desc')
-            ->get();
+    $availableOrders = Order::where('status', 'dispatched')
+        ->whereHas('delivery', function ($query) {
+            $query->whereNull('delivery_boy_id')
+                  ->where('type', 'home_delivery');
+        })
+        ->orderBy('created_at', 'desc')
+        ->get();
 
-        $myOrders = Order::whereHas('delivery', function ($query) use ($deliveryBoy) {
-            $query->where('delivery_boy_id', $deliveryBoy->id);
-        })->get();
+    $myOrders = Order::whereHas('delivery', function ($query) use ($deliveryBoy) {
+        $query->where('delivery_boy_id', $deliveryBoy->id);
+    })->get();
 
-        return view('Delivery.dashboard', compact('availableOrders', 'myOrders'));
+    return view('Delivery.dashboard', compact('availableOrders', 'myOrders'));
+}
+
+   public function accept(Order $order)
+{
+    $delivery = $order->delivery;
+
+    if (!$delivery) {
+        return back()->with('error', 'No delivery record found.');
     }
 
-    public function accept(Order $order)
-    {
-        $delivery = $order->delivery;
-
-        if (!$delivery) {
-            return back()->with('error', 'No delivery record found for this order.');
-        }
-
-        if ($delivery->delivery_boy_id !== null) {
-            return back()->with('error', 'This delivery has already been accepted by another delivery boy');
-        }
-
-        $delivery->update([
-            'delivery_boy_id' => Auth::id(),
-            'status'          => 'picked_up_from_customer',
-        ]);
-
-        return redirect()->route('delivery.dashboard')->with('success', 'Delivery accepted');
+    if ($delivery->delivery_boy_id !== null) {
+        return back()->with('error', 'Already accepted by another delivery boy.');
     }
+
+    $delivery->update([
+        'delivery_boy_id' => Auth::id(),
+        'status'          => 'out_for_delivery',
+    ]);
+
+    $order->update(['status' => 'on_the_way']);
+
+    return redirect()->route('delivery.dashboard')->with('success', 'Delivery accepted!');
+}
 
     public function reject(Order $order)
     {
