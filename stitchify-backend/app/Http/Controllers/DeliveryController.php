@@ -135,11 +135,20 @@ class DeliveryController extends Controller
 {
     $deliveryBoy = Auth::user();
 
-    $availableOrders = Order::where('status', 'dispatched')
+    $availableOrders = Order::where(function($q){
+        $q->where('status', 'accepted')
         ->whereHas('delivery', function ($query) {
             $query->whereNull('delivery_boy_id')
-                  ->where('type', 'home_delivery');
-        })
+                  ->where('status', 'scheduled');
+        });
+    })->orWhere(function($q) {
+    $q->where('status', 'dispatched')
+      ->whereHas('delivery', function($query) {
+          $query->whereNull('delivery_boy_id')
+                ->where('status', 'scheduled');
+      });
+    })
+        ->where('delivery_type', 'home_delivery')
         ->orderBy('created_at', 'desc')
         ->get();
 

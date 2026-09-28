@@ -164,6 +164,11 @@
                     <div class="order-id">
                         #{{ $order->order_number }}
                     </div>
+            <span class="order-status 
+                 {{ $order->status === 'accepted' ? 'status-pending' : 'status-progress' }}">
+                 {{ $order->status === 'accepted' ? 'Fabric Pickup' : 'Order Delivery' }}
+            </span>
+
                     <span class="order-status status-pending">
                         Ready
                     </span>
